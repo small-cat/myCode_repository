@@ -21,7 +21,7 @@
 #define STUDENT_INIT_NUM 20
 #define MAX_STRLEN 1024
 
-#define DB_FILE "cj.bat"
+#define DB_FILE "cj.dat"
 
 #define DEBUG0(fmt, ...) sys_err(fmt, __VA_ARGS__)
 
@@ -60,12 +60,13 @@ typedef struct _CLASS_INFO_ {
 void sys_err(const char* fmt, ...);
 
 /************* operations related to student infomation **********/
-void loadStuInfoFromFile (ClassInfo* mclass, const char* path);
+ClassInfo* loadStuInfoFromFile (const char* path);
 void input (ClassInfo* mclass);      /* input student info */
 void printScore (ClassInfo* mclass, int course);  /* get student scores by 
                                                      course */
-int Max (ClassInfo* mclass);        /* get student info which total
+void Max (ClassInfo* mclass);        /* get student info which total
                                        score is the highest */
+void freeStudentInfo (ClassInfo* mclass);
 
 /* simple insert sort */
 void simpleInsertSort (ClassInfo* mclass);

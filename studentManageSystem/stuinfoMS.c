@@ -16,18 +16,20 @@
  * 作者: 
  * 时间:
 ***********************************************************/ 
-void loadStuInfoFromFile (ClassInfo* mclass, const char* path)
+ClassInfo* loadStuInfoFromFile (const char* path)
 {
     int number = 0;
     double class_total_score = 0;
     FILE* fp = NULL;
     char buf[MAX_STRLEN] = {0};
+    ClassInfo* mclass = NULL;
 
     if (access (path, F_OK) == -1) {
-        printf ("\033[31;41mWARNING:\033[0m Can not load file, %s does not exist\n", path);
+        printf ("\033[40;31mWARNING:\033[0m Can not load file, %s does not exist\n", path);
     }
 
-    if ((fp = fopen (path, "r")) == NULL) {
+    if ((fp = fopen (path, "a+")) == NULL) {   /* if file does not exist, 
+                                                   create it. */
         fprintf (stderr, "open file %s failed\n", path);
         exit (EXIT_FAILURE);
     }
@@ -40,19 +42,16 @@ void loadStuInfoFromFile (ClassInfo* mclass, const char* path)
     /* reset file pointer to the beginning of the file */
     rewind (fp);
 
-    if (mclass) {
-        free (mclass);
-    }
 
     mclass = (ClassInfo*)malloc (sizeof (ClassInfo));
-    ERRPRINT (NULL==mclass, return, 0, "malloc failed, %d", __LINE__);
+    ERRPRINT (NULL==mclass, exit (EXIT_FAILURE), 0, "malloc failed, %d", __LINE__);
     if (0 == number) {
         mclass->students = (StudentInfo*)malloc (sizeof (StudentInfo) * STUDENT_INIT_NUM);
-        ERRPRINT (NULL==mclass->students, return, 0, "malloc failed, %d", __LINE__);
+        ERRPRINT (NULL==mclass->students, exit (EXIT_FAILURE), 0, "malloc failed, %d", __LINE__);
         mclass->students_num = STUDENT_INIT_NUM;
     } else {
         mclass->students = (StudentInfo*)malloc (sizeof (StudentInfo) * number);
-        ERRPRINT (NULL==mclass->students, return, 0, "malloc failed, %d", __LINE__);
+        ERRPRINT (NULL==mclass->students, exit (EXIT_FAILURE), 0, "malloc failed, %d", __LINE__);
         mclass->students_num = number;
     }
     mclass->current_student_num = 0;
@@ -108,7 +107,10 @@ void loadStuInfoFromFile (ClassInfo* mclass, const char* path)
 
         number++;
     }
+
+    return mclass;
 }
+
 
 /***********************************************************
  * 函数名: void input ()
@@ -128,7 +130,8 @@ void input (ClassInfo * mclass) {
     /* alloc more memory to store student info */
     if (mclass->current_student_num == mclass->students_num) {
         mclass->students_num += STUDENT_NUM_INCREMENT;
-        mclass->students = (StudentInfo*)realloc (mclass->students, );
+        mclass->students = (StudentInfo*)realloc (mclass->students, 
+                mclass->students_num);
     }
     
     /* input student info */
@@ -141,44 +144,50 @@ void input (ClassInfo * mclass) {
     double elec = 0;
     int idx = 0;
 
-    printf ("student number: ");
+    printf ("学号: ");
     scanf ("%s", num);
 
-    printf ("student name: ");
+    printf ("姓名: ");
     scanf ("%s", name);
 
-    printf ("english score: ");
+    printf ("英语: ");
     scanf ("%lf", &english);
 
-    printf ("math score: ");
+    printf ("高数: ");
     scanf ("%lf", &math);
 
-    printf ("mz score: ");
+    printf ("马哲: ");
     scanf ("%lf", &mz);
 
-    printf ("computer score: ");
+    printf ("计算机: ");
     scanf ("%lf", &computer);
     
-    printf ("electronic score: ");
+    printf ("电子技术: ");
     scanf ("%lf", &elec);
 
     /* you'd better check validate of data, here overlooked */
     /* TODO(check validate of data): */
     idx = mclass->current_student_num;
     strcpy (mclass->students[idx].student_no, num);
-    mclass->students[idx].student_no[strlen(mclass->students[idx].student_no) - 1] = '\0';
+    mclass->students[idx].student_no[strlen(mclass->students[idx].student_no)] = '\0';
 
     strcpy (mclass->students[idx].student_name, name);
-    mclass->students[idx].student_name[strlen(mclass->students[idx].student_name) - 1] = '\0';
+    mclass->students[idx].student_name[strlen(mclass->students[idx].student_name)] = '\0';
 
     mclass->students[idx].score.English = english;
     mclass->students[idx].score.Math = math;
     mclass->students[idx].score.MZ = mz;
     mclass->students[idx].score.Computer = computer;
     mclass->students[idx].score.Electronic = elec;
+    mclass->students[idx].total_score = (english + math + mz + computer + elec);
     mclass->average_score = (english + math + mz + computer + elec) / 5;
 
     mclass->current_student_num++;
+
+    printf ("\n\n");
+    printf ("Please Press ENTER to return ...");
+    getchar();  /* 上面最后一个scanf 会输入一个回车，这里需要先接收回车 */
+//   getchar();  /* c的输入函数 scanf 有很多后遗症，最好使用fgets 替代 */
 
     /* simple insert sort by total score from high to low */
     simpleInsertSort (mclass);
@@ -193,19 +202,34 @@ void input (ClassInfo * mclass) {
  * 作者: 
  * 时间: 2016-12-30
 ***********************************************************/ 
-void printScore (ClassInfo* mclass, const char* course_name) {
+void printScore (ClassInfo* mclass, int course_name) {
 }
 
 /***********************************************************
- * 函数名: 
- * 函数功能: 
+ * 函数名: void Max ()
+ * 函数功能: get the highest one
  * 参数说明: 
  * 返回值说明: 
  * 涉及到的表: 
  * 作者: 
  * 时间: 2016-12-30
 ***********************************************************/ 
-int Max (ClassInfo* mclass) {
+void Max (ClassInfo* mclass) {
+    /* data in mclass->students is sorted from high to low, 
+     * the first one is the highest */
+
+    printf ("\n\n--------------------------------"
+            "----------------------------------\n");
+    printf ("\e[40;31m最高分数:\e[0m %.2lf\n", mclass->students[0].total_score);
+    printf ("\n");
+    printf ("学号: %s\n", mclass->students[0].student_no);
+    printf ("姓名: %s\n", mclass->students[0].student_name);
+    printf ("英语: %.2lf\n", mclass->students[0].score.English);
+    printf ("高数: %.2lf\n", mclass->students[0].score.Math);
+    printf ("马哲: %.2lf\n", mclass->students[0].score.MZ);
+    printf ("计算机: %.2lf\n", mclass->students[0].score.Computer);
+    printf ("电子技术: %.2lf\n", mclass->students[0].score.Electronic);
+
 }
 
 /***********************************************************
@@ -220,7 +244,7 @@ int Max (ClassInfo* mclass) {
  * 时间: 2016-12-30
 ***********************************************************/ 
 void simpleInsertSort (ClassInfo* mclass) {
-    int cur = mclass->current_student_num;
+    int cur = mclass->current_student_num - 1;
     int idx = cur - 1, j = 0;
     StudentInfo* stu = mclass->students;
 
@@ -229,7 +253,7 @@ void simpleInsertSort (ClassInfo* mclass) {
             idx--;
         else {
             StudentInfo tmp;
-            memset (tmp, 0, sizeof (tmp));
+            memset (&tmp, 0, sizeof (tmp));
             strcpy (tmp.student_no, stu[cur].student_no);
             strcpy (tmp.student_name, stu[cur].student_name);
             tmp.score = stu[cur].score;
@@ -237,22 +261,50 @@ void simpleInsertSort (ClassInfo* mclass) {
 
             for (j=cur; j>idx; j--) {
                 /* stu[j] = stu[j-1]; */
-                memset (stu[j], 0, sizeof (stu[j]));
+                memset (&stu[j], 0, sizeof (stu[j]));
                 strcpy (stu[j].student_no, stu[j-1].student_no);    /* watch out NULL TERM */
                 strcpy (stu[j].student_name, stu[j-1].student_name);
                 stu[j].score = stu[j-1].score;
-                stu[j].total_score = stu[j-i].total_score;
+                stu[j].total_score = stu[j-1].total_score;
             }
 
             /* stu[j+1] = tmp */
-            memset (stu[j+1], 0, sizeof (stu[j+1]));
+            memset (&stu[j+1], 0, sizeof (stu[j+1]));
             strcpy (stu[j+1].student_no, tmp.student_no);
             strcpy (stu[j+1].student_name, tmp.student_name);
             stu[j+1].score = tmp.score;
             stu[j+1].total_score = tmp.total_score;
+
+            break;
         }
     }
 }
+
+/***********************************************************
+ * 函数名: void freeStudentInfo ()
+ * 函数功能: 
+ * 参数说明: 
+ * 返回值说明: 
+ * 涉及到的表: 
+ * 作者: wzhenyu 
+ * 时间: 2016-12-31 15:39 
+***********************************************************/ 
+void freeStudentInfo (ClassInfo* mclass)
+{
+    if (mclass) {
+        if (mclass->students) {
+            free (mclass->students);
+        }
+
+        mclass->students_num = 0;
+        mclass->current_student_num = 0;
+        mclass->average_score = 0;
+
+        free (mclass);
+        mclass = NULL;
+    }
+}
+
 
 /***********************************************************
  * 函数名: void sys_err (fmt, ...)
