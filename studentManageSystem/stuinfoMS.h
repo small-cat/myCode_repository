@@ -32,6 +32,11 @@
     } \
 } while(0)
 
+#define isExcellent(score) ((score >=90 && score <= 100))
+#define isFine(score) ((score >=80 && score <= 89))
+#define isMedium(score) ((score >= 70 && score <= 79))
+#define isPass(score) ((score >= 60 && score <= 69))
+
 typedef struct _COURSE_SCORE_ {
     double English;    /* Score */
     double Math;
@@ -66,7 +71,9 @@ void printScore (ClassInfo* mclass, int course);  /* get student scores by
                                                      course */
 void Max (ClassInfo* mclass);        /* get student info which total
                                        score is the highest */
+double getScore (StudentInfo* stu, int course_no);
 void freeStudentInfo (ClassInfo* mclass);
+void saveStuInfoToFile (ClassInfo* mclass, const char* path);
 
 /* simple insert sort */
 void simpleInsertSort (ClassInfo* mclass);

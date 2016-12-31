@@ -7,9 +7,19 @@
 
 #include "stuinfoMS.h"
 
+typedef enum {ENGLISH=1, MATH, MZ, COMPUTER, ELEC}CourseType;
+static const char* kCourseName[] = {
+    "",
+    "英语",
+    "高数",
+    "马哲",
+    "计算机",
+    "电子技术"
+};
+
 /***********************************************************
- * 函数名: 
- * 函数功能: 
+ * 函数名: ClassInfo* loadStuInfoFromFile ()
+ * 函数功能: 从文件中加载学生信息
  * 参数说明: 
  * 返回值说明: 
  * 涉及到的表: 
@@ -108,6 +118,7 @@ ClassInfo* loadStuInfoFromFile (const char* path)
         number++;
     }
 
+    fclose (fp);
     return mclass;
 }
 
@@ -194,15 +205,121 @@ void input (ClassInfo * mclass) {
 }
 
 /***********************************************************
- * 函数名: 
- * 函数功能: 
+ * 函数名: static void sortStuInfoByNo ()
+ * 函数功能: 对 stu 排序，按照直接插入排序排序, 从小到大 
+ * 参数说明: 
+ * 返回值说明: 
+ * 涉及到的表: 
+ * 作者: wzhenyu 
+ * 时间: 2016-12-31 22:24 
+***********************************************************/ 
+static void sortStuInfoByNo (StudentInfo** stu, int n)
+{
+    int i, j;
+    for (i=1; i<=n; i++) {
+        if (strcmp (stu[i]->student_no, stu[i-1]->student_no) < 0) {
+            StudentInfo* tmp = stu[i];
+
+            for (j=i-1; j>=0 && strcmp (tmp->student_no, stu[j]->student_no)<0; j--) {
+                stu[j+1] = stu[j];  //元素后移
+            }
+            stu[j+1] = tmp;
+        }
+    }
+}
+
+/***********************************************************
+ * 函数名: void printScore ()
+ * 函数功能: 打印某学科所有学生成绩，按照学号大小顺序排序，同时按照分数段
+ *           列出每一个分数段的学生的百分比
  * 参数说明: 
  * 返回值说明: 
  * 涉及到的表: 
  * 作者: 
  * 时间: 2016-12-30
 ***********************************************************/ 
-void printScore (ClassInfo* mclass, int course_name) {
+void printScore (ClassInfo* mclass, int course_no) {
+    /* 先按照学号顺序放在另一个临时数组中，然后根据学科分类处理 */
+    /* 输出格式是完全一样，现在只需要将学科数据拿出来格式化输出即可 */
+
+    /*************************** 定义变量 ***************************/
+    int num = mclass->current_student_num;
+    int excellent = 0;              /* 优秀 */
+    int fine = 0;                   /* 良好 */
+    int medium = 0;                 /* 中等 */
+    int pass = 0;                   /* 及格 */
+    double course_total_score = 0;
+    /*****************************************************************/
+
+    if (!num) {
+        printf ("no students.\n");
+        return;
+    }
+    StudentInfo** stu = (StudentInfo**)malloc (sizeof(StudentInfo*) * num);
+    ERRPRINT (NULL==stu, return, 0, "malloc failed, %d", __LINE__);
+
+    /* 按照学号从小到大排序 */
+    int i,k=0;
+    for (i=0; i<num; i++) {
+        stu[k] = &mclass->students[i];
+
+        sortStuInfoByNo (stu, k);
+        k++;
+    }
+
+    clrscr ();          /* clear screen */
+    printf ("课程名称: \e[40;31m%s\e[0m\n", kCourseName[course_no]);
+
+    printf ("\n----------------------------------------------------\n");
+    printf ("学号\t\t\t姓名\t\t\t成绩\n");
+    printf ("----------------------------------------------------\n");
+    for (i=0; i<num; i++) {
+        printf ("%s\t\t%s\t\t%lf\n", stu[i]->student_no, 
+                stu[i]->student_name, getScore (stu[i], course_no));
+
+        course_total_score += getScore (stu[i], course_no);
+
+        if (isExcellent (getScore (stu[i], course_no))) excellent++;
+        else if (isFine (getScore (stu[i], course_no))) fine++;
+        else if (isMedium (getScore (stu[i], course_no))) medium++;
+        else if (isPass (getScore (stu[i], course_no))) pass++;
+    }
+    printf ("----------------------------------------------------\n");
+    printf ("\n");
+
+    printf ("全班成绩统计:\t平均分: %lf\n", course_total_score/num);
+    printf ("90 - 100分(优):\t\t%d人\t\t占%.2lf%%\n", excellent, (double)excellent/num*100.00);
+    printf ("80 - 89分(优):\t\t%d人\t\t占%.2lf%%\n", fine, (double)fine/num*100.00);
+    printf ("70 - 79分(优):\t\t%d人\t\t占%.2lf%%\n", medium, (double)medium/num*100.00);
+    printf ("60 - 69分(优):\t\t%d人\t\t占%.2lf%%\n", pass, (double)pass/num*100.00);
+}
+
+/***********************************************************
+ * 函数名: double getScore (StudentInfo* stu, int course_no)
+ * 函数功能: 获取学生某科成绩 
+ * 参数说明: 
+ *          course_no: 课程编号
+ * 返回值说明: 
+ * 涉及到的表: 
+ * 作者: wzhenyu 
+ * 时间: 2016-12-31 22:48 
+***********************************************************/ 
+double getScore (StudentInfo* stu, int course_no)
+{
+    switch (course_no) {
+    case ENGLISH:
+        return stu->score.English;
+    case MATH:
+        return stu->score.Math;
+    case MZ:
+        return stu->score.MZ;
+    case COMPUTER:
+        return stu->score.Computer;
+    case ELEC:
+        return stu->score.Electronic;
+    default:
+        return 0;
+    }
 }
 
 /***********************************************************
@@ -249,7 +366,7 @@ void simpleInsertSort (ClassInfo* mclass) {
     StudentInfo* stu = mclass->students;
 
     while (idx >= 0) {
-        if (stu[cur].total_score < stu[idx].total_score)
+        if (stu[cur].total_score > stu[idx].total_score)
             idx--;
         else {
             StudentInfo tmp;
@@ -330,4 +447,44 @@ void sys_err (const char* fmt, ...)
     buf[strlen(buf) - 1] = '\0';
     fprintf (stderr, "%s\n", buf);
     errno = err;
+}
+
+/***********************************************************
+ * 函数名: void saveStuInfoToFile ()
+ * 函数功能: 将学生信息保存在文件中，按照总分从达到小的顺序
+ * 参数说明: 
+ * 返回值说明: 
+ * 涉及到的表: 
+ * 作者: wzhenyu 
+ * 时间: 2016-12-31 17:07 
+***********************************************************/ 
+void saveStuInfoToFile (ClassInfo* mclass, const char* path)
+{
+    printf ("Save students information to file %s\n", DB_FILE);
+    char buf[MAX_STRLEN] = {0};
+    FILE * fp = NULL;
+    int num = 0;
+
+    if ((fp = fopen (path, "w+")) == NULL) {
+        fprintf (stderr, "open file %s failed\n", path);
+        exit (EXIT_FAILURE);
+    }
+
+    while (num < mclass->current_student_num) {
+        memset (buf, 0, sizeof (buf));
+        sprintf (buf, "%s, %s, %.2lf, %.2lf, %.2lf, %.2lf, %.2lf\n", 
+                mclass->students[num].student_no, 
+                mclass->students[num].student_name, 
+                mclass->students[num].score.English, 
+                mclass->students[num].score.Math, 
+                mclass->students[num].score.MZ, 
+                mclass->students[num].score.Computer, 
+                mclass->students[num].score.Electronic);
+
+        /* 这里可以检查一下 fwrite 返回值 */
+        fwrite (buf, strlen (buf), 1, fp);
+        num++;
+    }
+
+    fclose (fp);
 }

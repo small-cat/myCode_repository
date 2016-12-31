@@ -59,7 +59,9 @@ int main (int argc, char* argv[])
             break;
         case 4:
             /* before exit, save student info to file */
-            /*saveStuInfoToFile (mclass, DB_FILE);*/
+            saveStuInfoToFile (mclass, DB_FILE);
+            freeStudentInfo (mclass);
+
             printf ("exit ...\n");
             exit (EXIT_SUCCESS);
         default:
