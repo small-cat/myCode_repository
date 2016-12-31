@@ -148,7 +148,7 @@ void input (ClassInfo * mclass) {
         mclass->students = (StudentInfo*)realloc (mclass->students, 
                 mclass->students_num * sizeof (StudentInfo));   /* 这个地方，必须指明 sizeof
                                         正确使用 realloc, 否则内存原内容将
-                                        会发生不可与之的变化 */
+                                        会发生不可预知的变化 */
     }
     
     /* input student info */
@@ -290,6 +290,8 @@ void printScore (ClassInfo* mclass, int course_no) {
         else if (isMedium (getScore (stu[i], course_no))) medium++;
         else if (isPass (getScore (stu[i], course_no))) pass++;
     }
+    free (stu);
+
     printf ("----------------------------------------------------\n");
     printf ("\n");
 
