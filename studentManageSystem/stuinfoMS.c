@@ -197,7 +197,7 @@ void input (ClassInfo * mclass) {
     mclass->students[idx].score.Computer = computer;
     mclass->students[idx].score.Electronic = elec;
     mclass->students[idx].total_score = (english + math + mz + computer + elec);
-    mclass->average_score = (english + math + mz + computer + elec) / 5;
+    /*mclass->average_score = (english + math + mz + computer + elec) / 5;*/
 
     mclass->current_student_num++;
 
