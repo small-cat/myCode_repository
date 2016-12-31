@@ -76,7 +76,7 @@ void freeStudentInfo (ClassInfo* mclass);
 void saveStuInfoToFile (ClassInfo* mclass, const char* path);
 
 /* simple insert sort */
-void simpleInsertSort (ClassInfo* mclass);
+void simpleInsertSort (StudentInfo* stu, int n);
 
 /*********** screen op ************/
 #define clrscr()        puts ("\033[2J\033[1;1H")           /* clear screen and move to row 1 col 1 */

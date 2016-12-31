@@ -83,12 +83,12 @@ ClassInfo* loadStuInfoFromFile (const char* path)
         /* get student number */
         result = strtok (buf, delims);
         strncpy (stu[number].student_no, result, strlen (result));
-        stu[number].student_no[strlen (result) - 1] = '\0';
+        stu[number].student_no[strlen (result)] = '\0';
 
         /* get student name */
         result = strtok (NULL, delims);
         strncpy (stu[number].student_name, result, strlen (result));
-        stu[number].student_name[strlen (result) - 1] = '\0';
+        stu[number].student_name[strlen (result)] = '\0';
 
         /* get english */
         result = strtok (NULL, delims);
@@ -116,7 +116,11 @@ ClassInfo* loadStuInfoFromFile (const char* path)
         class_total_score += stu[number].total_score;   /* class total score */
 
         number++;
+
+        simpleInsertSort (stu, number);
     }
+    mclass->current_student_num = number;
+    mclass->average_score = class_total_score / number;
 
     fclose (fp);
     return mclass;
@@ -142,7 +146,9 @@ void input (ClassInfo * mclass) {
     if (mclass->current_student_num == mclass->students_num) {
         mclass->students_num += STUDENT_NUM_INCREMENT;
         mclass->students = (StudentInfo*)realloc (mclass->students, 
-                mclass->students_num);
+                mclass->students_num * sizeof (StudentInfo));   /* 这个地方，必须指明 sizeof
+                                        正确使用 realloc, 否则内存原内容将
+                                        会发生不可与之的变化 */
     }
     
     /* input student info */
@@ -201,7 +207,7 @@ void input (ClassInfo * mclass) {
 //   getchar();  /* c的输入函数 scanf 有很多后遗症，最好使用fgets 替代 */
 
     /* simple insert sort by total score from high to low */
-    simpleInsertSort (mclass);
+    simpleInsertSort (mclass->students, mclass->current_student_num);
 }
 
 /***********************************************************
@@ -360,15 +366,12 @@ void Max (ClassInfo* mclass) {
  * 作者: 
  * 时间: 2016-12-30
 ***********************************************************/ 
-void simpleInsertSort (ClassInfo* mclass) {
-    int cur = mclass->current_student_num - 1;
-    int idx = cur - 1, j = 0;
-    StudentInfo* stu = mclass->students;
+void simpleInsertSort (StudentInfo* stu, int n) {
+    int cur = n - 1;
+    int j = 0;
 
-    while (idx >= 0) {
-        if (stu[cur].total_score > stu[idx].total_score)
-            idx--;
-        else {
+    if (cur > 0) {
+        if (stu[cur].total_score > stu[cur-1].total_score) {
             StudentInfo tmp;
             memset (&tmp, 0, sizeof (tmp));
             strcpy (tmp.student_no, stu[cur].student_no);
@@ -376,13 +379,13 @@ void simpleInsertSort (ClassInfo* mclass) {
             tmp.score = stu[cur].score;
             tmp.total_score = stu[cur].total_score;
 
-            for (j=cur; j>idx; j--) {
-                /* stu[j] = stu[j-1]; */
-                memset (&stu[j], 0, sizeof (stu[j]));
-                strcpy (stu[j].student_no, stu[j-1].student_no);    /* watch out NULL TERM */
-                strcpy (stu[j].student_name, stu[j-1].student_name);
-                stu[j].score = stu[j-1].score;
-                stu[j].total_score = stu[j-1].total_score;
+            for (j=cur-1; j>=0&& tmp.total_score>stu[j].total_score; j--) {
+                /* stu[j+1] = stu[j]; */
+                memset (&stu[j+1], 0, sizeof (stu[j+1]));
+                strcpy (stu[j+1].student_no, stu[j].student_no);    /* watch out NULL TERM */
+                strcpy (stu[j+1].student_name, stu[j].student_name);
+                stu[j+1].score = stu[j].score;
+                stu[j+1].total_score = stu[j].total_score;
             }
 
             /* stu[j+1] = tmp */
@@ -391,8 +394,6 @@ void simpleInsertSort (ClassInfo* mclass) {
             strcpy (stu[j+1].student_name, tmp.student_name);
             stu[j+1].score = tmp.score;
             stu[j+1].total_score = tmp.total_score;
-
-            break;
         }
     }
 }
