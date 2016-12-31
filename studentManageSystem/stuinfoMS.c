@@ -2,7 +2,7 @@
 	> File Name: stuinfoMS.c
 	> Author:
 	> Mail:
-	> Created Time: 2016-12-30
+	> Created Time:
  ************************************************************************/
 
 #include "stuinfoMS.h"
@@ -14,7 +14,7 @@
  * 返回值说明: 
  * 涉及到的表: 
  * 作者: 
- * 时间: 2016-12-30
+ * 时间:
 ***********************************************************/ 
 void loadStuInfoFromFile (ClassInfo* mclass, const char* path)
 {
@@ -59,7 +59,7 @@ void loadStuInfoFromFile (ClassInfo* mclass, const char* path)
     mclass->average_score = 0;
 
     /***********************************************************************************/
-    /****************************** load student into **********************************/
+    /****************************** load student info **********************************/
     /***********************************************************************************/
     StudentInfo* stu = mclass->students;
     number = 0;
@@ -68,6 +68,9 @@ void loadStuInfoFromFile (ClassInfo* mclass, const char* path)
         char delims[] = ",";
         char* result = NULL;
 
+        /* data format stored in cj.bat:
+         * student_no, student_name, english, math, mz, computer, electronic
+         */
         /* get student number */
         result = strtok (buf, delims);
         strncpy (stu[number].student_no, result, strlen (result));
