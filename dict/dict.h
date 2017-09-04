@@ -17,6 +17,8 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "common.h"
+
 #define DICT_HT_INIT_SIZE 4
 #define DICT_ERR -1
 #define DICT_OK 0
@@ -38,15 +40,6 @@ typedef struct _DICT_ITERATOR_ {
     long index;
     DictEntry *entry, *nextEntry;
 }DictIterator;
-
-void sys_err (const char* fmt, ...);
-#define ERR_PRINT(con, ret, fmt, ...) \
-    do { \
-        if (con) { \
-            sys_err (fmt, __VA_ARGS__); \
-            ret; \
-        } \
-    } while(0)
 
 /* operations on hash table */
 DictHT* dictCreate ();

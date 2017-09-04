@@ -7,8 +7,6 @@
 
 #include "dict.h"
 
-#define MAX_BUFLEN 1024
-
 /* ========================================================================== */
 /* ========================== static functions ============================== */
 /* ========================================================================== */
@@ -48,6 +46,7 @@ static unsigned int _dictKeyIndex (DictHT* ht, const void* key) {
 static void _dictFreeEntry (DictEntry* entry) {
     entry->next = NULL;
     free ((char*)entry->key);
+    free ((int*)entry->value);
     free (entry);
     entry = NULL;
 }
@@ -60,28 +59,6 @@ static void _dictReset (DictHT* ht) {
 }
 
 /* -------------------- dict operations ------------------ */
-/***********************************************************
- * 函数名: sys_err
- * 函数功能: print error information on standard output
- * 参数说明:
- * 返回值说明:
- * 涉及到的表:
- * 作者: wzhenyu
- * 时间: 2017-09-02 15:21
-***********************************************************/
-void sys_err (const char* fmt, ...) {
-    va_list ap;
-    int err = errno;
-    char buf[MAX_BUFLEN] = {0};
-
-    va_start (ap, fmt);
-    vsnprintf (buf, sizeof(buf), fmt, ap);
-    snprintf (buf+strlen(buf), MAX_BUFLEN-strlen(buf), "- %s", strerror(err));
-
-    fprintf (stderr, "%s\n", buf);
-    va_end (ap);
-}
-
 /***********************************************************
  * 函数名: dictCreate
  * 函数功能: create hash table
@@ -123,7 +100,10 @@ DictEntry* dictCreateWCEntry (void* key, void* value) {
             "dictCreateWCEntry, lines: %d", __LINE__);
     strncpy (entry->key, _key, len);
     ((char*)entry->key)[len] = '\0';
-    entry->value = (int*) value;
+    entry->value = (int*) malloc (sizeof(int));
+    ERR_PRINT (NULL==entry->value, exit(EXIT_FAILURE), 
+            "dictCreateWCEntry, %d", __LINE__);
+    *(int*)(entry->value) = *(int*)value;
     entry->next = NULL;
 
     return entry;
@@ -256,7 +236,7 @@ unsigned int dictHashKey (const void* key) {
     return dictGetHashFunction ((unsigned char*)key, strlen((char*)key));
 }
 
-unsigned int dictGenHashFunction(const void *key, int len) {
+unsigned int dictGetHashFunction(const void *key, int len) {
     /* 'm' and 'r' are mixing constants generated offline.
      * They're not really 'magic', they just happen to work well.  */
     uint32_t seed = dict_hash_function_seed;
@@ -359,9 +339,8 @@ DictEntry* dictNext (DictIterator* iter) {
             iter->nextEntry = iter->entry->next;
             return iter->entry;
         }
-
-        return NULL;
     }
+    return NULL;
 }
 
 void dictReleaseIterator (DictIterator* iter) {
@@ -378,9 +357,9 @@ void dictReleaseIterator (DictIterator* iter) {
  * 函数功能: compare the two keys, this can be implemented with
  * a function pointer
  * 参数说明: rules: no arguments can be NULL
- * 返回值说明: equal        : 0
- *             greater than : 1
- *             litter than  : -1
+ * 返回值说明: equal         0
+ *             greater than  0
+ *             litter than   0
  * 涉及到的表:
  * 作者: wzhenyu
  * 时间: 2017-09-03 17:21
@@ -388,18 +367,11 @@ void dictReleaseIterator (DictIterator* iter) {
 int dictCompareKeys (void* key_src, void* key_dest) {
     char* src  = (char*)key_src;
     char* dest = (char*)key_dest;
-    int ret = 0;
 
-    if ((ret=strcasecmp(src, dest)) == 0) {
-        return 0;
-    } else if (ret > 0) {
-        return 1;
-    } else if (ret < 0) {
-        return -1;
-    }
+    return strcasecmp(src, dest);
 }
 
 void updateEntryValue (DictEntry* entry, void* value) {
     int v = *(int*)value;
-    entry->value += v;
+    *(int*)(entry->value) += v;
 }
