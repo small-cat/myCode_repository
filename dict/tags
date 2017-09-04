@@ -1,0 +1,79 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+DICT_ERR	dict.h	18;"	d
+DICT_HT_INIT_SIZE	dict.h	17;"	d
+DICT_OK	dict.h	19;"	d
+DictEntry	dict.h	/^}DictEntry;$/;"	t	typeref:struct:_DICT_ENTRY_
+DictHT	dict.h	/^}DictHT;                \/* hash table *\/$/;"	t	typeref:struct:_DICT_HASH_TABLE_
+DictIterator	dict.h	/^}DictIterator;$/;"	t	typeref:struct:_DICT_ITERATOR_
+ERR_PRINT	dict.h	45;"	d
+MAX_BUFLEN	dict.c	10;"	d	file:
+_DICT_ENTRY_	dict.h	/^typedef struct _DICT_ENTRY_ {$/;"	s
+_DICT_ENTRY_::__anon1::d	dict.h	/^        double d;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+_DICT_ENTRY_::__anon1::s64	dict.h	/^        int64_t s64;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+_DICT_ENTRY_::__anon1::u64	dict.h	/^        uint64 u64;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+_DICT_ENTRY_::__anon1::val	dict.h	/^        void* val;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+_DICT_ENTRY_::key	dict.h	/^    void* key;$/;"	m	struct:_DICT_ENTRY_	access:public
+_DICT_ENTRY_::next	dict.h	/^    struct _DICT_ENTRY_* next;$/;"	m	struct:_DICT_ENTRY_	typeref:struct:_DICT_ENTRY_::_DICT_ENTRY_	access:public
+_DICT_ENTRY_::value	dict.h	/^    }value;$/;"	m	struct:_DICT_ENTRY_	typeref:union:_DICT_ENTRY_::__anon1	access:public
+_DICT_HASH_TABLE_	dict.h	/^typedef struct _DICT_HASH_TABLE_ {$/;"	s
+_DICT_HASH_TABLE_::size	dict.h	/^    unsigned long size;$/;"	m	struct:_DICT_HASH_TABLE_	access:public
+_DICT_HASH_TABLE_::table	dict.h	/^    DictEntry** table;$/;"	m	struct:_DICT_HASH_TABLE_	access:public
+_DICT_HASH_TABLE_::used	dict.h	/^    unsigned long used;$/;"	m	struct:_DICT_HASH_TABLE_	access:public
+_DICT_H_	dict.h	9;"	d
+_DICT_ITERATOR_	dict.h	/^typedef struct _DICT_ITERATOR_ {$/;"	s
+_DICT_ITERATOR_::entry	dict.h	/^    DictEntry *entry, *nextEntry;$/;"	m	struct:_DICT_ITERATOR_	access:public
+_DICT_ITERATOR_::ht	dict.h	/^    DictHT* ht;$/;"	m	struct:_DICT_ITERATOR_	access:public
+_DICT_ITERATOR_::index	dict.h	/^    long index;$/;"	m	struct:_DICT_ITERATOR_	access:public
+_DICT_ITERATOR_::nextEntry	dict.h	/^    DictEntry *entry, *nextEntry;$/;"	m	struct:_DICT_ITERATOR_	access:public
+_dictExpandIfNeeded	dict.c	/^static int _dictExpandIfNeeded (DictHT* ht) {$/;"	f	file:	signature:(DictHT* ht)
+_dictKeyIndex	dict.c	/^static unsigned int _dictKeyIndex (DictHT* ht, const void* key) {$/;"	f	file:	signature:(DictHT* ht, const void* key)
+_dictNextPower	dict.c	/^static unsigned long _dictNextPower (unsigned long size) {$/;"	f	file:	signature:(unsigned long size)
+d	dict.h	/^        double d;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+dictAdd	dict.c	/^int dictAdd (DictHT* ht, void* key, void* value) {$/;"	f	signature:(DictHT* ht, void* key, void* value)
+dictAdd	dict.h	/^int dictAdd (DictHT* ht, void* key, void* value);$/;"	p	signature:(DictHT* ht, void* key, void* value)
+dictCompareKeys	dict.c	/^int dictCompareKeys (void* key_src, void* key_dest) {$/;"	f	signature:(void* key_src, void* key_dest)
+dictCompareKeys	dict.h	/^int dictCompareKeys (void* key_src, void* key_dest);$/;"	p	signature:(void* key_src, void* key_dest)
+dictCreate	dict.c	/^DictHT* dictCreate () {$/;"	f
+dictCreate	dict.h	/^DictHT* dictCreate ();$/;"	p	signature:()
+dictCreateWCEntry	dict.c	/^DictEntry* dictCreateWCEntry (void* key, void* value) {$/;"	f	signature:(void* key, void* value)
+dictCreateWCEntry	dict.h	/^DictEntry* dictCreateWCEntry (void* key, void* value);$/;"	p	signature:(void* key, void* value)
+dictDelete	dict.c	/^int dictDelete (DictHT* ht, void *key) {$/;"	f	signature:(DictHT* ht, void *key)
+dictDelete	dict.h	/^int dictDelete (DictHT* ht, void* key);$/;"	p	signature:(DictHT* ht, void* key)
+dictEmpty	dict.c	/^void dictEmpty (DictHT* ht) {$/;"	f	signature:(DictHT* ht)
+dictEmpty	dict.h	/^void dictEmpty (DictHT* ht);$/;"	p	signature:(DictHT* ht)
+dictExpand	dict.c	/^int dictExpand (DictHT* ht, unsigned long size) {$/;"	f	signature:(DictHT* ht, unsigned long size)
+dictExpand	dict.h	/^int dictExpand (DictHT* ht);$/;"	p	signature:(DictHT* ht)
+dictFind	dict.c	/^int dictFind (DictHT* ht, void* key) {$/;"	f	signature:(DictHT* ht, void* key)
+dictFind	dict.h	/^int dictFind (DictHT* ht, void* key);$/;"	p	signature:(DictHT* ht, void* key)
+dictFreeEntry	dict.c	/^void dictFreeEntry (DictEntry* entry) {$/;"	f	signature:(DictEntry* entry)
+dictFreeEntry	dict.h	/^void dictFreeEntry (DictEntry* he);$/;"	p	signature:(DictEntry* he)
+dictGetIterator	dict.h	/^DictIterator* dictGetIterator (DictHT* ht);$/;"	p	signature:(DictHT* ht)
+dictHashKey	dict.c	/^unsigned int dictHashKey (const void* key) {$/;"	f	signature:(const void* key)
+dictHashKey	dict.h	/^int dictHashKey (const void* key);$/;"	p	signature:(const void* key)
+dictNext	dict.h	/^DictEntry* dictNext (DictIterator* iter);$/;"	p	signature:(DictIterator* iter)
+dictReleaseIterator	dict.h	/^void dictReleaseIterator (DictIterator* iter);$/;"	p	signature:(DictIterator* iter)
+dictResize	dict.c	/^int dictResize (DictHT* ht) {$/;"	f	signature:(DictHT* ht)
+dictResize	dict.h	/^int dictResize (DictHT* ht);$/;"	p	signature:(DictHT* ht)
+dict_hash_function_seed	dict.c	/^static uint32_t dict_hash_function_seed = 5381;$/;"	v	file:
+entry	dict.h	/^    DictEntry *entry, *nextEntry;$/;"	m	struct:_DICT_ITERATOR_	access:public
+ht	dict.h	/^    DictHT* ht;$/;"	m	struct:_DICT_ITERATOR_	access:public
+index	dict.h	/^    long index;$/;"	m	struct:_DICT_ITERATOR_	access:public
+key	dict.h	/^    void* key;$/;"	m	struct:_DICT_ENTRY_	access:public
+next	dict.h	/^    struct _DICT_ENTRY_* next;$/;"	m	struct:_DICT_ENTRY_	typeref:struct:_DICT_ENTRY_::_DICT_ENTRY_	access:public
+nextEntry	dict.h	/^    DictEntry *entry, *nextEntry;$/;"	m	struct:_DICT_ITERATOR_	access:public
+s64	dict.h	/^        int64_t s64;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+size	dict.h	/^    unsigned long size;$/;"	m	struct:_DICT_HASH_TABLE_	access:public
+sys_err	dict.c	/^void sys_err (const char* fmt, ...) {$/;"	f	signature:(const char* fmt, ...)
+sys_err	dict.h	/^void sys_err (const char* fmt, ...);$/;"	p	signature:(const char* fmt, ...)
+table	dict.h	/^    DictEntry** table;$/;"	m	struct:_DICT_HASH_TABLE_	access:public
+u64	dict.h	/^        uint64 u64;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+updateEntryValue	dict.c	/^void updateEntryValue (DictEntry* entry, void* value) {$/;"	f	signature:(DictEntry* entry, void* value)
+updateEntryValue	dict.h	/^void updateEntryValue (dictEntry* entry, void* value);$/;"	p	signature:(dictEntry* entry, void* value)
+used	dict.h	/^    unsigned long used;$/;"	m	struct:_DICT_HASH_TABLE_	access:public
+val	dict.h	/^        void* val;$/;"	m	union:_DICT_ENTRY_::__anon1	access:public
+value	dict.h	/^    }value;$/;"	m	struct:_DICT_ENTRY_	typeref:union:_DICT_ENTRY_::__anon1	access:public

@@ -20,3 +20,7 @@ sinclude $(SOURCE:.c=.d)
 .PHONY:clean
 clean:
 	$(RM) $(OBJECT) $(TARGET)
+
+.PHONY:cleanall
+cleanall:
+	$(RM) $(OBJECT) $(TARGET) core* *.d

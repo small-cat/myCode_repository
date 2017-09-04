@@ -55,6 +55,8 @@ unsigned int dictGetHashFunction (const void* key, int len);
 void dictEmpty (DictHT* ht);
 void dictFreeEntry (DictEntry* he);
 
+void dictScan (DictHT * ht);
+
 DictIterator* dictGetIterator (DictHT* ht);
 DictEntry* dictNext (DictIterator* iter);
 void dictReleaseIterator (DictIterator* iter);

@@ -101,7 +101,7 @@ DictEntry* dictCreateWCEntry (void* key, void* value) {
     strncpy (entry->key, _key, len);
     ((char*)entry->key)[len] = '\0';
     entry->value = (int*) malloc (sizeof(int));
-    ERR_PRINT (NULL==entry->value, exit(EXIT_FAILURE), 
+    ERR_PRINT (NULL==entry->value, exit(EXIT_FAILURE),
             "dictCreateWCEntry, %d", __LINE__);
     *(int*)(entry->value) = *(int*)value;
     entry->next = NULL;
@@ -374,4 +374,16 @@ int dictCompareKeys (void* key_src, void* key_dest) {
 void updateEntryValue (DictEntry* entry, void* value) {
     int v = *(int*)value;
     *(int*)(entry->value) += v;
+}
+
+void dictScan (DictHT * ht) {
+    DictIterator* iter = dictGetIterator (ht);
+    if (NULL == iter) {
+        return;
+    }
+
+    DictEntry *he = NULL;
+    while ((he = dictNext(iter)) != NULL) {
+        printf("%s : %d\n", (char*)he->key, *(int*)(he->value));
+    }
 }
