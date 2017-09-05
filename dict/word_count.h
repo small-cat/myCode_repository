@@ -12,8 +12,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
-void scanFile (char* file, DictHT* ht);
+void scanFile (char* file, DictHT** ht);
 char* wordTrim (char* word);
+char* wordLower (char* word);
 
 #endif

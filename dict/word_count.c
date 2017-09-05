@@ -17,7 +17,21 @@ static int _isAlphaOrDigit (char ch) {
     }
 }
 
-void scanFile (char* file, DictHT* ht) {
+char* wordLower (char* word) {
+    if (NULL == word) {
+        return NULL;
+    }
+
+    char* p = word;
+    while (*p != '\0') {
+        *p = tolower (*p);
+        p++;
+    }
+
+    return word;
+}
+
+void scanFile (char* file, DictHT** ht) {
     if (!file || !ht) {
         return;
     }
@@ -45,9 +59,10 @@ void scanFile (char* file, DictHT* ht) {
             }
 
             word = wordTrim (word);
-            if (word == '\0') {
+            if (strlen(word) == 0) {
                 break;
             }
+            wordLower (word);   // convert to lower case to ignore case
             dictAdd (ht, (void*)word, (void*)&count);    // 每一个单词出现，次数都是 1
         }
     }
@@ -97,7 +112,7 @@ int main (int argc, char* argv[]) {
     DictHT * hashtable;
     hashtable = dictCreate ();
 
-    scanFile (argv[1], hashtable);
+    scanFile (argv[1], &hashtable);
     dictScan (hashtable);
 
     return 0;

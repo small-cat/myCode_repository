@@ -44,9 +44,9 @@ typedef struct _DICT_ITERATOR_ {
 /* operations on hash table */
 DictHT* dictCreate ();
 DictEntry* dictCreateWCEntry (void* key, void* value);
-int dictResize (DictHT* ht);
-int dictExpand (DictHT* ht, unsigned long size);
-int dictAdd (DictHT* ht, void* key, void* value);
+int dictResize (DictHT** ht);
+int dictExpand (DictHT** ht, unsigned long size);
+int dictAdd (DictHT** ht, void* key, void* value);
 int dictDelete (DictHT* ht, void* key);
 unsigned int dictHashKey (const void* key);
 int dictFind (DictHT* ht, void* key);

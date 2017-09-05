@@ -23,13 +23,13 @@ static unsigned long _dictNextPower (unsigned long size) {
     return i;
 }
 
-static int _dictExpandIfNeeded (DictHT* ht) {
-    if (0 == ht->size) {
+static int _dictExpandIfNeeded (DictHT** ht) {
+    if (0 == (*ht)->size) {
         return dictExpand (ht, DICT_HT_INIT_SIZE);
     }
 
-    if (ht->used >= ht->size) {
-        return dictExpand (ht, ht->used*2);
+    if ((*ht)->used >= (*ht)->size) {
+        return dictExpand (ht, (*ht)->used*2);
     }
 
     return DICT_OK;
@@ -56,6 +56,57 @@ static void _dictReset (DictHT* ht) {
     ht->table = NULL;
     ht->used = 0;
     ht->size = 0;
+}
+
+static int _dictRehashed (DictHT** ht, unsigned long size) {
+    DictHT* oldHt = *ht;
+    DictHT* newHt = (DictHT*) malloc (sizeof(DictHT));
+    ERR_PRINT (NULL==newHt, exit(EXIT_FAILURE), "dictRehashed, line: %d",
+            __LINE__);
+
+    newHt->table = (DictEntry**) malloc (sizeof(DictEntry*) * size);
+    ERR_PRINT (NULL==newHt->table, exit(EXIT_FAILURE), "dictRehashed, line: %d",
+            __LINE__);
+    newHt->size = size;
+    newHt->used = 0;
+
+    /* rehash keys from old to new */
+    unsigned long index;
+    while (oldHt->used != 0) {
+        DictEntry *de, *nextde;
+        while ((oldHt->table[index] == NULL) 
+                && (index <= oldHt->size)) {
+            index++;
+        }
+        if (index > oldHt->size) {
+            break;
+        }
+
+        de = oldHt->table[index];
+        while (de) {
+            unsigned int rehashidx = _dictKeyIndex (newHt, de->key);
+
+            nextde = de->next;
+            de->next = newHt->table[rehashidx];
+            newHt->table[rehashidx] = de;
+
+            newHt->used++;
+            oldHt->used--;
+            de = nextde;
+        }
+        oldHt->table[index] = NULL;
+        index++;
+    }
+
+    /* check if we already rehashed the whole table ... */
+    if (oldHt->used == 0) {
+        oldHt->size = 0;
+        free (oldHt->table);
+        free (oldHt);
+        *ht = newHt;
+    }
+
+    return DICT_OK;
 }
 
 /* -------------------- dict operations ------------------ */
@@ -118,9 +169,9 @@ DictEntry* dictCreateWCEntry (void* key, void* value) {
  * 作者: wzhenyu
  * 时间: 2017-09-02 15:32
 ***********************************************************/
-int dictResize (DictHT* ht) {
+int dictResize (DictHT** ht) {
     unsigned long minimal = 0;
-    minimal = ht->used;
+    minimal = (*ht)->used;
 
     if (minimal < DICT_HT_INIT_SIZE) {
         minimal = DICT_HT_INIT_SIZE;
@@ -132,35 +183,35 @@ int dictResize (DictHT* ht) {
 /***********************************************************
  * 函数名: dictExpand
  * 函数功能: expand hash table
+ * if we just expand hash table with realloc, we can not find
+ * the same key in new hash with _dictKeyIndex because size
+ * of hash had changed, so we should create a larger one and
+ * rehashed all the keys from old to new
  * 参数说明:
  * 返回值说明:
  * 涉及到的表:
  * 作者: wzhenyu
  * 时间: 2017-09-03 17:17
 ***********************************************************/
-int dictExpand (DictHT* ht, unsigned long size) {
+int dictExpand (DictHT** ht, unsigned long size) {
     unsigned long realsize = _dictNextPower (size);
 
-    ht->table = (DictEntry**) realloc (ht->table,
-            sizeof(DictEntry*) * realsize);
-    ERR_PRINT (NULL==ht->table, exit(EXIT_FAILURE), "dictExpand, line: %d",
-            __LINE__);
+    _dictRehashed (ht, realsize);
 
-    ht->size = realsize;
     return DICT_OK;
 }
 
-int dictAdd (DictHT* ht, void* key, void* value) {
+int dictAdd (DictHT** htable, void* key, void* value) {
     int index;
     DictEntry* entry;
 
-    if (_dictExpandIfNeeded (ht) == DICT_ERR) {     // to expand hash
+    if (_dictExpandIfNeeded (htable) == DICT_ERR) {     // to expand hash
         return DICT_ERR;
     }
 
-    if ((index = _dictKeyIndex(ht, key)) > 0) {   // key has existed in ht
+    if ((index = _dictKeyIndex(*htable, key)) >= 0) {   // key has existed in ht
         // update value, eg. count of word
-        entry = ht->table[index];
+        entry = (*htable)->table[index];
         while (entry) {
             if (dictCompareKeys (key, entry->key) == 0) {   // TODO
                 updateEntryValue (entry, value);
@@ -171,9 +222,9 @@ int dictAdd (DictHT* ht, void* key, void* value) {
     }
 
     entry = dictCreateWCEntry (key, value);
-    entry->next = ht->table[index];
-    ht->table[index] = entry;
-    ht->used++;
+    entry->next = (*htable)->table[index];
+    (*htable)->table[index] = entry;
+    (*htable)->used++;
 
     return DICT_OK;
 }
