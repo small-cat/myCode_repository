@@ -115,5 +115,9 @@ int main (int argc, char* argv[]) {
     scanFile (argv[1], &hashtable);
     dictScan (hashtable);
 
+    /* free dict */
+    // dictEmpty (hashtable);
+    // free (hashtable);
+
     return 0;
 }

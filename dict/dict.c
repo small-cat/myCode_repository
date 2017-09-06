@@ -71,7 +71,7 @@ static int _dictRehashed (DictHT** ht, unsigned long size) {
     newHt->used = 0;
 
     /* rehash keys from old to new */
-    unsigned long index;
+    unsigned long index = 0;
     while (oldHt->used != 0) {
         DictEntry *de, *nextde;
         while ((oldHt->table[index] == NULL) 
