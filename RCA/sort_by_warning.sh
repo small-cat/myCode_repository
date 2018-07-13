@@ -22,28 +22,32 @@ function getWarningFromRedisByDev
     devname=$1
     devtmp="${devname}.tmp"
     devfile="${devname}.txt"
-    redis-cli --raw<<EOF > ${devtmp}
-sort ${dev}:msg:time by msg:*->msgInfo ALPHA get msg:*->msgInfo get time:*
-exit
+    redis-cli --raw <<EOF > ${devtmp}
+    sort ${devname}:msg:time by msg:*->msgInfo ALPHA get msg:*->msgInfo get time:* \
+        get msg:*->severity get msg:*->devname
+    exit
 EOF
     
-    # msg and time are in every two lines. transform to one line
+    # msg, time, severity and devname are in every two lines. transform to one line
     count=1
     while read line
     do
-        if [ $count -eq 1 ]; then
-            row=$line
-        elif [ $count -eq 2 ]; then
-            row="${row} $line"
+        if [ $count -le 3 ]; then
+            row="${row}${line}#"
+        elif [ $count -eq 4 ]; then
+            row="${row}${line}"
             echo "${row}" >> ${devfile}
-        elif [ $count -gt 2 ]; then
-            count=$[$count % 2]
+            row=""
+        elif [ $count -gt 4 ]; then
+            count=$[$count % 4]
+            row="${row}${line}#"
         fi
 
         let count++
     done < ${devtmp}
 
-    printLog INFO "getWarningFromRedisByDev" "sort ${dev} warnings to ${devfile}"
+    rm ${devtmp}
+    printLog INFO "getWarningFromRedisByDev" "sort ${devname} warnings to ${devfile}"
 }
 
 # ######################################################################### 
