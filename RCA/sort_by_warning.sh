@@ -9,7 +9,7 @@
 # 1. warning info is all the same except number, regard as the same warnings.
 # 2. warning info is all the same except ERRORCODE, regard as differ.
 
-# warnings have been sorted by msginfo by ALPHA, divived by devname.
+# warnings have been sorted by msginfo by ALPHA, divided by devname.
 
 # ######################################################################### 
 # DESC: get warnings from redis by dev
@@ -109,12 +109,12 @@ function getSimilarityBetweenSentenceLiteral
 # ######################################################################### 
 # DESC: write similar warnings into one file
 # first, get all the similar warnings
-# then, sort by time, and write similar warnings into one file
+# write similar warnings into one file
 # ARGUS: [devname]
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-13 15:22 
 # #########################################################################
-function divivedWarningsBySimilarity
+function dividedWarningsBySimilarity
 {
     devname=$1
     devfile="${devFilePath}/${devname}.txt"
@@ -138,16 +138,18 @@ function divivedWarningsBySimilarity
             echo "${line}" >> ${dataPath}/${devname}.${idx}
         fi
     done < ${devfile}
-    printLog INFO "divivedWarningsBySimilarity" "${devfile} divived into \
+    printLog INFO "dividedWarningsBySimilarity" "${devfile} divided into \
 ${idx} files"
 }
 
 # ######################################################################### 
-# DESC: 
+# DESC:
+# 1. sort by time
+# 2. filter similar warnings which time interval is in 10 min. 
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-13 17:26 
 # #########################################################################
-function divivedSimilarityWarningsByTime
+# function dividedSimilarityWarningsByTime
 
 # ENV
 devFilePath=/home/jona/myGit/myCode_repository/RCA/data/dev
@@ -159,5 +161,5 @@ mkdir -p ${warnFilePath}
 # eg: devname is cmszdbsb
 getWarningFromRedisByDev "cmszdbsb"
 
-# divived into different files
-divivedWarningsBySimilarity cmszdbsb
+# divided into different files
+dividedWarningsBySimilarity cmszdbsb
