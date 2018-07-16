@@ -71,6 +71,8 @@ function insertIntoRedis
     # dev:msg:time is a list, contains all the ids
     # msg:id is a hash, contains msgInfo and severity
     # time:id is a string, contains timeSec
+    # time:ids is a sorted set, element donates id, score donates time sec.
+    # ZRANGEBYSCORE can get time range.
     id=$1
     severity=$2
     msg=$3
@@ -80,6 +82,7 @@ function insertIntoRedis
     lpush ${dev}:msg:time ${id}
     hset msg:${id} severity ${severity} devname "${dev}" msgInfo "${msg}"
     set time:${id} ${time}
+    zadd time:ids ${time} ${id}
     exit
 EOF
     printLog INFO insertIntoRedis "insert into redis success."

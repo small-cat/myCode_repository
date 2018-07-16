@@ -14,7 +14,7 @@
 # ######################################################################### 
 # DESC: get warnings from redis by dev
 # AUTHOR: Jona
-# ARGUS: [dev]
+# ARGS: [dev]
 # CREATE TIME: 2018-07-13 10:29 
 # #########################################################################
 function getWarningFromRedisByDev
@@ -48,7 +48,7 @@ EOF
 
     rm ${devtmp}
     printLog INFO "getWarningFromRedisByDev" "sort ${devname} warnings to ${devfile}"
-    printLog INFO "getWarningFromRedisByDev" "${devfile} format is [msg]#[time]\
+    printLog INFO "getWarningFromRedisByDev" "format ${devfile} to [msg]#[time]\
 #[severity]#[devname]"
 }
 
@@ -56,16 +56,19 @@ EOF
 # DESC: print log
 # log format: [time] [log level] [function name] [description]
 # log level: DEBUG INFO ERROR
+# ARGS: [log level] [func name] [description]
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-10 15:03 
 # #########################################################################
 function printLog
 {
     # logfile
-    logLevel=$1
-    funcName=$2
+    log_file=${logFilePath}/`date "+%Y%m%d"`.log
+    log_level=$1
+    func_name=$2
     desc=$3
-    echo "`date "+%Y-%m-%d %H:%M:%S"` [$logLevel] [$funcName] [$desc]"
+    echo "`date "+%Y-%m-%d %H:%M:%S"` [$log_level] [$func_name]\
+ [$desc]" >> ${log_file}
 }
 
 # ######################################################################### 
@@ -110,53 +113,171 @@ function getSimilarityBetweenSentenceLiteral
 # DESC: write similar warnings into one file
 # first, get all the similar warnings
 # write similar warnings into one file
-# ARGUS: [devname]
+# ARGS: [devname]
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-13 15:22 
 # #########################################################################
 function dividedWarningsBySimilarity
 {
-    devname=$1
-    devfile="${devFilePath}/${devname}.txt"
-    dataPath=${warnFilePath}
+    dev_name=$1
+    dev_file="${devFilePath}/${dev_name}.txt"
+    data_path=${warnFilePath}
     idx=1 # suffix of new files
 
     # warnings in devfile are sorted by ALPHA in redis
     # get first line msg
-    origin_comp_stence=$(sed -n '1p' ${devfile} | cut -d# -f1)
+    origin_comp_stence=$(sed -n '1p' ${dev_file} | cut -d# -f1)
     while read line
     do
         comp_stence=$(echo ${line} | cut -d# -f1)
         getSimilarityBetweenSentenceLiteral "${origin_comp_stence}" "${comp_stence}"
         if [ $? -eq 0 ]; then
             #similar
-            echo ${line} >> ${dataPath}/${devname}.${idx}
+            echo ${line} >> ${data_path}/${dev_name}.${idx}
         else
             # differ
             let idx++
             origin_comp_stence=${comp_stence}
-            echo "${line}" >> ${dataPath}/${devname}.${idx}
+            echo "${line}" >> ${data_path}/${dev_name}.${idx}
         fi
-    done < ${devfile}
-    printLog INFO "dividedWarningsBySimilarity" "${devfile} divided into \
-${idx} files"
+    done < ${dev_file}
+    printLog INFO "dividedWarningsBySimilarity" "${dev_file} divided into \
+${idx} files, ${data_path}/${dev_name}.1-${idx}"
+
+    # split each file generated upper(${dev_name}.${idx}) based on time interval
+    # time interval must be 10 min
+    while [ ${idx} -gt 0 ]; do
+        dividedSimilarWarningsByTime ${data_path}/${dev_name}.${idx}
+        let idx--
+    done
+}
+
+# ######################################################################### 
+# DESC: get all warnings before or later than a given time
+# time:ids is a sorted set in redis, get ids from it in time range
+# ARGS: [before|later] [time_dst] [time_span]
+# AUTHOR: Jona
+# CREATE TIME: 2018-07-16 12:31 
+# #########################################################################
+function getAllWarningsByTime
+{
+    flag=$1
+    time_dst=$2
+    time_span=$3
+    tmpfile=${tmpFilePath}/tmp
+
+    printLog INFO "getAllWarningsByTime" "get warnings ${flag} ${time_dst} \
+        ${time_span}"
+
+    if [ "${flag}" = "before" ]; then
+        # get all the ids from time:ids to tmpfile
+        redis-cli --raw <<EOF >${tmpfile}
+        zrangebyscore time:ids $[${time_dst} - ${time_span}] ${time_dst}
+        exit
+EOF
+        while read ids; do
+            redis-cli --raw <<EOF | sed 's/\"//g' | sed 'N;N;N;s/\n/#/g'
+            hget msg:${ids} msgInfo
+            get time:${ids}
+            hget msg:${ids} severity
+            hget msg:${ids} devname
+            exit
+EOF
+        done < ${tmpfile}
+    elif [ "${flag}" = "later" ]; then
+        redis-cli --raw <<EOF >${tmpfile}
+        zrangebyscore time:ids ${time_dst} $[${time_dst} + ${time_span}]
+        exit
+EOF
+        while read ids; do
+            redis-cli --raw <<EOF | sed 's/\"//g' | sed 'N;N;N;s/\n/#/g'
+            hget msg:${ids} msgInfo
+            get time:${ids}
+            hget msg:${ids} severity
+            hget msg:${ids} devname
+            exit
+EOF
+        done < ${tmpfile}
+    else
+        printLog ERROR "getAllWarningsByTime" "Wrong args:${flag}"
+    fi
+    rm ${tmpfile}
 }
 
 # ######################################################################### 
 # DESC:
 # 1. sort by time
-# 2. filter similar warnings which time interval is in 10 min. 
+# 2. filter similar warnings which time interval is less than 10 min. 
+# ARGS: [filename]
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-13 17:26 
 # #########################################################################
-# function dividedSimilarityWarningsByTime
+function dividedSimilarWarningsByTime
+{
+    deal_file=$1
+
+    printLog INFO "dividedSimilarWarningsByTime" "divide ${deal_file} by time"
+
+    # initial
+    time_cmp_begin=$(sed -n '1p' | cut -d# -f2)
+    time_cmp_end=${time_cmp_begin}
+    sort -k2n -t# ${deal_file} | while read lines; do
+        tmp_time=$(echo ${lines} | cut -d# -f2)
+        diff=$[${tmp_time} - ${time_cmp_begin}] # calculate time diff
+        if [ ${diff} -ge 0 ] && [ ${diff} -lt ${timeInterVal} ]; then
+            echo ${lines} >> ${tmpFilePath}/${deal_file}.tmp # output to tmp 
+            printLog INFO "dividedSimilarWarningsByTime" "write [${lines}] to \
+${tmpFilePath}/${deal_file}.tmp"
+
+            time_cmp_end=${tmp_time} # end time
+        elif [ ${diff} -lt 0 ]; then
+            printLog ERROR "dividedSimilarWarningsByTime" "err occured in \
+                ${deal_file}:${lines}"
+        else
+            # diff ge timeInterVal, belonged to another warning.
+            # mv tmp to res
+            # rename to filename.timestart-timeend
+            dest_filename_suffix="`date -d "$[${time_cmp_begin} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S"`-\
+`date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S"`"
+            dest_file="${resFilePath}/${deal_file}.${dest_filename_suffix}"
+            mv ${tmpFilePath}/${deal_file}.tmp ${dest_file}
+
+            printLog INFO "dividedSimilarWarningsByTime" "mv ${tmpFilePath}/${deal_file}.tmp ${dest_file}"
+            printLog INFO "dividedSimilarWarningsByTime" "split ${deal_file} to ${dest_file} between \
+${time_cmp_begin} and ${time_cmp_end}"
+
+            # get all warnings which are 30min before than time_cmp_begin
+            getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] >> ${dest_file}
+            # get all warnings which are 30min later than time_cmp_end
+            getAllWarningsByTime later ${time_cmp_end} $[30 * 60] >> ${dest_file}
+
+            time_cmp_begin=${tmp_time} # another warning
+            time_cmp_end=${time_cmp_begin}
+            echo "${lines}" >> ${tmpFilePath}/${deal_file}.tmp
+        fi
+    done
+}
+
+# #########################################################################
+# THE MAIN PROGRAM
+# #########################################################################
 
 # ENV
 devFilePath=/home/jona/myGit/myCode_repository/RCA/data/dev
 warnFilePath=/home/jona/myGit/myCode_repository/RCA/data/classification
+logFilePath=/home/jona/myGit/myCode_repository/RCA/data/log
+# include the last result
+resFilePath=/home/jona/myGit/myCode_repository/RCA/data/res
+# tmp file
+tmpFilePath=/home/jona/myGit/myCode_repository/RCA/data/tmp
+timeInterVal=$[10 * 60] # total seconds
 
+# create directory if not exist.
 mkdir -p ${devFilePath}
 mkdir -p ${warnFilePath}
+mkdir -p ${tmpFilePath}
+mkdir -p ${logFilePath}
+mkdir -p ${resFilePath}
 
 # eg: devname is cmszdbsb
 getWarningFromRedisByDev "cmszdbsb"
