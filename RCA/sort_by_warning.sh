@@ -214,20 +214,21 @@ EOF
 # #########################################################################
 function dividedSimilarWarningsByTime
 {
-    deal_file=$1
+    deal_file=$1 # this is absulutely path
+    deal_file_name=${deal_file##*/} # get filename
 
     printLog INFO "dividedSimilarWarningsByTime" "divide ${deal_file} by time"
 
     # initial
-    time_cmp_begin=$(sed -n '1p' | cut -d# -f2)
+    time_cmp_begin=$(sort -k2n -t# ${deal_file} | sed -n '1p' | cut -d# -f2)
     time_cmp_end=${time_cmp_begin}
     sort -k2n -t# ${deal_file} | while read lines; do
         tmp_time=$(echo ${lines} | cut -d# -f2)
         diff=$[${tmp_time} - ${time_cmp_begin}] # calculate time diff
         if [ ${diff} -ge 0 ] && [ ${diff} -lt ${timeInterVal} ]; then
-            echo ${lines} >> ${tmpFilePath}/${deal_file}.tmp # output to tmp 
+            echo ${lines} >> ${tmpFilePath}/${deal_file_name}.tmp # output to tmp 
             printLog INFO "dividedSimilarWarningsByTime" "write [${lines}] to \
-${tmpFilePath}/${deal_file}.tmp"
+${tmpFilePath}/${deal_file_name}.tmp"
 
             time_cmp_end=${tmp_time} # end time
         elif [ ${diff} -lt 0 ]; then
@@ -237,23 +238,23 @@ ${tmpFilePath}/${deal_file}.tmp"
             # diff ge timeInterVal, belonged to another warning.
             # mv tmp to res
             # rename to filename.timestart-timeend
-            dest_filename_suffix="`date -d "$[${time_cmp_begin} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S"`-\
-`date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S"`"
-            dest_file="${resFilePath}/${deal_file}.${dest_filename_suffix}"
-            mv ${tmpFilePath}/${deal_file}.tmp ${dest_file}
+            dest_filename_suffix="$(date -d "$[${time_cmp_begin} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")-\
+$(date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")"
+            dest_file="${resFilePath}/${deal_file_name}.${dest_filename_suffix}"
+            mv ${tmpFilePath}/${deal_file_name}.tmp ${dest_file}
 
-            printLog INFO "dividedSimilarWarningsByTime" "mv ${tmpFilePath}/${deal_file}.tmp ${dest_file}"
+            printLog INFO "dividedSimilarWarningsByTime" "mv ${tmpFilePath}/${deal_file_name}.tmp ${dest_file}"
             printLog INFO "dividedSimilarWarningsByTime" "split ${deal_file} to ${dest_file} between \
 ${time_cmp_begin} and ${time_cmp_end}"
 
             # get all warnings which are 30min before than time_cmp_begin
-            getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] >> ${dest_file}
+#            getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] >> ${dest_file}
             # get all warnings which are 30min later than time_cmp_end
-            getAllWarningsByTime later ${time_cmp_end} $[30 * 60] >> ${dest_file}
+#            getAllWarningsByTime later ${time_cmp_end} $[30 * 60] >> ${dest_file}
 
             time_cmp_begin=${tmp_time} # another warning
             time_cmp_end=${time_cmp_begin}
-            echo "${lines}" >> ${tmpFilePath}/${deal_file}.tmp
+            echo "${lines}" >> ${tmpFilePath}/${deal_file_name}.tmp
         fi
     done
 }
