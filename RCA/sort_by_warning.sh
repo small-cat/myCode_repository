@@ -155,7 +155,7 @@ ${idx} files, ${data_path}/${dev_name}.1-${idx}"
 # ######################################################################### 
 # DESC: get all warnings before or later than a given time
 # time:ids is a sorted set in redis, get ids from it in time range
-# ARGS: [before|later] [time_dst] [time_span]
+# ARGS: [before|later] [time_dst] [time_span] [outputfile]
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-16 12:31 
 # #########################################################################
@@ -164,19 +164,21 @@ function getAllWarningsByTime
     flag=$1
     time_dst=$2
     time_span=$3
+    outputfile=$4
     tmpfile=${tmpFilePath}/tmp
 
     printLog INFO "getAllWarningsByTime" "get warnings ${flag} ${time_dst} \
-        ${time_span}"
+${time_span}, output to ${outputfile}"
 
     if [ "${flag}" = "before" ]; then
         # get all the ids from time:ids to tmpfile
+        echo "# ################## before #############################" >> ${outputfile}
         redis-cli --raw <<EOF >${tmpfile}
         zrangebyscore time:ids $[${time_dst} - ${time_span}] ${time_dst}
         exit
 EOF
         while read ids; do
-            redis-cli --raw <<EOF | sed 's/\"//g' | sed 'N;N;N;s/\n/#/g'
+            redis-cli --raw <<EOF | sed 's/\"//g' | sed 'N;N;N;s/\n/#/g' >> ${outputfile}
             hget msg:${ids} msgInfo
             get time:${ids}
             hget msg:${ids} severity
@@ -185,12 +187,13 @@ EOF
 EOF
         done < ${tmpfile}
     elif [ "${flag}" = "later" ]; then
+        echo "# ################## later #############################" >> ${outputfile}
         redis-cli --raw <<EOF >${tmpfile}
         zrangebyscore time:ids ${time_dst} $[${time_dst} + ${time_span}]
         exit
 EOF
         while read ids; do
-            redis-cli --raw <<EOF | sed 's/\"//g' | sed 'N;N;N;s/\n/#/g'
+            redis-cli --raw <<EOF | sed 's/\"//g' | sed 'N;N;N;s/\n/#/g' >> ${outputfile}
             hget msg:${ids} msgInfo
             get time:${ids}
             hget msg:${ids} severity
@@ -214,7 +217,7 @@ EOF
 # #########################################################################
 function dividedSimilarWarningsByTime
 {
-    deal_file=$1 # this is absulutely path
+    deal_file=$1 # this is absolutely path
     deal_file_name=${deal_file##*/} # get filename
 
     printLog INFO "dividedSimilarWarningsByTime" "divide ${deal_file} by time"
@@ -222,11 +225,18 @@ function dividedSimilarWarningsByTime
     # initial
     time_cmp_begin=$(sort -k2n -t# ${deal_file} | sed -n '1p' | cut -d# -f2)
     time_cmp_end=${time_cmp_begin}
-    sort -k2n -t# ${deal_file} | while read lines; do
+
+    # sort -k2n -t# ${deal_file} | while read lines; do
+    # NOTE:
+    # pipeline in shell, means to execute task in a child process, variables
+    # will not be inherited by parent process. so we cannot get any values
+    # in while loop if we use pipeline as upper.
+    while read lines; do
         tmp_time=$(echo ${lines} | cut -d# -f2)
-        diff=$[${tmp_time} - ${time_cmp_begin}] # calculate time diff
+        diff=$[${tmp_time} - ${time_cmp_end}] # calculate time diff
         if [ ${diff} -ge 0 ] && [ ${diff} -lt ${timeInterVal} ]; then
             echo ${lines} >> ${tmpFilePath}/${deal_file_name}.tmp # output to tmp 
+
             printLog INFO "dividedSimilarWarningsByTime" "write [${lines}] to \
 ${tmpFilePath}/${deal_file_name}.tmp"
 
@@ -235,32 +245,47 @@ ${tmpFilePath}/${deal_file_name}.tmp"
             printLog ERROR "dividedSimilarWarningsByTime" "err occured in \
                 ${deal_file}:${lines}"
         else
-            # diff ge timeInterVal, belonged to another warning.
+            # diff greater than timeInterVal, belonged to another warning.
             # mv tmp to res
-            # rename to filename.timestart-timeend
+            # rename tmp to filename.timestart-timeend
             dest_filename_suffix="$(date -d "$[${time_cmp_begin} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")-\
 $(date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")"
             dest_file="${resFilePath}/${deal_file_name}.${dest_filename_suffix}"
-            mv ${tmpFilePath}/${deal_file_name}.tmp ${dest_file}
+            mv ${tmpFilePath}/${deal_file_name}.tmp ${dest_file} 
 
             printLog INFO "dividedSimilarWarningsByTime" "mv ${tmpFilePath}/${deal_file_name}.tmp ${dest_file}"
             printLog INFO "dividedSimilarWarningsByTime" "split ${deal_file} to ${dest_file} between \
 ${time_cmp_begin} and ${time_cmp_end}"
 
             # get all warnings which are 30min before than time_cmp_begin
-#            getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] >> ${dest_file}
+            getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
             # get all warnings which are 30min later than time_cmp_end
-#            getAllWarningsByTime later ${time_cmp_end} $[30 * 60] >> ${dest_file}
+            getAllWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
 
             time_cmp_begin=${tmp_time} # another warning
             time_cmp_end=${time_cmp_begin}
             echo "${lines}" >> ${tmpFilePath}/${deal_file_name}.tmp
         fi
-    done
+    done < <(sort -k2n -t# ${deal_file}) 
+
+    # warnings in the end of the file, are in the tmp file, should continue to deal
+    dest_filename_suffix="$(date -d "$[${time_cmp_begin} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")-\
+$(date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")"
+    dest_file="${resFilePath}/${deal_file_name}.${dest_filename_suffix}" # absolutely path
+    mv ${tmpFilePath}/${deal_file_name}.tmp ${dest_file}
+
+    printLog INFO "dividedSimilarWarningsByTime" "mv ${tmpFilePath}/${deal_file_name}.tmp ${dest_file}"
+    printLog INFO "dividedSimilarWarningsByTime" "split ${deal_file} to ${dest_file} between \
+${time_cmp_begin} and ${time_cmp_end}"
+
+    # get all warnings which are 30min before time_cmp_begin
+    getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
+    # get all warnings which are 30min later than time_cmp_end
+    getAllWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
 }
 
 # #########################################################################
-# THE MAIN PROGRAM
+# ######################### THE MAIN PROGRAM ############################ #
 # #########################################################################
 
 # ENV
