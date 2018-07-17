@@ -264,7 +264,11 @@ ${time_cmp_begin} and ${time_cmp_end}"
 
             time_cmp_begin=${tmp_time} # another warning
             time_cmp_end=${time_cmp_begin}
+
             echo "${lines}" >> ${tmpFilePath}/${deal_file_name}.tmp
+            printLog INFO "dividedSimilarWarningsByTime" "write [${lines}] to \
+${tmpFilePath}/${deal_file_name}.tmp"
+
         fi
     done < <(sort -k2n -t# ${deal_file}) 
 
@@ -289,6 +293,8 @@ ${time_cmp_begin} and ${time_cmp_end}"
 # #########################################################################
 
 # ENV
+deviceCfgFile=/home/jona/myGit/myCode_repository/RCA/device_name.cfg
+
 devFilePath=/home/jona/myGit/myCode_repository/RCA/data/dev
 warnFilePath=/home/jona/myGit/myCode_repository/RCA/data/classification
 logFilePath=/home/jona/myGit/myCode_repository/RCA/data/log
@@ -305,8 +311,10 @@ mkdir -p ${tmpFilePath}
 mkdir -p ${logFilePath}
 mkdir -p ${resFilePath}
 
-# eg: devname is cmszdbsb
-getWarningFromRedisByDev "cmszdbsb"
+while read device_name; do
+    # eg: devname is cmszdbsb, cmszvdbb_voT12, cmszdbsa
+    getWarningFromRedisByDev "${device_name}"
 
-# divided into different files
-dividedWarningsBySimilarity cmszdbsb
+    # divided into different files
+    dividedWarningsBySimilarity "${device_name}"
+done < ${deviceCfgFile}
