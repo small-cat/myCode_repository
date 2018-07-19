@@ -155,7 +155,8 @@ ${idx} files, ${data_path}/${dev_name}.1-${idx}"
 # ######################################################################### 
 # DESC: get all warnings before or later than a given time
 # time:ids is a sorted set in redis, get ids from it in time range
-# ARGS: [before|later] [time_dst] [time_span] [outputfile]
+# ARGS: [before|later|between] [time_dst] [time_span] [outputfile], if first
+# arg is between, second and third arg are two time sides.
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-16 12:31 
 # #########################################################################
@@ -172,7 +173,7 @@ ${time_span}, output to ${outputfile}"
 
     if [ "${flag}" = "before" ]; then
         # get all the ids from time:ids to tmpfile
-        echo "# ################## before #############################" >> ${outputfile}
+        echo "# ################### before #####################" >> ${outputfile}
         redis-cli --raw <<EOF >${tmpfile}
         zrangebyscore time:ids $[${time_dst} - ${time_span}] ${time_dst}
         exit
@@ -187,9 +188,24 @@ EOF
 EOF
         done < ${tmpfile}
     elif [ "${flag}" = "later" ]; then
-        echo "# ################## later #############################" >> ${outputfile}
+        echo "# ################### later ######################" >> ${outputfile}
         redis-cli --raw <<EOF >${tmpfile}
         zrangebyscore time:ids ${time_dst} $[${time_dst} + ${time_span}]
+        exit
+EOF
+        while read ids; do
+            redis-cli --raw <<EOF | sed 's/\"//g' | sed 'N;N;N;s/\n/#/g' >> ${outputfile}
+            hget msg:${ids} msgInfo
+            get time:${ids}
+            hget msg:${ids} severity
+            hget msg:${ids} devname
+            exit
+EOF
+        done < ${tmpfile}
+    elif [ "${flag}" = "between" ]; then
+        echo "# ####################### between ###############" >> ${outputfile}
+        redis-cli --raw <<EOF > ${tmpfile}
+        zrangebyscore time:ids $2 $3
         exit
 EOF
         while read ids; do
@@ -257,8 +273,12 @@ $(date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")"
             printLog INFO "dividedSimilarWarningsByTime" "split ${deal_file} to ${dest_file} between \
 ${time_cmp_begin} and ${time_cmp_end}"
 
-            # get all warnings which are 30min before than time_cmp_begin
+            # get all warnings which are 30min before time_cmp_begin
             getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
+
+            # get all warnings between time_cmp_begin and time_cmp_end
+            getAllWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
+
             # get all warnings which are 30min later than time_cmp_end
             getAllWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
 
@@ -284,6 +304,10 @@ ${time_cmp_begin} and ${time_cmp_end}"
 
     # get all warnings which are 30min before time_cmp_begin
     getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
+
+    # get all warnings between time_cmp_begin and time_cmp_end
+    getAllWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
+
     # get all warnings which are 30min later than time_cmp_end
     getAllWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
 }
@@ -300,6 +324,7 @@ warnFilePath=/home/jona/myGit/myCode_repository/RCA/data/classification
 logFilePath=/home/jona/myGit/myCode_repository/RCA/data/log
 # include the last result
 resFilePath=/home/jona/myGit/myCode_repository/RCA/data/res
+sortFilePath=/home/jona/myGit/myCode_repository/RCA/data/sort
 # tmp file
 tmpFilePath=/home/jona/myGit/myCode_repository/RCA/data/tmp
 timeInterVal=$[10 * 60] # total seconds
@@ -310,6 +335,7 @@ mkdir -p ${warnFilePath}
 mkdir -p ${tmpFilePath}
 mkdir -p ${logFilePath}
 mkdir -p ${resFilePath}
+mkdir -p ${sortFilePath}
 
 while read device_name; do
     # eg: devname is cmszdbsb, cmszvdbb_voT12, cmszdbsa
@@ -318,3 +344,9 @@ while read device_name; do
     # divided into different files
     dividedWarningsBySimilarity "${device_name}"
 done < ${deviceCfgFile}
+
+# sort all files in resFilePath and remove duplications in every file
+fileNameSet=$(ls ${resFilePath})
+for filename in ${fileNameSet}; do
+    cat ${resFilePath}/${filename} | sed '/#######/d' | sort -u | sort -k2n -t# > ${sortFilePath}/${filename}
+done

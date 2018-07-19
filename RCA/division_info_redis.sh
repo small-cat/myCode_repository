@@ -75,10 +75,10 @@ function insertIntoRedis
     # ZRANGEBYSCORE can get time range.
     id=$1
     severity=$2
-    msg=$3
+    msg=$(echo $3 | sed 's/"//g')
     time=$4
-    dev=$5
-    redis-cli<<EOF
+    dev=$(echo $5 | sed 's/"//g')
+    redis-cli <<EOF
     lpush ${dev}:msg:time ${id}
     hset msg:${id} severity ${severity} devname "${dev}" msgInfo "${msg}"
     set time:${id} ${time}
@@ -116,7 +116,7 @@ do
     printLog INFO main "ariseTimeStr:${ariseTimeStr}, timeSec:${timeSec}"
     printLog INFO main "devName:${devName}"
 
-    insertIntoRedis ${id} ${severity} ${msgInfo} ${timeSec} ${devName}
+    insertIntoRedis ${id} ${severity} "${msgInfo}" ${timeSec} ${devName}
 done < "${warning_file}"
 IFS=$OLDIFS
 # NOTE: if modify IFS, and use "done < ${warning_file}", may occur an 
