@@ -153,14 +153,14 @@ ${idx} files, ${data_path}/${dev_name}.1-${idx}"
 }
 
 # ######################################################################### 
-# DESC: get all warnings before or later than a given time
+# DESC: get all platform warnings before or later than a given time
 # time:ids is a sorted set in redis, get ids from it in time range
 # ARGS: [before|later|between] [time_dst] [time_span] [outputfile], if first
 # arg is between, second and third arg are two time sides.
 # AUTHOR: Jona
 # CREATE TIME: 2018-07-16 12:31 
 # #########################################################################
-function getAllWarningsByTime
+function getAllPlatformWarningsByTime
 {
     flag=$1
     time_dst=$2
@@ -168,12 +168,12 @@ function getAllWarningsByTime
     outputfile=$4
     tmpfile=${tmpFilePath}/tmp
 
-    printLog INFO "getAllWarningsByTime" "get warnings ${flag} ${time_dst} \
+    printLog INFO "getAllPlatformWarningsByTime" "get warnings ${flag} ${time_dst} \
 ${time_span}, output to ${outputfile}"
 
     if [ "${flag}" = "before" ]; then
         # get all the ids from time:ids to tmpfile
-        echo "# ################### before #####################" >> ${outputfile}
+        echo "# ################### platform before #####################" >> ${outputfile}
         redis-cli --raw <<EOF >${tmpfile}
         zrangebyscore time:ids $[${time_dst} - ${time_span}] ${time_dst}
         exit
@@ -188,7 +188,7 @@ EOF
 EOF
         done < ${tmpfile}
     elif [ "${flag}" = "later" ]; then
-        echo "# ################### later ######################" >> ${outputfile}
+        echo "# ################### platform later ######################" >> ${outputfile}
         redis-cli --raw <<EOF >${tmpfile}
         zrangebyscore time:ids ${time_dst} $[${time_dst} + ${time_span}]
         exit
@@ -203,7 +203,7 @@ EOF
 EOF
         done < ${tmpfile}
     elif [ "${flag}" = "between" ]; then
-        echo "# ####################### between ###############" >> ${outputfile}
+        echo "# ####################### platform between ###############" >> ${outputfile}
         redis-cli --raw <<EOF > ${tmpfile}
         zrangebyscore time:ids $2 $3
         exit
@@ -219,6 +219,79 @@ EOF
         done < ${tmpfile}
     else
         printLog ERROR "getAllWarningsByTime" "Wrong args:${flag}"
+    fi
+    rm ${tmpfile}
+}
+
+# ######################################################################### 
+# DESC: get all app warnings by time from redis
+# ARGS: [before|later|between] [time_dst] [time_span] [outputfile], if first
+# arg is between, second and third arg are two time sides.
+# AUTHOR: Jona
+# CREATE TIME: 2018-07-20 16:28 
+# #########################################################################
+function getAllAppWarningsByTime
+{
+    flag=$1
+    time_dst=$2
+    time_span=$3
+    outputfile=$4
+    tmpfile=${tmpFilePath}/tmp
+
+    printLog INFO "getAllAppWarningsByTime" "getapp warnings ${flag} ${time_dst} \
+${time_span}, output to ${outputfile}"
+
+    if [ "${flag}" = "before" ]; then
+        # get all the ids from app:time:ids to tmpfile
+        echo "# ################### app before #####################" >> ${outputfile}
+        redis-cli --raw <<EOF >${tmpfile}
+        select 1
+        zrangebyscore app:time:ids $[${time_dst} - ${time_span}] ${time_dst}
+        exit
+EOF
+        while read ids; do
+            redis-cli --raw <<EOF | sed '1d' | sed 's/\"//g' | sed 'N;N;s/\n/#/g' >> ${outputfile}
+            select 1
+            hget app:msg:${ids} msgInfo
+            hget app:msg:${ids} arisingtime
+            hget app:msg:${ids} devname
+            exit
+EOF
+        done < ${tmpfile}
+    elif [ "${flag}" = "later" ]; then
+        echo "# ################### app later ######################" >> ${outputfile}
+        redis-cli --raw <<EOF >${tmpfile}
+        select 1
+        zrangebyscore app:time:ids ${time_dst} $[${time_dst} + ${time_span}]
+        exit
+EOF
+        while read ids; do
+            redis-cli --raw <<EOF | sed '1d' | sed 's/\"//g' | sed 'N;N;s/\n/#/g' >> ${outputfile}
+            select 1
+            hget app:msg:${ids} msgInfo
+            hget app:msg:${ids} arisingtime
+            hget app:msg:${ids} devname
+            exit
+EOF
+        done < ${tmpfile}
+    elif [ "${flag}" = "between" ]; then
+        echo "# ####################### app between ###############" >> ${outputfile}
+        redis-cli --raw <<EOF > ${tmpfile}
+        select 1
+        zrangebyscore app:time:ids $2 $3
+        exit
+EOF
+        while read ids; do
+            redis-cli --raw <<EOF | sed '1d' | sed 's/\"//g' | sed 'N;N;s/\n/#/g' >> ${outputfile}
+            select 1
+            hget app:msg:${ids} msgInfo
+            hget app:msg:${ids} arisingtime
+            hget app:msg:${ids} devname
+            exit
+EOF
+        done < ${tmpfile}
+    else
+        printLog ERROR "getAllAppWarningsByTime" "Wrong args:${flag}"
     fi
     rm ${tmpfile}
 }
@@ -273,14 +346,18 @@ $(date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")"
             printLog INFO "dividedSimilarWarningsByTime" "split ${deal_file} to ${dest_file} between \
 ${time_cmp_begin} and ${time_cmp_end}"
 
-            # get all warnings which are 30min before time_cmp_begin
-            getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
+            # get all platform warnings which are 30min before time_cmp_begin
+            getAllPlatformWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
 
-            # get all warnings between time_cmp_begin and time_cmp_end
-            getAllWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
+            # get all platform warnings between time_cmp_begin and time_cmp_end
+            getAllPlatformWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
 
-            # get all warnings which are 30min later than time_cmp_end
-            getAllWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
+            # get all platform warnings which are 30min later than time_cmp_end
+            getAllPlatformWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
+
+            getAllAppWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
+            getAllAppWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
+            getAllAppWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
 
             time_cmp_begin=${tmp_time} # another warning
             time_cmp_end=${time_cmp_begin}
@@ -303,13 +380,18 @@ $(date -d "$[${time_cmp_end} - `date +%s`] sec" "+%Y-%m-%d_%H:%M:%S")"
 ${time_cmp_begin} and ${time_cmp_end}"
 
     # get all warnings which are 30min before time_cmp_begin
-    getAllWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
+    getAllPlatformWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
 
     # get all warnings between time_cmp_begin and time_cmp_end
-    getAllWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
+    getAllPlatformWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
 
     # get all warnings which are 30min later than time_cmp_end
-    getAllWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
+    getAllPlatformWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
+
+    getAllAppWarningsByTime before ${time_cmp_begin} $[30 * 60] ${dest_file}
+    getAllAppWarningsByTime between ${time_cmp_begin} ${time_cmp_end} ${dest_file}
+    getAllAppWarningsByTime later ${time_cmp_end} $[30 * 60] ${dest_file}
+
 }
 
 # #########################################################################
@@ -325,6 +407,7 @@ logFilePath=/home/jona/myGit/myCode_repository/RCA/data/log
 # include the last result
 resFilePath=/home/jona/myGit/myCode_repository/RCA/data/res
 sortFilePath=/home/jona/myGit/myCode_repository/RCA/data/sort
+humanityFilePath=/home/jona/myGit/myCode_repository/RCA/data/humanity
 # tmp file
 tmpFilePath=/home/jona/myGit/myCode_repository/RCA/data/tmp
 timeInterVal=$[10 * 60] # total seconds
@@ -336,6 +419,7 @@ mkdir -p ${tmpFilePath}
 mkdir -p ${logFilePath}
 mkdir -p ${resFilePath}
 mkdir -p ${sortFilePath}
+mkdir -p ${humanityFilePath}
 
 while read device_name; do
     # eg: devname is cmszdbsb, cmszvdbb_voT12, cmszdbsa
@@ -348,5 +432,17 @@ done < ${deviceCfgFile}
 # sort all files in resFilePath and remove duplications in every file
 fileNameSet=$(ls ${resFilePath})
 for filename in ${fileNameSet}; do
-    cat ${resFilePath}/${filename} | sed '/#######/d' | sort -u | sort -k2n -t# > ${sortFilePath}/${filename}
+    cat ${resFilePath}/${filename} | sed '/^#/d' | sort -u | sort -k2n -t# > ${sortFilePath}/${filename}
 done
+
+# convert time sec to yyyy-mm-dd HH:MM:SS
+fileNameSet=$(ls ${sortFilePath})
+if [ true ]; then
+    for filename in ${fileNameSet}; do
+        while read line; do
+            timeSec=$(echo ${line} | cut -d# -f2)
+            timeStr=$(date -d "$[${timeSec} - `date +%s`] sec" "+%Y%m%d%H%M%S")
+            echo "${line}" | sed "s/#[0-9]*#/#${timeStr}#/g" >> ${humanityFilePath}/${filename}
+        done < ${sortFilePath}/${filename}
+    done
+fi
