@@ -133,7 +133,7 @@ if [ -e "${platform_warning_file}" ]; then
 
         severity=$(echo ${line} | awk -F"\t" '{print $2}')
 
-        msgInfo=$(echo ${line} | awk -F"\t" '{print $3}' | cut -d: -f2)
+        msgInfo=$(echo ${line} | awk -F"\t" '{print $3}')
 
         ariseTimeStr=$(echo ${line} | awk -F"\t" '{print $4}')
         timeSec=$(getSecondsFromTimeStr $ariseTimeStr)
