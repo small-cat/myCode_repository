@@ -62,8 +62,8 @@ unsigned strlen(const char* str);
 
 #ifdef ENVIRONMENT32
 /* alignment property */
-#define _AUPBND                 (sizeof(long) - 1)
-#define _ADNBND                 (sizeof(long) - 1)
+#define _AUPBND                 (sizeof(int) - 1)
+#define _ADNBND                 (sizeof(int) - 1)
 
 #define _bnd(X, bnd)            ((sizeof(X) + (bnd)) & (~(bnd)))
 
