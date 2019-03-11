@@ -31,7 +31,8 @@ namespace std {
             ofstream& write(const char* buf, unsigned size);
     };
 
-    inline ofstream& endl(ofstream& o) {
+    inline ofstream& endl(ofstream& o)
+    {
         return o << '\n';
     }
 

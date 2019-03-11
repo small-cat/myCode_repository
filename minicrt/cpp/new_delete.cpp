@@ -8,18 +8,22 @@
 extern "C" void* malloc(unsigned int);
 extern "C" void free(void*);
 
-void* operator new(long unsigned int size) {
+void* operator new(long unsigned int size)
+{
     return malloc(size);
 }
 
-void operator delete(void* p) {
+void operator delete(void* p)
+{
     free(p);
 }
 
-void* operator new[](long unsigned int size) {
+void* operator new[](long unsigned int size)
+{
     return malloc(size);
 }
 
-void operator delete[](void *p) {
+void operator delete[](void *p)
+{
     free(p);
 }

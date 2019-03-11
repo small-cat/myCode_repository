@@ -23,7 +23,8 @@ typedef struct _heap_header {
 
 static heap_header* list_head = NULL;
 
-void free(void* ptr) {
+void free(void* ptr) 
+{
     heap_header* header = (heap_header*)ADDR_ADD(ptr, -HEADER_SIZE);
     if (header->type != HEAP_BLOCK_USED) {
         return;
@@ -49,7 +50,8 @@ void free(void* ptr) {
     }
 }
 
-void* malloc(unsigned size) {
+void* malloc(unsigned size) 
+{
     heap_header* header;
     if (0 == size) {
         return NULL;
@@ -91,7 +93,8 @@ void* malloc(unsigned size) {
     return NULL;
 }
 
-static int brk(void* end_data_segment) {
+static int brk(void* end_data_segment) 
+{
     int ret = 0;
     // Linux brk system call
     // sys_brk system call number: 12
@@ -107,7 +110,8 @@ static int brk(void* end_data_segment) {
     return ret;
 }
 
-int mini_crt_heap_init() {
+int mini_crt_heap_init()
+{
     void* base = NULL;
     heap_header* header = NULL;
 

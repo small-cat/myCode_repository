@@ -15,7 +15,8 @@
  * * AUTHOR: Jona
  * * CREATE TIME: 2019-02-01 16:38 
 *************************************************************************/ 
-char* itoa(int n, char* str) {
+char* itoa(int n, char* str)
+{
     int digit = 0;
     char* p = str;
     char* head = str;
@@ -56,7 +57,8 @@ char* itoa(int n, char* str) {
  * * AUTHOR: Jona
  * * CREATE TIME: 2019-02-01 14:48 
 *************************************************************************/ 
-int strcmp(const char* src, const char* dest) {
+int strcmp(const char* src, const char* dest)
+{
     int ret = 0;
     char* pSrc = (char*)src;
     char* pDst = (char*)dest;
@@ -87,7 +89,8 @@ int strcmp(const char* src, const char* dest) {
  * * AUTHOR: Jona
  * * CREATE TIME: 2019-02-01 15:01 
 *************************************************************************/ 
-char* strcpy(char* dest, const char* src) {
+char* strcpy(char* dest, const char* src)
+{
     char* ret = dest;
     while (*src != '\0') {
         *dest++ = *src++;
@@ -104,7 +107,8 @@ char* strcpy(char* dest, const char* src) {
  * * AUTHOR: Jona
  * * CREATE TIME: 2019-02-01 15:02 
 *************************************************************************/ 
-unsigned strlen(const char* str) {
+unsigned strlen(const char* str)
+{
     unsigned ret = 0;
     if(!str) {
         return 0;

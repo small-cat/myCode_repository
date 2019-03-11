@@ -62,6 +62,9 @@ unsigned strlen(const char* str);
 
 #ifdef ENVIRONMENT32
 /* alignment property */
+/*
+ * the 32bit version here is just show the difference between 64bit version.
+ */
 #define _AUPBND                 (sizeof(int) - 1)
 #define _ADNBND                 (sizeof(int) - 1)
 

@@ -9,43 +9,52 @@
 #include "minicrt.h"
 
 namespace std {
-    ofstream::ofstream() {
+    ofstream::ofstream()
+    {
         fp = (FILE*)0;
     }
 
-    ofstream::ofstream(FILE *p) {
+    ofstream::ofstream(FILE *p)
+    {
         fp = p;
     }
 
-    ofstream::ofstream(const char* filename, ofstream::openmode md) {
+    ofstream::ofstream(const char* filename, ofstream::openmode md)
+    {
         fp = 0;
         open(filename, md);
     }
 
-    ofstream::~ofstream() {
+    ofstream::~ofstream()
+    {
         close();
     }
 
-    ofstream& ofstream::operator<<(char c) {
+    ofstream& ofstream::operator<<(char c)
+    {
         fputc(c, fp);
         return *this;
     }
 
-    ofstream& ofstream::operator<<(int n) {
+    ofstream& ofstream::operator<<(int n)
+    {
         fprintf(fp, "%d", n);
         return *this;
     }
 
-    ofstream& ofstream::operator<<(const char* str) {
+    ofstream& ofstream::operator<<(const char* str)
+    {
         fprintf(fp, "%s", str);
         return *this;
     }
 
-    ofstream& ofstream::operator<<(ofstream& (*manip)(ofstream&)) {
+    ofstream& ofstream::operator<<(ofstream& (*manip)(ofstream&))
+    {
         return manip(*this);
     }
 
-    void ofstream::open(const char* filename, ofstream::openmode md) {
+    void ofstream::open(const char* filename, ofstream::openmode md)
+    {
         char mode[4] = {0};
         int len = 0;
         close();
@@ -73,22 +82,26 @@ namespace std {
         fp = fopen(filename, mode);
     }
 
-    void ofstream::close() {
+    void ofstream::close()
+    {
         if (fp) {
             fclose(fp);
             fp = 0;
         }
     }
 
-    ofstream& ofstream::write(const char* buf, unsigned size) {
+    ofstream& ofstream::write(const char* buf, unsigned size)
+    {
         fwrite(buf, 1, size, fp);
         return *this;
     }
 
-    stdout_stream::stdout_stream(FILE* fp) : ofstream(fp) {
+    stdout_stream::stdout_stream(FILE* fp) : ofstream(fp)
+    {
     }
 
-    stdout_stream::stdout_stream() : ofstream(stdout) {
+    stdout_stream::stdout_stream() : ofstream(stdout)
+    {
     }
 
     stdout_stream cout = stdout;

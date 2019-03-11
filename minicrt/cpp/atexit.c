@@ -17,7 +17,8 @@ typedef struct _func_node_ {
 /* insert into list from head, travel list from head : FILO */
 static func_node* atexit_list = NULL;
 
-int register_atexit(atexit_func_t func, void* arg, int is_cxa) {
+int register_atexit(atexit_func_t func, void* arg, int is_cxa)
+{
     func_node* node;
     if (!func) {
         return -1;
@@ -37,15 +38,18 @@ int register_atexit(atexit_func_t func, void* arg, int is_cxa) {
     return 0;
 }
 
-int __cxa_atexit(cxa_func_t func, void* arg, void* unused) {
+int __cxa_atexit(cxa_func_t func, void* arg, void* unused)
+{
     return register_atexit((atexit_func_t)(func), arg, 1);
 }
 
-int atexit(atexit_func_t func) {
+int atexit(atexit_func_t func)
+{
     return register_atexit(func, 0, 0);
 }
 
-void mini_crt_call_exit_routine() {
+void mini_crt_call_exit_routine()
+{
     func_node* p = atexit_list;
     func_node* tmp = NULL;
     while (p) {

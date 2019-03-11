@@ -10,12 +10,14 @@
 extern int main(int argc, char* argv[]);
 void exit(int exitCode);
 
-static void crt_fatal_error(const char* msg) {
+static void crt_fatal_error(const char* msg)
+{
     printf("fatal error: %s", msg);
     exit(1);
 }
 
-void mini_crt_entry(void) {
+void mini_crt_entry(void)
+{
     int ret;
     int argc;
     char** argv;
@@ -47,7 +49,8 @@ void mini_crt_entry(void) {
 }
 
 /* system call number of sys_exit is 60 */
-void exit(int exitCode) {
+void exit(int exitCode)
+{
     mini_crt_call_exit_routine();
     asm(
             "mov $0x3c, %%rax \n\t"

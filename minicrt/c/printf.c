@@ -7,7 +7,8 @@
 
 #include "minicrt.h"
 
-int fputc(int c, FILE* stream) {
+int fputc(int c, FILE* stream)
+{
     if (fwrite(&c, 1, 1, stream) != 1) {
         return EOF;
     } else {
@@ -15,7 +16,8 @@ int fputc(int c, FILE* stream) {
     }
 }
 
-int fputs(const char* str, FILE* stream) {
+int fputs(const char* str, FILE* stream)
+{
     int len = (int)strlen(str);
     if (fwrite(str, 1, len, stream) != len) {
         return EOF;
@@ -24,7 +26,8 @@ int fputs(const char* str, FILE* stream) {
     }
 }
 
-int vfprintf(FILE* stream, const char* format, va_list arglist) {
+int vfprintf(FILE* stream, const char* format, va_list arglist)
+{
     int translating = 0;
     int ret = 0;
     const char* p = NULL;
@@ -90,7 +93,8 @@ int vfprintf(FILE* stream, const char* format, va_list arglist) {
     return ret;
 }
 
-int fprintf(FILE* stream, const char* format, ...) {
+int fprintf(FILE* stream, const char* format, ...)
+{
     int ret = 0;
     va_list ap;
     va_start(ap, format);
@@ -100,7 +104,8 @@ int fprintf(FILE* stream, const char* format, ...) {
     return ret;
 }
 
-int printf(const char* format, ...) {
+int printf(const char* format, ...)
+{
     int ret = 0;
     va_list ap;
     va_start(ap, format);
