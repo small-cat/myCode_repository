@@ -1,0 +1,57 @@
+DBManager.o: DBManager.cpp ../../include/dbmanager/DBManager.h \
+ /usr/include/mysql/mysql.h /usr/include/mysql/mysql_version.h \
+ /usr/include/mysql/mysql_com.h /usr/include/mysql/binary_log_types.h \
+ /usr/include/mysql/my_command.h /usr/include/mysql/mysql_time.h \
+ /usr/include/mysql/my_list.h /usr/include/mysql/mysql/client_plugin.h \
+ /usr/include/mysql/mysql/plugin_auth_common.h \
+ /usr/include/mysql/typelib.h /usr/include/mysql/my_alloc.h \
+ /usr/include/mysql/mysql/psi/psi_memory.h \
+ /usr/include/mysql/mysql/psi/psi_base.h \
+ ../../include/config/ConfigManager.h ../../include/config/MyStr.h \
+ ../../include/common/error.h ../../include/global/globaldef.h \
+ ../../include/log/log.h ../../include/common/lock.h \
+ ../../include/common/myTime.h ../../include/log4cplus/logger.h \
+ ../../include/log4cplus/config.hxx \
+ ../../include/log4cplus/config/defines.hxx \
+ ../../include/log4cplus/helpers/thread-config.h \
+ ../../include/log4cplus/loglevel.h ../../include/log4cplus/tstring.h \
+ ../../include/log4cplus/tchar.h \
+ ../../include/log4cplus/spi/appenderattachable.h \
+ ../../include/log4cplus/appender.h ../../include/log4cplus/layout.h \
+ ../../include/log4cplus/streams.h \
+ ../../include/log4cplus/helpers/pointer.h \
+ ../../include/log4cplus/thread/syncprims.h \
+ ../../include/log4cplus/spi/filter.h \
+ ../../include/log4cplus/helpers/lockfile.h \
+ ../../include/log4cplus/spi/loggerfactory.h \
+ ../../include/log4cplus/configurator.h \
+ ../../include/log4cplus/helpers/property.h \
+ ../../include/log4cplus/helpers/stringhelper.h \
+ ../../include/log4cplus/loggingmacros.h \
+ ../../include/log4cplus/helpers/snprintf.h \
+ ../../include/log4cplus/tracelogger.h
+RedisManager.o: RedisManager.cpp ../../include/dbmanager/RedisManager.h \
+ ../../include/config/ConfigManager.h ../../include/config/MyStr.h \
+ ../../include/common/error.h ../../include/global/globaldef.h \
+ ../../include/log/log.h ../../include/common/lock.h \
+ ../../include/common/myTime.h ../../include/log4cplus/logger.h \
+ ../../include/log4cplus/config.hxx \
+ ../../include/log4cplus/config/defines.hxx \
+ ../../include/log4cplus/helpers/thread-config.h \
+ ../../include/log4cplus/loglevel.h ../../include/log4cplus/tstring.h \
+ ../../include/log4cplus/tchar.h \
+ ../../include/log4cplus/spi/appenderattachable.h \
+ ../../include/log4cplus/appender.h ../../include/log4cplus/layout.h \
+ ../../include/log4cplus/streams.h \
+ ../../include/log4cplus/helpers/pointer.h \
+ ../../include/log4cplus/thread/syncprims.h \
+ ../../include/log4cplus/spi/filter.h \
+ ../../include/log4cplus/helpers/lockfile.h \
+ ../../include/log4cplus/spi/loggerfactory.h \
+ ../../include/log4cplus/configurator.h \
+ ../../include/log4cplus/helpers/property.h \
+ ../../include/log4cplus/helpers/stringhelper.h \
+ ../../include/log4cplus/loggingmacros.h \
+ ../../include/log4cplus/helpers/snprintf.h \
+ ../../include/log4cplus/tracelogger.h ../../include/hiredis/hiredis.h \
+ ../../include/hiredis/read.h ../../include/hiredis/sds.h

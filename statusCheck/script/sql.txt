@@ -1,0 +1,24 @@
+select iden.identity,UNIX_TIMESTAMP(iden.valid_date) validDate,UNIX_TIMESTAMP(iden.expire_date) expireDate,cycle.os_sts_dtl osStsDtl from (
+select * from cm_res_identity_0 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_1 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_2 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_3 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_4 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_5 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_6 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_7 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_8 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00' union
+select * from cm_res_identity_9 where valid_date between '2016-04-01 00:00:00' and '2037-01-01 00:00:00'
+) iden join (
+select * from cm_res_lifecycle_0 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_1 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_2 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_3 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_4 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_5 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_6 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_7 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_8 where os_sts_dtl in (2, 4) union
+select * from cm_res_lifecycle_9 where os_sts_dtl in (2, 4)
+) cycle
+on iden.resource_id = cycle.resource_id order by validDate asc;

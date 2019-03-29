@@ -1,0 +1,146 @@
+.\" @(#)downcheck.1 2018-03-12
+.\"
+.\" 
+.\"
+.TH downcheck 1 "March 12 2018"
+.UC 4
+.SH NAME
+downcheck \- a program used to filter exceptional records which is generated while the user is in stopping service.
+.SH SYNOPSIS
+.B downcheck
+[\-h\ help] [\-v\ version] [\-t\ test] [\-d\ decode]
+.SH DESCRIPTION
+.I Downcheck
+is a program used to filter exceptional records, the standards of judgement is phone
+number, dtl(user status), valid date and expire date.
+.br
+.I Downcheck
+could run in the background, and output two kinds of information into two files, one is the filename's information the program has been dealed, the other is the 
+detailed information of exceptional records.
+.br
+If you wanted to start downcheck successfully,  
+.I./downcheck, 
+you should also install mysql and redis, and add the IP, password, 
+username .etc into the config/downcheck.ini, libhiredis.so was also needed. If you get the error message like "load libhiredis.so.1 failed", 
+maybe you could execute the following command 
+.br	
+
+"EXPORT LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib" 
+
+.br
+before execut the command, you should make sure that libhiredis.so.1 is in the /lib directory.
+
+.\" =======================================================================
+.SH OPTIONS
+Options offered by
+.I downcheck
+are the following:
+.TP 0.6i
+.B \-h 
+Show help information.
+.br
+
+.\" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+.TP 0.6i
+.B \-v
+Show version information.
+
+.\" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+.TP 0.6i
+.B \-t 
+Testing mode. In this mode, downcheck will run as simple process and will 
+exit when files have done.
+
+.\" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+.TP 0.6i
+.B \-s 
+Stop and exit. When program started, it would write its pid into a file 
+which you can configured in the config/downcheck.ini. If you execute -s,
+program will get pid from the file and kill it by process id.
+
+.\" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+.TP 0.6i
+.B \-d
+Program will run in testing mode and only decode input files. You can use this
+option to decode the record files.
+
+.\" =======================================================================
+.SH CONFIGURATION FILES
+.I Downcheck
+will use the configuration file in config/downcheck.ini.
+If no config file, program can not start.
+.br
+.I Downcheck
+use log4cplus as its log module, you can use configurator to control the
+log output.
+
+.\" =======================================================================
+.SH DEPLOYMENT
+1. Create a directory named DownCheck in home directory, uncompress program
+file downcheck.tar.gz
+
+tar -xzvf downcheck.tar.gz
+
+2. After uncompressing, enter statusCheck and build
+
+make
+
+3. configuration files. 
+program settings configure in config/downcheck_config.ini,  
+log format and log file settings configure in config/log4cplus.properties.
+
+1)  Create directories named recordfile, unknown_files, output, log in $HOME/DownCheck, 
+    and write the following settings in config/downcheck.ini.
+
+decodeFilePath=$HOME/DownCheck/recordfile
+
+decodeMovePath=$HOME/DownCheck/unknown_files
+
+outputPath=$HOME/DownCheck/output
+
+logCfgPath=$HOME/DownCheck/StatusCheck/config/log4cplus.properties
+
+pidfile=$HOME/DownCheck/StatusCheck/bin/pidfile.txt
+
+2)  Make the following settings in config/log4cplus.properties
+
+log4cplus.appender.LOG_MSGS.File=$HOME/DownCheck/log/downcheck_sysrun.log
+
+log4cplus.appender.LOG_MSGS.filters.1.LogLevelMin=TRACE
+
+log4cplus.appender.LOG_MSGS.filters.1.LogLevelMax=FATAL
+
+use LogLevelMin and LogLevelMax to limit log output, the range from low to high
+is:
+
+TRACE DEBUG INFO WARN ERROR FATAL. The lower the log level is, the more log information will be output.
+
+.\" =======================================================================
+.SH AUTHOR
+.I Downcheck
+was developed by CMSZ ZhuanShou.
+.br
+
+.\" =======================================================================
+.SH VERSION
+This is
+.I downcheck
+version 1.1.0 Beta (CMSZ) 201803, deployed on March 12th, 2018.
+.\" =======================================================================
+.SH CHANGE LOG
+1. Add four fields in VID (msc, lac_id, cell_id, partial_id)
+.br
+   Add two fields in VLTE (ggsnAddr, sgsnAddr).
+.br
+2. Add decode functions named GetGPRSWord_CHAR and GetGPRSWord_LONGINT to decode VLTE record files. 
+.br
+3. Redefined active user, and fixed the logic of counting active users. 
+.br
+4. Fix bugs about memory leak.
+.\" =======================================================================
+.SH "SEE ALSO"
+.I mysql(1)
+,
+.I redis(1)
+,
+.I log4cplus(1)

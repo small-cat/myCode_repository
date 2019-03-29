@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+
+#该脚本输入是远程主机的ip，命令等信息，输出是远程主机的执行结果，结果放在变量文件cur_file中，需要自己配。
+
+ 
+
+if { $argc != 4 } {
+	send_user "usage: expect ssh.exp cmd user passwd host_ip\n"
+	exit
+}
+
+#set cur_file "/mnt/hgfs/share/statusCheck/script/movefile/old.test"     
+set cmd [lindex $argv 0]
+set user [lindex $argv 1]
+set passwd [lindex $argv 2]
+set ip [lindex $argv 3]
+spawn -noecho /usr/bin/ssh $user@$ip "${cmd}"  
+expect  {
+	"(yes/no)?" {send "yes\r";exp_continue}
+	"password:" {send "$passwd\r"}
+} 
+expect eof 

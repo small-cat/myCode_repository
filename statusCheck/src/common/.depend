@@ -1,0 +1,7 @@
+error.o: error.c ../../include/common/error.h
+filelock.o: filelock.c ../../include/common/filelock.h \
+ ../../include/common/error.h
+formatString.o: formatString.c ../../include/common/formatString.h
+myTime.o: myTime.c ../../include/common/myTime.h \
+ ../../include/common/error.h
+lock.o: lock.cpp ../../include/common/lock.h

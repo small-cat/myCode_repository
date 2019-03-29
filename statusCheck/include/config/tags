@@ -1,0 +1,131 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Add	StrArray.h	15;"	p	language:C++	class:CStrArray	access:public	signature:(CStr *newstr)
+Add	StrArray.h	16;"	p	language:C++	class:CStrArray	access:public	signature:(const CStr &newstr)
+AddString	MyStr.h	175;"	f	language:C++	class:CStr	signature:(const CStr& obj)
+AddString	MyStr.h	178;"	f	language:C++	class:CStr	signature:(const char* s)
+AddStringAtLeft	MyStr.h	181;"	f	language:C++	class:CStr	signature:(const CStr& obj)
+AllTrim	MyStr.h	51;"	p	language:C++	class:CStr	access:public	signature:(const char* charset = NULL)
+CConfigManager	ConfigManager.h	29;"	c	language:C++
+CConfigManager	ConfigManager.h	32;"	p	language:C++	class:CConfigManager	access:public	signature:()
+CConfigManager::CConfigManager	ConfigManager.h	32;"	p	language:C++	class:CConfigManager	access:public	signature:()
+CConfigManager::FindValue	ConfigManager.h	40;"	p	language:C++	class:CConfigManager	access:public	signature:(const char* cItem)
+CConfigManager::GetValue	ConfigManager.h	35;"	p	language:C++	class:CConfigManager	access:public	signature:(int CfgType, const char* cSection, const char* cItem, int& nVal)
+CConfigManager::GetValue	ConfigManager.h	36;"	p	language:C++	class:CConfigManager	access:public	signature:(int CfgType, const char* cSection, const char* cItem, char* strVal)
+CConfigManager::Init	ConfigManager.h	38;"	p	language:C++	class:CConfigManager	access:public	signature:()
+CConfigManager::Load	ConfigManager.h	39;"	p	language:C++	class:CConfigManager	access:public	signature:(char* filename)
+CConfigManager::Start	ConfigManager.h	41;"	p	language:C++	class:CConfigManager	access:public	signature:()
+CConfigManager::csList	ConfigManager.h	47;"	m	language:C++	class:CConfigManager	access:public
+CConfigManager::m_szLocalCfgPath	ConfigManager.h	44;"	m	language:C++	class:CConfigManager	access:private
+CConfigManager::~CConfigManager	ConfigManager.h	33;"	p	language:C++	class:CConfigManager	access:public	signature:()
+CStr	MyStr.h	22;"	c	language:C++
+CStr	MyStr.h	31;"	p	language:C++	class:CStr	access:public	signature:()
+CStr	MyStr.h	32;"	p	language:C++	class:CStr	access:public	signature:(const CStr& source)
+CStr	MyStr.h	60;"	f	language:C++	class:CStr	signature:()
+CStr::AddString	MyStr.h	175;"	f	language:C++	class:CStr	signature:(const CStr& obj)
+CStr::AddString	MyStr.h	178;"	f	language:C++	class:CStr	signature:(const char* s)
+CStr::AddStringAtLeft	MyStr.h	181;"	f	language:C++	class:CStr	signature:(const CStr& obj)
+CStr::AllTrim	MyStr.h	51;"	p	language:C++	class:CStr	access:public	signature:(const char* charset = NULL)
+CStr::CStr	MyStr.h	31;"	p	language:C++	class:CStr	access:public	signature:()
+CStr::CStr	MyStr.h	32;"	p	language:C++	class:CStr	access:public	signature:(const CStr& source)
+CStr::CStr	MyStr.h	60;"	f	language:C++	class:CStr	signature:()
+CStr::ConvertInt	MyStr.h	44;"	p	language:C++	class:CStr	access:public	signature:()
+CStr::GetAt	MyStr.h	134;"	f	language:C++	class:CStr	signature:(int idx) const
+CStr::GetAt	MyStr.h	43;"	p	language:C++	class:CStr	access:public	signature:(int idx) const
+CStr::GetFirstChar	MyStr.h	40;"	p	language:C++	class:CStr	access:public	signature:() const
+CStr::GetFirstChar	MyStr.h	76;"	f	language:C++	class:CStr	signature:() const
+CStr::GetLength	MyStr.h	105;"	f	language:C++	class:CStr	signature:() const
+CStr::GetLength	MyStr.h	37;"	p	language:C++	class:CStr	access:public	signature:() const
+CStr::GetString	MyStr.h	148;"	f	language:C++	class:CStr	signature:() const
+CStr::GetString	MyStr.h	39;"	p	language:C++	class:CStr	access:public	signature:() const
+CStr::IsEmpty	MyStr.h	36;"	p	language:C++	class:CStr	access:public	signature:() const
+CStr::IsEmpty	MyStr.h	90;"	f	language:C++	class:CStr	signature:() const
+CStr::SubString	MyStr.h	46;"	p	language:C++	class:CStr	access:public	signature:(int startpos, int endpos)
+CStr::operator +=	MyStr.h	186;"	f	language:C++	class:CStr	signature:(const char ch)
+CStr::operator []	MyStr.h	120;"	f	language:C++	class:CStr	signature:(int idx) const
+CStr::operator []	MyStr.h	42;"	p	language:C++	class:CStr	access:public	signature:(int idx) const
+CStr::setValue	MyStr.h	52;"	p	language:C++	class:CStr	access:public	signature:(char* val)
+CStr::strData	MyStr.h	27;"	m	language:C++	class:CStr	access:private
+CStr::strLength	MyStr.h	28;"	m	language:C++	class:CStr	access:private
+CStr::~CStr	MyStr.h	33;"	p	language:C++	class:CStr	access:public	signature:()
+CStrArray	StrArray.h	10;"	p	language:C++	class:CStrArray	access:public	signature:()
+CStrArray	StrArray.h	7;"	c	language:C++
+CStrArray::Add	StrArray.h	15;"	p	language:C++	class:CStrArray	access:public	signature:(CStr *newstr)
+CStrArray::Add	StrArray.h	16;"	p	language:C++	class:CStrArray	access:public	signature:(const CStr &newstr)
+CStrArray::CStrArray	StrArray.h	10;"	p	language:C++	class:CStrArray	access:public	signature:()
+CStrArray::Close	StrArray.h	12;"	p	language:C++	class:CStrArray	access:public	signature:()
+CStrArray::GetAt	StrArray.h	30;"	f	language:C++	class:CStrArray	access:public	signature:( int nIndex )
+CStrArray::GetAt2	StrArray.h	37;"	f	language:C++	class:CStrArray	access:public	signature:( int nIndex )
+CStrArray::GetSize	StrArray.h	28;"	f	language:C++	class:CStrArray	access:public	signature:()
+CStrArray::InsertAt	StrArray.h	21;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex, CStr* newstr )
+CStrArray::InsertAt	StrArray.h	22;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex,const CStr& newstr )
+CStrArray::Remove	StrArray.h	24;"	p	language:C++	class:CStrArray	access:public	signature:(CStr *remstr)
+CStrArray::RemoveAll	StrArray.h	26;"	p	language:C++	class:CStrArray	access:public	signature:()
+CStrArray::RemoveAt	StrArray.h	25;"	p	language:C++	class:CStrArray	access:public	signature:(int nIndex)
+CStrArray::SetAt	StrArray.h	18;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex, CStr* newstr )
+CStrArray::SetAt	StrArray.h	19;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex,const CStr& newstr )
+CStrArray::m_curno	StrArray.h	51;"	m	language:C++	class:CStrArray	access:private
+CStrArray::m_strTab	StrArray.h	53;"	m	language:C++	class:CStrArray	access:private
+CStrArray::m_total	StrArray.h	52;"	m	language:C++	class:CStrArray	access:private
+CStrArray::operator []	StrArray.h	42;"	f	language:C++	class:CStrArray	access:public	signature:(int nIndex)
+CStrArray::~CStrArray	StrArray.h	11;"	p	language:C++	class:CStrArray	access:public	signature:()
+Close	StrArray.h	12;"	p	language:C++	class:CStrArray	access:public	signature:()
+ConvertInt	MyStr.h	44;"	p	language:C++	class:CStr	access:public	signature:()
+FindValue	ConfigManager.h	40;"	p	language:C++	class:CConfigManager	access:public	signature:(const char* cItem)
+GetAt	MyStr.h	134;"	f	language:C++	class:CStr	signature:(int idx) const
+GetAt	MyStr.h	43;"	p	language:C++	class:CStr	access:public	signature:(int idx) const
+GetAt	StrArray.h	30;"	f	language:C++	class:CStrArray	access:public	signature:( int nIndex )
+GetAt2	StrArray.h	37;"	f	language:C++	class:CStrArray	access:public	signature:( int nIndex )
+GetFirstChar	MyStr.h	40;"	p	language:C++	class:CStr	access:public	signature:() const
+GetFirstChar	MyStr.h	76;"	f	language:C++	class:CStr	signature:() const
+GetLength	MyStr.h	105;"	f	language:C++	class:CStr	signature:() const
+GetLength	MyStr.h	37;"	p	language:C++	class:CStr	access:public	signature:() const
+GetSize	StrArray.h	28;"	f	language:C++	class:CStrArray	access:public	signature:()
+GetString	MyStr.h	148;"	f	language:C++	class:CStr	signature:() const
+GetString	MyStr.h	39;"	p	language:C++	class:CStr	access:public	signature:() const
+GetValue	ConfigManager.h	35;"	p	language:C++	class:CConfigManager	access:public	signature:(int CfgType, const char* cSection, const char* cItem, int& nVal)
+GetValue	ConfigManager.h	36;"	p	language:C++	class:CConfigManager	access:public	signature:(int CfgType, const char* cSection, const char* cItem, char* strVal)
+INI_CFG_FILE_NAME	ConfigManager.h	22;"	v	language:C++
+Init	ConfigManager.h	38;"	p	language:C++	class:CConfigManager	access:public	signature:()
+InsertAt	StrArray.h	21;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex, CStr* newstr )
+InsertAt	StrArray.h	22;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex,const CStr& newstr )
+IsEmpty	MyStr.h	36;"	p	language:C++	class:CStr	access:public	signature:() const
+IsEmpty	MyStr.h	90;"	f	language:C++	class:CStr	signature:() const
+Load	ConfigManager.h	39;"	p	language:C++	class:CConfigManager	access:public	signature:(char* filename)
+Remove	StrArray.h	24;"	p	language:C++	class:CStrArray	access:public	signature:(CStr *remstr)
+RemoveAll	StrArray.h	26;"	p	language:C++	class:CStrArray	access:public	signature:()
+RemoveAt	StrArray.h	25;"	p	language:C++	class:CStrArray	access:public	signature:(int nIndex)
+SetAt	StrArray.h	18;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex, CStr* newstr )
+SetAt	StrArray.h	19;"	p	language:C++	class:CStrArray	access:public	signature:( int nIndex,const CStr& newstr )
+Start	ConfigManager.h	41;"	p	language:C++	class:CConfigManager	access:public	signature:()
+SubString	MyStr.h	46;"	p	language:C++	class:CStr	access:public	signature:(int startpos, int endpos)
+_STRARRAY_H_	StrArray.h	2;"	d	language:C++
+__CONFIGMANAGER_H__	ConfigManager.h	10;"	d	language:C++
+__MYSTR_H__	MyStr.h	10;"	d	language:C++
+csList	ConfigManager.h	47;"	m	language:C++	class:CConfigManager	access:public
+m_curno	StrArray.h	51;"	m	language:C++	class:CStrArray	access:private
+m_strTab	StrArray.h	53;"	m	language:C++	class:CStrArray	access:private
+m_szLocalCfgPath	ConfigManager.h	44;"	m	language:C++	class:CConfigManager	access:private
+m_total	StrArray.h	52;"	m	language:C++	class:CStrArray	access:private
+operator !=	MyStr.h	161;"	f	language:C++	signature:(const CStr& s1, const CStr& s2)
+operator !=	MyStr.h	164;"	f	language:C++	signature:(const CStr& s1, LPCTSTR s2)
+operator !=	MyStr.h	167;"	f	language:C++	signature:(LPCTSTR s1, const CStr& s2)
+operator +=	MyStr.h	186;"	f	language:C++	class:CStr	signature:(const char ch)
+operator ==	MyStr.h	158;"	f	language:C++	signature:(LPCTSTR s1, const CStr& s2)
+operator []	MyStr.h	120;"	f	language:C++	class:CStr	signature:(int idx) const
+operator []	MyStr.h	42;"	p	language:C++	class:CStr	access:public	signature:(int idx) const
+operator []	StrArray.h	42;"	f	language:C++	class:CStrArray	access:public	signature:(int nIndex)
+rtrim	MyStr.h	194;"	p	language:C++	signature:(char *str)
+setValue	MyStr.h	52;"	p	language:C++	class:CStr	access:public	signature:(char* val)
+strData	MyStr.h	27;"	m	language:C++	class:CStr	access:private
+strLength	MyStr.h	28;"	m	language:C++	class:CStr	access:private
+strlwr	MyStr.h	192;"	p	language:C++	signature:(char* p)
+strrev	MyStr.h	191;"	p	language:C++	signature:(char* p)
+strupr	MyStr.h	193;"	p	language:C++	signature:(char* p)
+~CConfigManager	ConfigManager.h	33;"	p	language:C++	class:CConfigManager	access:public	signature:()
+~CStr	MyStr.h	33;"	p	language:C++	class:CStr	access:public	signature:()
+~CStrArray	StrArray.h	11;"	p	language:C++	class:CStrArray	access:public	signature:()

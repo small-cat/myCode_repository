@@ -1,0 +1,23 @@
+log.o: log.cpp ../../include/log/log.h ../../include/common/lock.h \
+ ../../include/global/globaldef.h ../../include/config/ConfigManager.h \
+ ../../include/config/MyStr.h ../../include/common/error.h \
+ ../../include/common/myTime.h ../../include/log4cplus/logger.h \
+ ../../include/log4cplus/config.hxx \
+ ../../include/log4cplus/config/defines.hxx \
+ ../../include/log4cplus/helpers/thread-config.h \
+ ../../include/log4cplus/loglevel.h ../../include/log4cplus/tstring.h \
+ ../../include/log4cplus/tchar.h \
+ ../../include/log4cplus/spi/appenderattachable.h \
+ ../../include/log4cplus/appender.h ../../include/log4cplus/layout.h \
+ ../../include/log4cplus/streams.h \
+ ../../include/log4cplus/helpers/pointer.h \
+ ../../include/log4cplus/thread/syncprims.h \
+ ../../include/log4cplus/spi/filter.h \
+ ../../include/log4cplus/helpers/lockfile.h \
+ ../../include/log4cplus/spi/loggerfactory.h \
+ ../../include/log4cplus/configurator.h \
+ ../../include/log4cplus/helpers/property.h \
+ ../../include/log4cplus/helpers/stringhelper.h \
+ ../../include/log4cplus/loggingmacros.h \
+ ../../include/log4cplus/helpers/snprintf.h \
+ ../../include/log4cplus/tracelogger.h

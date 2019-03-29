@@ -1,0 +1,5 @@
+MyStr.o: MyStr.cpp ../../include/config/MyStr.h \
+ ../../include/common/error.h
+ConfigManager.o: ConfigManager.cpp ../../include/config/ConfigManager.h \
+ ../../include/config/MyStr.h ../../include/common/error.h \
+ ../../include/global/globaldef.h

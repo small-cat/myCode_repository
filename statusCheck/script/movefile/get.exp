@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+if { $argc != 4 } {
+	send_user "usage: expect get.exp cmd user passwd host_ip\n"
+	exit
+}
+
+
+
+set cmd [lindex $argv 0]
+set user [lindex $argv 1]
+set passwd [lindex $argv 2]
+set ip [lindex $argv 3]
+spawn /usr/bin/sftp $user@$ip
+expect {
+"(yes/no)?" {send "yes\r";exp_continue}
+"password:" {send "$passwd\r"}
+}
+expect ">" 
+send "$cmd\r"
+expect ">"
+send "bye\r"
+expect eof
