@@ -15,4 +15,3 @@ count English words in files with hash table. I learned and write the hash
 table code from redis source code.
 
 ## statusCheck
-
