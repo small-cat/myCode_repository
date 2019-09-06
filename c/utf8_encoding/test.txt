@@ -1,1 +1,1 @@
-select phone, 手机号码, "证件号码", "identify_card" from "scott".student;
+select name, "phone", 手机号码, "身份证", "identify_card" from "scott".student;

@@ -14,6 +14,20 @@
 #include <unistd.h>
 #include <ctype.h>
 
+/***********************************************************
+ * check string is utf8 or not. utf8 format as the following
+ * 1 0XXXXXXX
+ * 2 110XXXX  10XXXXXX
+ * 3 1110XXXX 10XXXXXX 10XXXXXX
+ * 4 11110XXX 10XXXXXX 10XXXXXX 10XXXXXX 
+ * 5 111110XX 10XXXXXX 10XXXXXX 10XXXXXX 10XXXXXX 
+ * 6 1111110X 10XXXXXX 10XXXXXX 10XXXXXX 10XXXXXX 10XXXXXX
+ * so, the range length is from 1 to 6, one byte format is the same as ascii
+ * in first byte of others, the number of 1s is the number of bytes.
+ * @author 
+ * @param 
+ * @date 06/09/2019 
+***********************************************************/ 
 int utf8_check(const char* str, size_t len) {
     if (NULL == str || len <= 0) {
         return 0;
@@ -21,7 +35,7 @@ int utf8_check(const char* str, size_t len) {
 
     size_t i = 0;
     int n_bytes = 0;
-    unsigned char ch = 0;
+    char ch = 0;
 
     while (i < len) {
         ch = *(str + i);
@@ -59,6 +73,13 @@ int utf8_check(const char* str, size_t len) {
     return n_bytes == 0;
 }
 
+/***********************************************************
+ * only toupper alpha, if string is surrounded by double quotes, 
+ * is case sensitive, and don't toupper
+ * @author 
+ * @param 
+ * @date 06/09/2019 
+***********************************************************/ 
 char* toupper_with_case_sensitive(char* str, size_t len) {
     if (str == NULL || len <= 0) {
         printf("string is empty\n");
@@ -69,14 +90,16 @@ char* toupper_with_case_sensitive(char* str, size_t len) {
     int n_bytes = 0;
     int case_sensitive = 0;
     char *p = NULL;
+    char ch = 0;
 
     while (i < len) {
         p = str + i;
 
         if (*p & 0x80) {    // maybe Chinese character, not same as ascii
-            while (*p & 0x80) {
+            ch = *p;
+            while (ch & 0x80) {
                 n_bytes++;
-                *p <<= 1;
+                ch <<= 1;
             }
             // skip the current character
             i += n_bytes;
@@ -114,7 +137,7 @@ char* toupper_with_case_sensitive(char* str, size_t len) {
 void printstring(char* str, size_t len) {
     char *p = str;
     while (*p != '\0') {
-        printf("%c %x", *p, *p);
+        printf("%x, ", *p);
         p++;
     }
 
@@ -136,9 +159,9 @@ int main() {
         printf("utf8 string, len:%ld, code: %s\n", len, buf);
     }
 
-    printstring(buf, len);
     toupper_with_case_sensitive(buf, len);
-    printstring(buf, len);
+    printf("after toupper..............\n");
+    printf("%s\n", buf);
 
     close(fd);
     return 0;
