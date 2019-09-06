@@ -1,0 +1,1 @@
+select phone, 手机号码, "证件号码", "identify_card" from "scott".student;
