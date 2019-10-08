@@ -76,7 +76,7 @@ int utf8_check(const char* str, size_t len) {
 /***********************************************************
  * only toupper alpha, if string is surrounded by double quotes, 
  * is case sensitive, and don't toupper
- * @author 
+ * @author Jona
  * @param 
  * @date 06/09/2019 
 ***********************************************************/ 

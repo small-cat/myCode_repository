@@ -1,0 +1,22 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "
+#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../from_clause_matcher.hpp\"
+
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}FromClauseMatcher : public FromClauseMatcher {
+  public:
+    ${database}FromClauseMatcher() {}
+    ~${database}FromClauseMatcher() {}
+
+    virtual bool Match(dbproxy::ServerContext &ctx) override;
+};
+}}}
+
+#endif"

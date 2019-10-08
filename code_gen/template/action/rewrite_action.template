@@ -1,0 +1,26 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "
+#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../rewrite_action.hpp\"
+
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}RewriteAction : public RewriteAction {
+  public:
+    ${database}RewriteAction() {}
+    ~${database}RewriteAction() {}
+
+    virtual std::error_code Do(dbproxy::ServerContext &ctx, 
+        std::error_code &ec) {
+      ctx.SetSql(alternate_statement());
+      return ec;
+    }
+};
+}}}
+
+#endif"

@@ -1,0 +1,21 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../mask_action.hpp\"
+
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}MaskAction : public MaskAction {
+  public:
+    ${database}MaskAction() {}
+    ~${database}MaskAction() {}
+
+    virtual std::error_code Do(dbproxy::ServerContext& ctx, std::error_code& ec) override;
+};
+}}}
+
+#endif"

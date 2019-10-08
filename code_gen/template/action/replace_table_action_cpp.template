@@ -1,0 +1,43 @@
+typeset -l lower_database
+lower_database="${database}"
+classname="${database}ReplaceTableAction"
+
+echo "
+#include \"${include_file_hpp}\"
+#include \"../../sqlparser/${lower_database}/${lower_database}_get_table_listener.h\"
+#include \"../../sqlparser/${lower_database}/${lower_database}_replace_table_listener.h\"
+#include \"../mask_item.hpp\"
+#include \"../../sqlparser/error_verbose_listener.h\"
+
+#include <${database}SqlLexer.h>
+#include <${database}SqlParser.h>
+#include <plog/Log.h>
+
+using namespace antlr4;
+
+namespace dbproxy {namespace rule {namespace security {
+
+std::error_code ${classname}::Do(dbproxy::ServerContext& ctx, 
+    std::error_code& ec) {
+  ANTLRInputStream input(ctx.GetSql());
+  ${database}SqlLexer lexer(&input);
+  CommonTokenStream tokens(&lexer);
+  ${database}SqlParser parser(&tokens);
+
+  // add a new error listener
+  ErrorVerboseListener err_listener;
+  parser.removeErrorListeners();
+  parser.addErrorListener(&err_listener);
+
+  tree::ParseTree *tree = parser.run_rules();
+  if (err_listener.has_error()) {
+    PLOG_ERROR << \"Parse failed: \" << ctx.GetSql();
+    PLOG_ERROR << err_listener.get_err_message();
+    return ec;
+  }
+
+  /* add you logical code block here */
+
+  return ec;
+}
+}}}"

@@ -1,0 +1,21 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../replace_table_action.hpp\"
+
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}ReplaceTableAction : public ReplaceTableAction {
+  public:
+    ${database}ReplaceTableAction() {}
+    ~${database}ReplaceTableAction() {}
+
+    virtual std::error_code Do(dbproxy::ServerContext& ctx, std::error_code &ec) override;
+};
+}}}
+
+#endif"

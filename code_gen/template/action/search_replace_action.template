@@ -1,0 +1,40 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "
+#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../search_replace_action.hpp\"
+
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}SearchReplaceAction : public SearchReplaceAction {
+  public:
+    ${database}SearchReplaceAction() {}
+    ~${database}SearchReplaceAction() {}
+
+    virtual std::error_code Do(dbproxy::ServerContext& ctx, 
+        std::error_code &ec) override {
+      auto sql_statement = ctx.GetSql();
+      if (method_text() == "string") {
+        auto pos = sql_statement.find(search_text());
+        if (pos != std::string::pos) {
+          sql_statement.replace(pos, search_text.size(), replace_text());
+        }
+      } else if (method_text() == "regex") {
+        try {
+          std::regex text_match(search_text(), std::regex::icase);
+          sql_statement = regex_replace(sql_statement, text_match, replace_text());
+        } catch (std::exception& e) {
+          PLOG_ERROR << e.what();
+        }
+      }
+      ctx.SetSql(sql_statement);
+      return ec;
+    }
+};
+}}}
+
+#endif"

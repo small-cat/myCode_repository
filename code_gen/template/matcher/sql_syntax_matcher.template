@@ -1,0 +1,24 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "
+#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../sql_syntax_matcher.hpp\"
+
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}SqlSyntaxMatcher : public SqlSyntaxMatcher {
+  public:
+    ${database}SqlSyntaxMatcher() {}
+    ~${database}SqlSyntaxMatcher() {}
+
+    virtual bool Match(dbproxy::ServerContext &ctx) override {
+      return true;
+    }
+};
+}}}
+
+#endif"

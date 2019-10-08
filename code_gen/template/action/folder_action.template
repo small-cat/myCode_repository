@@ -1,0 +1,27 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../folder_action.hpp\"
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}FolderAction : public FolderAction {
+  public:
+  ${database}FolderAction() {}
+  ~${database}FolderAction() {}
+
+  virtual std::error_code Do(dbproxy::ServerContext& ctx, std::error_code& ec) override {
+    PLOG_DEBUG << \"folder action\";
+    if (!rule_set()) {
+      return ec;
+    }
+    return rule_set()->Do(ctx, ec);
+  }
+};
+
+}}} // namespace
+
+#endif"

@@ -1,0 +1,31 @@
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "
+#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include \"../symbol_matcher.hpp\"
+
+namespace dbproxy {namespace rule {namespace security {
+
+class ${database}SymbolMatcher : public SymbolMatcher {
+  public:
+    ${database}SymbolMatcher() {}
+    ~${database}SymbolMatcher() {}
+
+    virtual bool Match(dbproxy::ServerContext &ctx) override {
+      std::string str;
+      if (ctx.GetVariable(property().name, str)) {
+        for (const auto& item : property().items) {
+          if (strcasecmp(str.c_str(), item.c_str()) == 0)
+            return true;
+        }
+      }
+      return false;
+    }
+};
+}}}
+
+#endif"

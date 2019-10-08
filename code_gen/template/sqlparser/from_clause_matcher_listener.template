@@ -1,0 +1,30 @@
+typeset -l lower_database
+lower_database="${database}"
+
+typeset -u IF_DEFINE
+cur_file=$(echo ${filename} | sed 's/\./_/g')
+IF_DEFINE=${cur_file}
+
+echo "
+#ifndef ${IF_DEFINE}
+#define ${IF_DEFINE}
+
+#include <string>
+#include <${database}SqlParser.h>
+#include <${database}SqlParserBaseListener.h>
+
+namespace ${lower_database} {
+
+class ${database}FromClauseMatcher : public ${database}SqlParserBaseListener {
+  public:
+    ${database}FromClauseMatcher() {}
+    ~${database}FromClauseMatcher() {}
+
+    /* TODO: implements enter and exit functions */
+
+  private:
+    /* TODO: */
+};
+}
+
+#endif"
