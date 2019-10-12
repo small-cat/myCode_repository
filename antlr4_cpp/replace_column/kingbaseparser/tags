@@ -1,0 +1,371 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Column	column_item.h	/^typedef struct Column {$/;"	s
+Column	column_item.h	/^} Column;$/;"	t	typeref:struct:Column
+Column::column_type	column_item.h	/^  ColumnType column_type;$/;"	m	struct:Column	access:public
+Column::func_column	column_item.h	/^  FuncColumn func_column;$/;"	m	struct:Column	access:public
+Column::regular_column	column_item.h	/^  RegularColumn regular_column;$/;"	m	struct:Column	access:public
+ColumnDAG	column_relation_dag.h	/^struct ColumnDAG {$/;"	s
+ColumnDAG::clear	column_relation_dag.h	/^    void clear() {$/;"	f	struct:ColumnDAG	access:public	signature:()
+ColumnDAG::equivalent_cond_list	column_relation_dag.h	/^    EquivalentCondList equivalent_cond_list;$/;"	m	struct:ColumnDAG	access:public
+ColumnDAG::table_to_column_list	column_relation_dag.h	/^    Tables2ColumnsList table_to_column_list;$/;"	m	struct:ColumnDAG	access:public
+ColumnDAG::table_to_subquery_list	column_relation_dag.h	/^    Table2SubqueryList table_to_subquery_list;$/;"	m	struct:ColumnDAG	access:public
+ColumnItem	column_item.h	/^typedef struct ColumnItem {$/;"	s
+ColumnItem	column_item.h	/^} ColumnItem;$/;"	t	typeref:struct:ColumnItem
+ColumnItem	item.h	/^struct ColumnItem {$/;"	s
+ColumnItem::alias	item.h	/^  std::string alias;$/;"	m	struct:ColumnItem	access:public
+ColumnItem::alias_name	column_item.h	/^  std::string alias_name;$/;"	m	struct:ColumnItem	access:public
+ColumnItem::clear	column_item.h	/^  void clear() {$/;"	f	struct:ColumnItem	access:public	signature:()
+ColumnItem::clear	item.h	/^  void clear() {$/;"	f	struct:ColumnItem	access:public	signature:()
+ColumnItem::column	item.h	/^  std::string column;$/;"	m	struct:ColumnItem	access:public
+ColumnItem::column_list	column_item.h	/^  std::vector<Column> column_list;$/;"	m	struct:ColumnItem	access:public
+ColumnItem::operator <	item.h	/^  friend bool operator<(const ColumnItem& col1, const ColumnItem& col2) {$/;"	f	struct:ColumnItem	access:friend	signature:(const ColumnItem& col1, const ColumnItem& col2)
+ColumnItem::operator_list	column_item.h	/^  std::vector<std::string> operator_list;$/;"	m	struct:ColumnItem	access:public
+ColumnItem::schema	item.h	/^  std::string schema;$/;"	m	struct:ColumnItem	access:public
+ColumnItem::table	item.h	/^  std::string table;$/;"	m	struct:ColumnItem	access:public
+ColumnItemList	column_item.h	/^typedef std::vector<ColumnItem> ColumnItemList;$/;"	t
+ColumnItemList	item.h	/^typedef std::vector<ColumnItem> ColumnItemList;$/;"	t
+ColumnType	column_item.h	/^typedef enum class ColumnType {$/;"	c
+ColumnType	column_item.h	/^} ColumnType;$/;"	t	typeref:class:ColumnType
+ColumnType::FUNCTION	column_item.h	/^  FUNCTION,$/;"	m	class:ColumnType	access:private
+ColumnType::REGULAR	column_item.h	/^  REGULAR,$/;"	m	class:ColumnType	access:private
+EquivalentCond	column_relation_dag.h	/^struct EquivalentCond {$/;"	s
+EquivalentCond::from	column_relation_dag.h	/^    ColumnItem from;$/;"	m	struct:EquivalentCond	access:public
+EquivalentCond::to	column_relation_dag.h	/^    ColumnItem to;$/;"	m	struct:EquivalentCond	access:public
+EquivalentCondList	column_relation_dag.h	/^typedef std::vector<EquivalentCond> EquivalentCondList;$/;"	t
+ErrorVerboseListener	error_verbose_listener.hpp	/^  ErrorVerboseListener () {$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+ErrorVerboseListener	error_verbose_listener.hpp	/^class ErrorVerboseListener : public antlr4::BaseErrorListener {$/;"	c	inherits:antlr4::BaseErrorListener
+ErrorVerboseListener::ErrorVerboseListener	error_verbose_listener.hpp	/^  ErrorVerboseListener () {$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+ErrorVerboseListener::err_message	error_verbose_listener.hpp	/^  std::string err_message() {$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+ErrorVerboseListener::err_message_	error_verbose_listener.hpp	/^  std::string err_message_;$/;"	m	class:ErrorVerboseListener	access:private
+ErrorVerboseListener::has_error	error_verbose_listener.hpp	/^  bool has_error() {$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+ErrorVerboseListener::has_error_	error_verbose_listener.hpp	/^  bool has_error_;$/;"	m	class:ErrorVerboseListener	access:private
+ErrorVerboseListener::syntaxError	error_verbose_listener.hpp	/^  void syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, $/;"	f	class:ErrorVerboseListener	access:public	signature:(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line, size_t charPositionInLine, const std::string &msg, std::exception_ptr e)
+ErrorVerboseListener::~ErrorVerboseListener	error_verbose_listener.hpp	/^  virtual ~ErrorVerboseListener () {}$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+FUNCTION	column_item.h	/^  FUNCTION,$/;"	m	class:ColumnType	access:private
+FindFromTableToColumnList	column_relation_dag.h	/^static void FindFromTableToColumnList($/;"	f	signature:( std::map<ColumnItem, ColumnItemList> &map_columns, ColumnItem &key, ColumnDAG &column_dag, ColumnItem &column_item)
+FuncColumn	column_item.h	/^typedef struct FuncColumn {$/;"	s
+FuncColumn	column_item.h	/^} FuncColumn;$/;"	t	typeref:struct:FuncColumn
+FuncColumn	item.h	/^typedef struct FuncColumn {$/;"	s
+FuncColumn	item.h	/^} FuncColumn;$/;"	t	typeref:struct:FuncColumn
+FuncColumn::arg_list	column_item.h	/^  std::vector<std::string> arg_list;$/;"	m	struct:FuncColumn	access:public
+FuncColumn::arg_list	item.h	/^  std::vector<std::string> arg_list;$/;"	m	struct:FuncColumn	access:public
+FuncColumn::func_name	column_item.h	/^  std::string func_name;$/;"	m	struct:FuncColumn	access:public
+FuncColumn::func_name	item.h	/^  std::string func_name;$/;"	m	struct:FuncColumn	access:public
+GetColumnRelations	column_relation_dag.h	/^static void GetColumnRelations($/;"	f	signature:( ColumnDAG &dag, MaskItem &mask_item, std::map<ColumnItem, ColumnItemList> &column_relations_map)
+GetColumnRelationsByMaskItemList	kingbase_get_column_dag_listener.hpp	/^    std::map<ColumnItem, ColumnItemList> GetColumnRelationsByMaskItemList($/;"	f	class:KingbaseGetColumnDAG	access:public	signature:( MaskItemList &mask_item_list)
+GetResult	kingbase_mask_listener.h	/^    std::string GetResult() {$/;"	f	class:KingbaseMaskListener	access:public	signature:()
+IsItemInMap	column_relation_dag.h	/^static bool IsItemInMap(std::map<ColumnItem, ColumnItemList> &map, $/;"	f	signature:(std::map<ColumnItem, ColumnItemList> &map, ColumnItem &item)
+IsMaskColumn	column_relation_dag.h	/^static bool IsMaskColumn(std::map<ColumnItem, ColumnItemList> &column_relations_map, $/;"	f	signature:(std::map<ColumnItem, ColumnItemList> &column_relations_map, MaskItem &mask_item, ColumnItem &col_item)
+KingbaseFromClauseMatcherListener	kingbase_from_clause_matcher_listener.h	/^        KingbaseFromClauseMatcherListener(KingbaseSqlParser *parser, std::string string) {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:(KingbaseSqlParser *parser, std::string string)
+KingbaseFromClauseMatcherListener	kingbase_from_clause_matcher_listener.h	/^class KingbaseFromClauseMatcherListener : public KingbaseSqlParserBaseListener {$/;"	c	inherits:KingbaseSqlParserBaseListener
+KingbaseFromClauseMatcherListener::KingbaseFromClauseMatcherListener	kingbase_from_clause_matcher_listener.h	/^        KingbaseFromClauseMatcherListener(KingbaseSqlParser *parser, std::string string) {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:(KingbaseSqlParser *parser, std::string string)
+KingbaseFromClauseMatcherListener::enterTable_name	kingbase_from_clause_matcher_listener.h	/^       void enterTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+KingbaseFromClauseMatcherListener::exitTable_name	kingbase_from_clause_matcher_listener.h	/^       void exitTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+KingbaseFromClauseMatcherListener::matched	kingbase_from_clause_matcher_listener.h	/^        bool matched() {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:()
+KingbaseFromClauseMatcherListener::matched_	kingbase_from_clause_matcher_listener.h	/^        bool matched_;$/;"	m	class:KingbaseFromClauseMatcherListener	access:private
+KingbaseFromClauseMatcherListener::parser_	kingbase_from_clause_matcher_listener.h	/^        KingbaseSqlParser *parser_;$/;"	m	class:KingbaseFromClauseMatcherListener	access:private
+KingbaseFromClauseMatcherListener::tablename	kingbase_from_clause_matcher_listener.h	/^        std::string tablename() {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:()
+KingbaseFromClauseMatcherListener::tablename_	kingbase_from_clause_matcher_listener.h	/^        std::string tablename_;$/;"	m	class:KingbaseFromClauseMatcherListener	access:private
+KingbaseFromClauseMatcherListener::~KingbaseFromClauseMatcherListener	kingbase_from_clause_matcher_listener.h	/^        ~KingbaseFromClauseMatcherListener(){}$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:()
+KingbaseGetColumnDAG	kingbase_get_column_dag_listener.hpp	/^    KingbaseGetColumnDAG(KingbaseSqlParser *parser) : parser_(parser) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser *parser)
+KingbaseGetColumnDAG	kingbase_get_column_dag_listener.hpp	/^class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {$/;"	c	inherits:KingbaseSqlParserBaseListener
+KingbaseGetColumnDAG::GetColumnRelationsByMaskItemList	kingbase_get_column_dag_listener.hpp	/^    std::map<ColumnItem, ColumnItemList> GetColumnRelationsByMaskItemList($/;"	f	class:KingbaseGetColumnDAG	access:public	signature:( MaskItemList &mask_item_list)
+KingbaseGetColumnDAG::KingbaseGetColumnDAG	kingbase_get_column_dag_listener.hpp	/^    KingbaseGetColumnDAG(KingbaseSqlParser *parser) : parser_(parser) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser *parser)
+KingbaseGetColumnDAG::column_dag	kingbase_get_column_dag_listener.hpp	/^    ColumnDAG column_dag() {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:()
+KingbaseGetColumnDAG::column_dag_	kingbase_get_column_dag_listener.hpp	/^    ColumnDAG column_dag_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::column_list_	kingbase_get_column_dag_listener.hpp	/^    ColumnItemList column_list_;        \/\/ get column_list$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::column_list_restore_	kingbase_get_column_dag_listener.hpp	/^    std::vector<ColumnItemList> column_list_restore_; \/\/ restore$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::column_or_expression_visited_	kingbase_get_column_dag_listener.hpp	/^    bool column_or_expression_visited_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::count_for_name_	kingbase_get_column_dag_listener.hpp	/^    int count_for_name_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::enterColumn_name	kingbase_get_column_dag_listener.hpp	/^    void enterColumn_name(KingbaseSqlParser::Column_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Column_nameContext *ctx)
+KingbaseGetColumnDAG::enterIn_elements	kingbase_get_column_dag_listener.hpp	/^    void enterIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+KingbaseGetColumnDAG::enterJoin_on_part	kingbase_get_column_dag_listener.hpp	/^    void enterJoin_on_part(KingbaseSqlParser::Join_on_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Join_on_partContext *ctx)
+KingbaseGetColumnDAG::enterParen_column_list	kingbase_get_column_dag_listener.hpp	/^    void enterParen_column_list(KingbaseSqlParser::Paren_column_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Paren_column_listContext *ctx)
+KingbaseGetColumnDAG::enterQuery_block	kingbase_get_column_dag_listener.hpp	/^    void enterQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+KingbaseGetColumnDAG::enterRelational_expression	kingbase_get_column_dag_listener.hpp	/^    void enterRelational_expression(KingbaseSqlParser::Relational_expressionContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Relational_expressionContext *ctx)
+KingbaseGetColumnDAG::enterSelected_list	kingbase_get_column_dag_listener.hpp	/^    void enterSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+KingbaseGetColumnDAG::enterSelected_list_element	kingbase_get_column_dag_listener.hpp	/^    void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+KingbaseGetColumnDAG::enterSubquery_operation_part	kingbase_get_column_dag_listener.hpp	/^    void enterSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+KingbaseGetColumnDAG::enterTable_name	kingbase_get_column_dag_listener.hpp	/^    void enterTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+KingbaseGetColumnDAG::enterTable_ref_aux	kingbase_get_column_dag_listener.hpp	/^    void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+KingbaseGetColumnDAG::enterTable_ref_list	kingbase_get_column_dag_listener.hpp	/^    void enterTable_ref_list(KingbaseSqlParser::Table_ref_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_listContext *ctx)
+KingbaseGetColumnDAG::enterWith_query	kingbase_get_column_dag_listener.hpp	/^    void enterWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+KingbaseGetColumnDAG::exitColumn_name	kingbase_get_column_dag_listener.hpp	/^    void exitColumn_name(KingbaseSqlParser::Column_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Column_nameContext *ctx)
+KingbaseGetColumnDAG::exitIn_elements	kingbase_get_column_dag_listener.hpp	/^    void exitIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+KingbaseGetColumnDAG::exitJoin_on_part	kingbase_get_column_dag_listener.hpp	/^    void exitJoin_on_part(KingbaseSqlParser::Join_on_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Join_on_partContext *ctx)
+KingbaseGetColumnDAG::exitParen_column_list	kingbase_get_column_dag_listener.hpp	/^    void exitParen_column_list(KingbaseSqlParser::Paren_column_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Paren_column_listContext *ctx)
+KingbaseGetColumnDAG::exitQuery_block	kingbase_get_column_dag_listener.hpp	/^    void exitQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+KingbaseGetColumnDAG::exitRelational_expression	kingbase_get_column_dag_listener.hpp	/^    void exitRelational_expression(KingbaseSqlParser::Relational_expressionContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Relational_expressionContext *ctx)
+KingbaseGetColumnDAG::exitSelected_list	kingbase_get_column_dag_listener.hpp	/^    void exitSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+KingbaseGetColumnDAG::exitSelected_list_element	kingbase_get_column_dag_listener.hpp	/^    void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+KingbaseGetColumnDAG::exitSubquery_operation_part	kingbase_get_column_dag_listener.hpp	/^    void exitSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+KingbaseGetColumnDAG::exitTable_name	kingbase_get_column_dag_listener.hpp	/^    void exitTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+KingbaseGetColumnDAG::exitTable_ref_aux	kingbase_get_column_dag_listener.hpp	/^    void exitTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+KingbaseGetColumnDAG::exitTable_ref_list	kingbase_get_column_dag_listener.hpp	/^    void exitTable_ref_list(KingbaseSqlParser::Table_ref_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_listContext *ctx)
+KingbaseGetColumnDAG::exitWith_query	kingbase_get_column_dag_listener.hpp	/^    void exitWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+KingbaseGetColumnDAG::join_on_part_	kingbase_get_column_dag_listener.hpp	/^    bool join_on_part_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::parser_	kingbase_get_column_dag_listener.hpp	/^    KingbaseSqlParser *parser_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::subquery_namev_	kingbase_get_column_dag_listener.hpp	/^    std::vector<std::string> subquery_namev_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::table_item_	kingbase_get_column_dag_listener.hpp	/^    TableItem table_item_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::table_list_	kingbase_get_column_dag_listener.hpp	/^    TableItemList  table_list_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::table_list_restore_	kingbase_get_column_dag_listener.hpp	/^    std::vector<TableItemList> table_list_restore_;  \/\/ restore table_list$/;"	m	class:KingbaseGetColumnDAG	access:private
+KingbaseGetColumnDAG::~KingbaseGetColumnDAG	kingbase_get_column_dag_listener.hpp	/^    ~KingbaseGetColumnDAG() {}$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:()
+KingbaseGetSelectedListListener	kingbase_get_selected_list_listener.hpp	/^  KingbaseGetSelectedListListener (KingbaseSqlParser *parser) : parser_(parser) {$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:(KingbaseSqlParser *parser)
+KingbaseGetSelectedListListener	kingbase_get_selected_list_listener.hpp	/^class KingbaseGetSelectedListListener : public KingbaseSqlParserBaseListener {$/;"	c	inherits:KingbaseSqlParserBaseListener
+KingbaseGetSelectedListListener::KingbaseGetSelectedListListener	kingbase_get_selected_list_listener.hpp	/^  KingbaseGetSelectedListListener (KingbaseSqlParser *parser) : parser_(parser) {$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:(KingbaseSqlParser *parser)
+KingbaseGetSelectedListListener::column_item_	kingbase_get_selected_list_listener.hpp	/^  ColumnItem column_item_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+KingbaseGetSelectedListListener::column_list_	kingbase_get_selected_list_listener.hpp	/^  ColumnItemList column_list_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+KingbaseGetSelectedListListener::enterSelected_list_element	kingbase_get_selected_list_listener.hpp	/^  void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext* ctx) {$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext* ctx)
+KingbaseGetSelectedListListener::exitSelected_list_element	kingbase_get_selected_list_listener.hpp	/^  void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext* ctx) {}$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext* ctx)
+KingbaseGetSelectedListListener::parser_	kingbase_get_selected_list_listener.hpp	/^  KingbaseSqlParser *parser_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+KingbaseGetSelectedListListener::selected_list_element_	kingbase_get_selected_list_listener.hpp	/^  selected_list_element_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+KingbaseGetSelectedListListener::~KingbaseGetSelectedListListener	kingbase_get_selected_list_listener.hpp	/^  ~KingbaseGetSelectedListListener () {}$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:()
+KingbaseGetTableListener	kingbase_get_table_listener.h	/^        KingbaseGetTableListener(KingbaseSqlParser *parser) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser *parser)
+KingbaseGetTableListener	kingbase_get_table_listener.h	/^class KingbaseGetTableListener : public KingbaseSqlParserBaseListener {$/;"	c	inherits:KingbaseSqlParserBaseListener
+KingbaseGetTableListener::KingbaseGetTableListener	kingbase_get_table_listener.h	/^        KingbaseGetTableListener(KingbaseSqlParser *parser) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser *parser)
+KingbaseGetTableListener::enterTable_name	kingbase_get_table_listener.h	/^        void enterTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+KingbaseGetTableListener::enterTable_ref_aux	kingbase_get_table_listener.h	/^        void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+KingbaseGetTableListener::exitTable_name	kingbase_get_table_listener.h	/^        void exitTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+KingbaseGetTableListener::exitTable_ref_aux	kingbase_get_table_listener.h	/^        void exitTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+KingbaseGetTableListener::getTable_Item_List	kingbase_get_table_listener.h	/^        MaskColumnItemList getTable_Item_List(const MaskItemList &mask_item_list) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(const MaskItemList &mask_item_list)
+KingbaseGetTableListener::parser_	kingbase_get_table_listener.h	/^        KingbaseSqlParser *parser_;$/;"	m	class:KingbaseGetTableListener	access:private
+KingbaseGetTableListener::table_item_	kingbase_get_table_listener.h	/^        TableItem table_item_;$/;"	m	class:KingbaseGetTableListener	access:private
+KingbaseGetTableListener::table_item_list_	kingbase_get_table_listener.h	/^        TableItemList table_item_list_;$/;"	m	class:KingbaseGetTableListener	access:private
+KingbaseMaskListener	kingbase_mask_listener.h	/^    KingbaseMaskListener(KingbaseSqlParser *parser, $/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser *parser, antlr4::TokenStream *tokens, std::map<ColumnItem, ColumnItemList> map_columns, MaskItemList mask_item_list)
+KingbaseMaskListener	kingbase_mask_listener.h	/^class KingbaseMaskListener : public KingbaseSqlParserBaseListener {$/;"	c	inherits:KingbaseSqlParserBaseListener
+KingbaseMaskListener::GetResult	kingbase_mask_listener.h	/^    std::string GetResult() {$/;"	f	class:KingbaseMaskListener	access:public	signature:()
+KingbaseMaskListener::KingbaseMaskListener	kingbase_mask_listener.h	/^    KingbaseMaskListener(KingbaseSqlParser *parser, $/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser *parser, antlr4::TokenStream *tokens, std::map<ColumnItem, ColumnItemList> map_columns, MaskItemList mask_item_list)
+KingbaseMaskListener::StrCaseCmp	kingbase_mask_listener.h	/^    bool StrCaseCmp(const std::string &s1, const std::string &s2) {$/;"	f	class:KingbaseMaskListener	access:private	signature:(const std::string &s1, const std::string &s2)
+KingbaseMaskListener::column_relation_map_	kingbase_mask_listener.h	/^    std::map<ColumnItem, ColumnItemList> column_relation_map_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::enterIn_elements	kingbase_mask_listener.h	/^    void enterIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+KingbaseMaskListener::enterQuery_block	kingbase_mask_listener.h	/^    void enterQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+KingbaseMaskListener::enterSelected_list	kingbase_mask_listener.h	/^    void enterSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {}$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+KingbaseMaskListener::enterSelected_list_element	kingbase_mask_listener.h	/^    void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+KingbaseMaskListener::enterSubquery_operation_part	kingbase_mask_listener.h	/^    void enterSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+KingbaseMaskListener::enterTable_ref_aux	kingbase_mask_listener.h	/^    void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+KingbaseMaskListener::enterWith_query	kingbase_mask_listener.h	/^    void enterWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+KingbaseMaskListener::exitIn_elements	kingbase_mask_listener.h	/^    void exitIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+KingbaseMaskListener::exitQuery_block	kingbase_mask_listener.h	/^    void exitQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+KingbaseMaskListener::exitSelected_list	kingbase_mask_listener.h	/^    void exitSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+KingbaseMaskListener::exitSelected_list_element	kingbase_mask_listener.h	/^    void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+KingbaseMaskListener::exitSubquery_operation_part	kingbase_mask_listener.h	/^    void exitSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+KingbaseMaskListener::exitTable_ref_aux	kingbase_mask_listener.h	/^    void exitTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+KingbaseMaskListener::exitWith_query	kingbase_mask_listener.h	/^    void exitWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+KingbaseMaskListener::is_root_query_block_	kingbase_mask_listener.h	/^    bool is_root_query_block_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::mask_item_list_	kingbase_mask_listener.h	/^    MaskItemList mask_item_list_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::parser_	kingbase_mask_listener.h	/^    KingbaseSqlParser *parser_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::rewriter_	kingbase_mask_listener.h	/^    antlr4::TokenStreamRewriter rewriter_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::root_query_blockv_	kingbase_mask_listener.h	/^    std::vector<bool> root_query_blockv_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::subquery_name_save_	kingbase_mask_listener.h	/^    std::vector<std::string> subquery_name_save_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::subquery_namev_	kingbase_mask_listener.h	/^    std::vector<std::string> subquery_namev_;$/;"	m	class:KingbaseMaskListener	access:private
+KingbaseMaskListener::~KingbaseMaskListener	kingbase_mask_listener.h	/^    ~KingbaseMaskListener() {}$/;"	f	class:KingbaseMaskListener	access:public	signature:()
+KingbaseTestListener	kingbase_test_listener.hpp	/^    KingbaseTestListener() {}$/;"	f	class:KingbaseTestListener	access:public	signature:()
+KingbaseTestListener	kingbase_test_listener.hpp	/^class KingbaseTestListener : public KingbaseSqlParserBaseListener {$/;"	c	inherits:KingbaseSqlParserBaseListener
+KingbaseTestListener::KingbaseTestListener	kingbase_test_listener.hpp	/^    KingbaseTestListener() {}$/;"	f	class:KingbaseTestListener	access:public	signature:()
+KingbaseTestListener::enterQuery_block	kingbase_test_listener.hpp	/^    void enterQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+KingbaseTestListener::enterSelect_statement	kingbase_test_listener.hpp	/^    void enterSelect_statement(KingbaseSqlParser::Select_statementContext* ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Select_statementContext* ctx)
+KingbaseTestListener::exitQuery_block	kingbase_test_listener.hpp	/^    void exitQuery_block(KingbaseSqlParser::Query_blockContext* ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Query_blockContext* ctx)
+KingbaseTestListener::exitSelect_statement	kingbase_test_listener.hpp	/^    void exitSelect_statement(KingbaseSqlParser::Select_statementContext* ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Select_statementContext* ctx)
+KingbaseTestListener::~KingbaseTestListener	kingbase_test_listener.hpp	/^    ~KingbaseTestListener() {}$/;"	f	class:KingbaseTestListener	access:public	signature:()
+MaskColumnItem	item.h	/^struct MaskColumnItem {$/;"	s
+MaskColumnItem::mask_item	item.h	/^  MaskItem mask_item;$/;"	m	struct:MaskColumnItem	access:public
+MaskColumnItem::table_item	item.h	/^  TableItem table_item;$/;"	m	struct:MaskColumnItem	access:public
+MaskColumnItemList	item.h	/^typedef std::vector<MaskColumnItem> MaskColumnItemList;$/;"	t
+MaskItem	item.h	/^struct MaskItem {$/;"	s
+MaskItem::clear	item.h	/^  void clear() {$/;"	f	struct:MaskItem	access:public	signature:()
+MaskItem::column	item.h	/^  std::string column;$/;"	m	struct:MaskItem	access:public
+MaskItem::mask_function	item.h	/^  std::string mask_function;$/;"	m	struct:MaskItem	access:public
+MaskItem::table	item.h	/^  std::string table;$/;"	m	struct:MaskItem	access:public
+MaskItemList	item.h	/^typedef std::vector<MaskItem> MaskItemList;$/;"	t
+REGULAR	column_item.h	/^  REGULAR,$/;"	m	class:ColumnType	access:private
+RegularColumn	column_item.h	/^typedef struct RegularColumn {$/;"	s
+RegularColumn	column_item.h	/^} RegularColumn;$/;"	t	typeref:struct:RegularColumn
+RegularColumn	item.h	/^struct RegularColumn {$/;"	s
+RegularColumn::clear	column_item.h	/^  void clear() {$/;"	f	struct:RegularColumn	access:public	signature:()
+RegularColumn::column	column_item.h	/^  std::string column;$/;"	m	struct:RegularColumn	access:public
+RegularColumn::column	item.h	/^  std::string column;$/;"	m	struct:RegularColumn	access:public
+RegularColumn::schema	column_item.h	/^  std::string schema;$/;"	m	struct:RegularColumn	access:public
+RegularColumn::schema	item.h	/^  std::string schema;$/;"	m	struct:RegularColumn	access:public
+RegularColumn::table	column_item.h	/^  std::string table;$/;"	m	struct:RegularColumn	access:public
+RegularColumn::table	item.h	/^  std::string table;$/;"	m	struct:RegularColumn	access:public
+SUBQUERY_SUFFIX	column_relation_dag.h	/^static const std::string SUBQUERY_SUFFIX = "_SUBQUERY_SECSMART";$/;"	v
+SUBQUERY_WITHCLAUSE	column_relation_dag.h	/^static const std::string SUBQUERY_WITHCLAUSE = "_WITHCLAUSE_SECSMART";$/;"	v
+StrCaseCmp	column_relation_dag.h	/^static bool StrCaseCmp(const std::string &str1, const std::string &str2) {$/;"	f	signature:(const std::string &str1, const std::string &str2)
+StrCaseCmp	kingbase_mask_listener.h	/^    bool StrCaseCmp(const std::string &s1, const std::string &s2) {$/;"	f	class:KingbaseMaskListener	access:private	signature:(const std::string &s1, const std::string &s2)
+Table2Subquery	column_relation_dag.h	/^struct Table2Subquery {$/;"	s
+Table2Subquery::subquery_name	column_relation_dag.h	/^    std::string subquery_name;$/;"	m	struct:Table2Subquery	access:public
+Table2Subquery::table_name	column_relation_dag.h	/^    std::string table_name;$/;"	m	struct:Table2Subquery	access:public
+Table2SubqueryList	column_relation_dag.h	/^typedef std::vector<Table2Subquery> Table2SubqueryList;$/;"	t
+TableItem	item.h	/^struct TableItem {$/;"	s
+TableItem::alias	item.h	/^  std::string alias;$/;"	m	struct:TableItem	access:public
+TableItem::clear	item.h	/^  void clear() {$/;"	f	struct:TableItem	access:public	signature:()
+TableItem::database	item.h	/^  std::string database;$/;"	m	struct:TableItem	access:public
+TableItem::schema	item.h	/^  std::string schema;$/;"	m	struct:TableItem	access:public
+TableItem::table	item.h	/^  std::string table;$/;"	m	struct:TableItem	access:public
+TableItemList	item.h	/^typedef std::vector<TableItem> TableItemList;$/;"	t
+Tables2Columns	column_relation_dag.h	/^struct Tables2Columns {$/;"	s
+Tables2Columns::from	column_relation_dag.h	/^    TableItemList from;$/;"	m	struct:Tables2Columns	access:public
+Tables2Columns::subquery_name	column_relation_dag.h	/^    std::string subquery_name;  \/\/ pointer out which subquery it is$/;"	m	struct:Tables2Columns	access:public
+Tables2Columns::to	column_relation_dag.h	/^    ColumnItemList to;$/;"	m	struct:Tables2Columns	access:public
+Tables2ColumnsList	column_relation_dag.h	/^typedef std::vector<Tables2Columns> Tables2ColumnsList;$/;"	t
+TravelColumnDag	column_relation_dag.h	/^static void TravelColumnDag(const ColumnDAG &dag) {$/;"	f	signature:(const ColumnDAG &dag)
+__COLUMN_RELATION_DAG_H__	column_relation_dag.h	19;"	d
+__ERROR_VERBOSE_LISTENER_H__	error_verbose_listener.hpp	9;"	d
+__KINGBASE_FROM_CLAUSE_MATCHER_LISTENER_H__	kingbase_from_clause_matcher_listener.h	9;"	d
+__KINGBASE_GET_COLUMN_DAG_LISTENER_HPP__	kingbase_get_column_dag_listener.hpp	31;"	d
+__KINGBASE_GET_SELECTED_LIST_LISTENER_H__	kingbase_get_selected_list_listener.hpp	9;"	d
+__KINGBASE_GET_TABLE_LISTENER_H__	kingbase_get_table_listener.h	9;"	d
+__KINGBASE_MASK_LISTENER_H__	kingbase_mask_listener.h	11;"	d
+__KINGBASE_TEST_LISTENER_HPP__	kingbase_test_listener.hpp	8;"	d
+__TABLE_ITEM_H__	item.h	9;"	d
+alias	item.h	/^  std::string alias;$/;"	m	struct:ColumnItem	access:public
+alias	item.h	/^  std::string alias;$/;"	m	struct:TableItem	access:public
+alias_name	column_item.h	/^  std::string alias_name;$/;"	m	struct:ColumnItem	access:public
+arg_list	column_item.h	/^  std::vector<std::string> arg_list;$/;"	m	struct:FuncColumn	access:public
+arg_list	item.h	/^  std::vector<std::string> arg_list;$/;"	m	struct:FuncColumn	access:public
+clear	column_item.h	/^  void clear() {$/;"	f	struct:ColumnItem	access:public	signature:()
+clear	column_item.h	/^  void clear() {$/;"	f	struct:RegularColumn	access:public	signature:()
+clear	column_relation_dag.h	/^    void clear() {$/;"	f	struct:ColumnDAG	access:public	signature:()
+clear	item.h	/^  void clear() {$/;"	f	struct:ColumnItem	access:public	signature:()
+clear	item.h	/^  void clear() {$/;"	f	struct:MaskItem	access:public	signature:()
+clear	item.h	/^  void clear() {$/;"	f	struct:TableItem	access:public	signature:()
+column	column_item.h	/^  std::string column;$/;"	m	struct:RegularColumn	access:public
+column	item.h	/^  std::string column;$/;"	m	struct:ColumnItem	access:public
+column	item.h	/^  std::string column;$/;"	m	struct:MaskItem	access:public
+column	item.h	/^  std::string column;$/;"	m	struct:RegularColumn	access:public
+column_dag	kingbase_get_column_dag_listener.hpp	/^    ColumnDAG column_dag() {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:()
+column_dag_	kingbase_get_column_dag_listener.hpp	/^    ColumnDAG column_dag_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+column_item_	kingbase_get_selected_list_listener.hpp	/^  ColumnItem column_item_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+column_list	column_item.h	/^  std::vector<Column> column_list;$/;"	m	struct:ColumnItem	access:public
+column_list_	kingbase_get_column_dag_listener.hpp	/^    ColumnItemList column_list_;        \/\/ get column_list$/;"	m	class:KingbaseGetColumnDAG	access:private
+column_list_	kingbase_get_selected_list_listener.hpp	/^  ColumnItemList column_list_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+column_list_restore_	kingbase_get_column_dag_listener.hpp	/^    std::vector<ColumnItemList> column_list_restore_; \/\/ restore$/;"	m	class:KingbaseGetColumnDAG	access:private
+column_or_expression_visited_	kingbase_get_column_dag_listener.hpp	/^    bool column_or_expression_visited_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+column_relation_map_	kingbase_mask_listener.h	/^    std::map<ColumnItem, ColumnItemList> column_relation_map_;$/;"	m	class:KingbaseMaskListener	access:private
+column_type	column_item.h	/^  ColumnType column_type;$/;"	m	struct:Column	access:public
+count_for_name_	kingbase_get_column_dag_listener.hpp	/^    int count_for_name_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+database	item.h	/^  std::string database;$/;"	m	struct:TableItem	access:public
+enterColumn_name	kingbase_get_column_dag_listener.hpp	/^    void enterColumn_name(KingbaseSqlParser::Column_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Column_nameContext *ctx)
+enterIn_elements	kingbase_get_column_dag_listener.hpp	/^    void enterIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+enterIn_elements	kingbase_mask_listener.h	/^    void enterIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+enterJoin_on_part	kingbase_get_column_dag_listener.hpp	/^    void enterJoin_on_part(KingbaseSqlParser::Join_on_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Join_on_partContext *ctx)
+enterParen_column_list	kingbase_get_column_dag_listener.hpp	/^    void enterParen_column_list(KingbaseSqlParser::Paren_column_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Paren_column_listContext *ctx)
+enterQuery_block	kingbase_get_column_dag_listener.hpp	/^    void enterQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+enterQuery_block	kingbase_mask_listener.h	/^    void enterQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+enterQuery_block	kingbase_test_listener.hpp	/^    void enterQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+enterRelational_expression	kingbase_get_column_dag_listener.hpp	/^    void enterRelational_expression(KingbaseSqlParser::Relational_expressionContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Relational_expressionContext *ctx)
+enterSelect_statement	kingbase_test_listener.hpp	/^    void enterSelect_statement(KingbaseSqlParser::Select_statementContext* ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Select_statementContext* ctx)
+enterSelected_list	kingbase_get_column_dag_listener.hpp	/^    void enterSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+enterSelected_list	kingbase_mask_listener.h	/^    void enterSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {}$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+enterSelected_list_element	kingbase_get_column_dag_listener.hpp	/^    void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+enterSelected_list_element	kingbase_get_selected_list_listener.hpp	/^  void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext* ctx) {$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext* ctx)
+enterSelected_list_element	kingbase_mask_listener.h	/^    void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+enterSubquery_operation_part	kingbase_get_column_dag_listener.hpp	/^    void enterSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+enterSubquery_operation_part	kingbase_mask_listener.h	/^    void enterSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+enterTable_name	kingbase_from_clause_matcher_listener.h	/^       void enterTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+enterTable_name	kingbase_get_column_dag_listener.hpp	/^    void enterTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+enterTable_name	kingbase_get_table_listener.h	/^        void enterTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+enterTable_ref_aux	kingbase_get_column_dag_listener.hpp	/^    void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+enterTable_ref_aux	kingbase_get_table_listener.h	/^        void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+enterTable_ref_aux	kingbase_mask_listener.h	/^    void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+enterTable_ref_list	kingbase_get_column_dag_listener.hpp	/^    void enterTable_ref_list(KingbaseSqlParser::Table_ref_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_listContext *ctx)
+enterWith_query	kingbase_get_column_dag_listener.hpp	/^    void enterWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+enterWith_query	kingbase_mask_listener.h	/^    void enterWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+equivalent_cond_list	column_relation_dag.h	/^    EquivalentCondList equivalent_cond_list;$/;"	m	struct:ColumnDAG	access:public
+err_message	error_verbose_listener.hpp	/^  std::string err_message() {$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+err_message_	error_verbose_listener.hpp	/^  std::string err_message_;$/;"	m	class:ErrorVerboseListener	access:private
+exitColumn_name	kingbase_get_column_dag_listener.hpp	/^    void exitColumn_name(KingbaseSqlParser::Column_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Column_nameContext *ctx)
+exitIn_elements	kingbase_get_column_dag_listener.hpp	/^    void exitIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+exitIn_elements	kingbase_mask_listener.h	/^    void exitIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::In_elementsContext *ctx)
+exitJoin_on_part	kingbase_get_column_dag_listener.hpp	/^    void exitJoin_on_part(KingbaseSqlParser::Join_on_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Join_on_partContext *ctx)
+exitParen_column_list	kingbase_get_column_dag_listener.hpp	/^    void exitParen_column_list(KingbaseSqlParser::Paren_column_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Paren_column_listContext *ctx)
+exitQuery_block	kingbase_get_column_dag_listener.hpp	/^    void exitQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+exitQuery_block	kingbase_mask_listener.h	/^    void exitQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Query_blockContext *ctx)
+exitQuery_block	kingbase_test_listener.hpp	/^    void exitQuery_block(KingbaseSqlParser::Query_blockContext* ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Query_blockContext* ctx)
+exitRelational_expression	kingbase_get_column_dag_listener.hpp	/^    void exitRelational_expression(KingbaseSqlParser::Relational_expressionContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Relational_expressionContext *ctx)
+exitSelect_statement	kingbase_test_listener.hpp	/^    void exitSelect_statement(KingbaseSqlParser::Select_statementContext* ctx) {$/;"	f	class:KingbaseTestListener	access:public	signature:(KingbaseSqlParser::Select_statementContext* ctx)
+exitSelected_list	kingbase_get_column_dag_listener.hpp	/^    void exitSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+exitSelected_list	kingbase_mask_listener.h	/^    void exitSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_listContext *ctx)
+exitSelected_list_element	kingbase_get_column_dag_listener.hpp	/^    void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+exitSelected_list_element	kingbase_get_selected_list_listener.hpp	/^  void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext* ctx) {}$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext* ctx)
+exitSelected_list_element	kingbase_mask_listener.h	/^    void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Selected_list_elementContext *ctx)
+exitSubquery_operation_part	kingbase_get_column_dag_listener.hpp	/^    void exitSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+exitSubquery_operation_part	kingbase_mask_listener.h	/^    void exitSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Subquery_operation_partContext *ctx)
+exitTable_name	kingbase_from_clause_matcher_listener.h	/^       void exitTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+exitTable_name	kingbase_get_column_dag_listener.hpp	/^    void exitTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+exitTable_name	kingbase_get_table_listener.h	/^        void exitTable_name(KingbaseSqlParser::Table_nameContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_nameContext *ctx)
+exitTable_ref_aux	kingbase_get_column_dag_listener.hpp	/^    void exitTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+exitTable_ref_aux	kingbase_get_table_listener.h	/^        void exitTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+exitTable_ref_aux	kingbase_mask_listener.h	/^    void exitTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::Table_ref_auxContext *ctx)
+exitTable_ref_list	kingbase_get_column_dag_listener.hpp	/^    void exitTable_ref_list(KingbaseSqlParser::Table_ref_listContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::Table_ref_listContext *ctx)
+exitWith_query	kingbase_get_column_dag_listener.hpp	/^    void exitWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+exitWith_query	kingbase_mask_listener.h	/^    void exitWith_query(KingbaseSqlParser::With_queryContext *ctx) {$/;"	f	class:KingbaseMaskListener	access:public	signature:(KingbaseSqlParser::With_queryContext *ctx)
+from	column_relation_dag.h	/^    ColumnItem from;$/;"	m	struct:EquivalentCond	access:public
+from	column_relation_dag.h	/^    TableItemList from;$/;"	m	struct:Tables2Columns	access:public
+func_column	column_item.h	/^  FuncColumn func_column;$/;"	m	struct:Column	access:public
+func_name	column_item.h	/^  std::string func_name;$/;"	m	struct:FuncColumn	access:public
+func_name	item.h	/^  std::string func_name;$/;"	m	struct:FuncColumn	access:public
+getTable_Item_List	kingbase_get_table_listener.h	/^        MaskColumnItemList getTable_Item_List(const MaskItemList &mask_item_list) {$/;"	f	class:KingbaseGetTableListener	access:public	signature:(const MaskItemList &mask_item_list)
+get_column	item.h	/^static ColumnItem get_column(const std::string &str) {$/;"	f	signature:(const std::string &str)
+get_regular_column	column_item.h	/^static RegularColumn get_regular_column(const std::string &str) {$/;"	f	signature:(const std::string &str)
+has_error	error_verbose_listener.hpp	/^  bool has_error() {$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+has_error_	error_verbose_listener.hpp	/^  bool has_error_;$/;"	m	class:ErrorVerboseListener	access:private
+is_root_query_block_	kingbase_mask_listener.h	/^    bool is_root_query_block_;$/;"	m	class:KingbaseMaskListener	access:private
+join_on_part_	kingbase_get_column_dag_listener.hpp	/^    bool join_on_part_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+mask_function	item.h	/^  std::string mask_function;$/;"	m	struct:MaskItem	access:public
+mask_item	item.h	/^  MaskItem mask_item;$/;"	m	struct:MaskColumnItem	access:public
+mask_item_list_	kingbase_mask_listener.h	/^    MaskItemList mask_item_list_;$/;"	m	class:KingbaseMaskListener	access:private
+matched	kingbase_from_clause_matcher_listener.h	/^        bool matched() {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:()
+matched_	kingbase_from_clause_matcher_listener.h	/^        bool matched_;$/;"	m	class:KingbaseFromClauseMatcherListener	access:private
+operator <	item.h	/^  friend bool operator<(const ColumnItem& col1, const ColumnItem& col2) {$/;"	f	struct:ColumnItem	access:friend	signature:(const ColumnItem& col1, const ColumnItem& col2)
+operator_list	column_item.h	/^  std::vector<std::string> operator_list;$/;"	m	struct:ColumnItem	access:public
+parser_	kingbase_from_clause_matcher_listener.h	/^        KingbaseSqlParser *parser_;$/;"	m	class:KingbaseFromClauseMatcherListener	access:private
+parser_	kingbase_get_column_dag_listener.hpp	/^    KingbaseSqlParser *parser_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+parser_	kingbase_get_selected_list_listener.hpp	/^  KingbaseSqlParser *parser_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+parser_	kingbase_get_table_listener.h	/^        KingbaseSqlParser *parser_;$/;"	m	class:KingbaseGetTableListener	access:private
+parser_	kingbase_mask_listener.h	/^    KingbaseSqlParser *parser_;$/;"	m	class:KingbaseMaskListener	access:private
+regular_column	column_item.h	/^  RegularColumn regular_column;$/;"	m	struct:Column	access:public
+rewriter_	kingbase_mask_listener.h	/^    antlr4::TokenStreamRewriter rewriter_;$/;"	m	class:KingbaseMaskListener	access:private
+root_query_blockv_	kingbase_mask_listener.h	/^    std::vector<bool> root_query_blockv_;$/;"	m	class:KingbaseMaskListener	access:private
+schema	column_item.h	/^  std::string schema;$/;"	m	struct:RegularColumn	access:public
+schema	item.h	/^  std::string schema;$/;"	m	struct:ColumnItem	access:public
+schema	item.h	/^  std::string schema;$/;"	m	struct:RegularColumn	access:public
+schema	item.h	/^  std::string schema;$/;"	m	struct:TableItem	access:public
+selected_list_element_	kingbase_get_selected_list_listener.hpp	/^  selected_list_element_;$/;"	m	class:KingbaseGetSelectedListListener	access:private
+split	column_item.h	/^static void split(const std::string &s, std::vector<std::string> &sv, const char flag = ' ') {$/;"	f	signature:(const std::string &s, std::vector<std::string> &sv, const char flag = Ã)
+split	item.h	/^static void split(const std::string &s, std::vector<std::string> &sv, const char flag = ' ') {$/;"	f	signature:(const std::string &s, std::vector<std::string> &sv, const char flag = Ã)
+subquery_name	column_relation_dag.h	/^    std::string subquery_name;  \/\/ pointer out which subquery it is$/;"	m	struct:Tables2Columns	access:public
+subquery_name	column_relation_dag.h	/^    std::string subquery_name;$/;"	m	struct:Table2Subquery	access:public
+subquery_name_save_	kingbase_mask_listener.h	/^    std::vector<std::string> subquery_name_save_;$/;"	m	class:KingbaseMaskListener	access:private
+subquery_namev_	kingbase_get_column_dag_listener.hpp	/^    std::vector<std::string> subquery_namev_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+subquery_namev_	kingbase_mask_listener.h	/^    std::vector<std::string> subquery_namev_;$/;"	m	class:KingbaseMaskListener	access:private
+syntaxError	error_verbose_listener.hpp	/^  void syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, $/;"	f	class:ErrorVerboseListener	access:public	signature:(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line, size_t charPositionInLine, const std::string &msg, std::exception_ptr e)
+table	column_item.h	/^  std::string table;$/;"	m	struct:RegularColumn	access:public
+table	item.h	/^  std::string table;$/;"	m	struct:ColumnItem	access:public
+table	item.h	/^  std::string table;$/;"	m	struct:MaskItem	access:public
+table	item.h	/^  std::string table;$/;"	m	struct:RegularColumn	access:public
+table	item.h	/^  std::string table;$/;"	m	struct:TableItem	access:public
+table_item	item.h	/^  TableItem table_item;$/;"	m	struct:MaskColumnItem	access:public
+table_item_	kingbase_get_column_dag_listener.hpp	/^    TableItem table_item_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+table_item_	kingbase_get_table_listener.h	/^        TableItem table_item_;$/;"	m	class:KingbaseGetTableListener	access:private
+table_item_list_	kingbase_get_table_listener.h	/^        TableItemList table_item_list_;$/;"	m	class:KingbaseGetTableListener	access:private
+table_list_	kingbase_get_column_dag_listener.hpp	/^    TableItemList  table_list_;$/;"	m	class:KingbaseGetColumnDAG	access:private
+table_list_restore_	kingbase_get_column_dag_listener.hpp	/^    std::vector<TableItemList> table_list_restore_;  \/\/ restore table_list$/;"	m	class:KingbaseGetColumnDAG	access:private
+table_name	column_relation_dag.h	/^    std::string table_name;$/;"	m	struct:Table2Subquery	access:public
+table_to_column_list	column_relation_dag.h	/^    Tables2ColumnsList table_to_column_list;$/;"	m	struct:ColumnDAG	access:public
+table_to_subquery_list	column_relation_dag.h	/^    Table2SubqueryList table_to_subquery_list;$/;"	m	struct:ColumnDAG	access:public
+tablename	kingbase_from_clause_matcher_listener.h	/^        std::string tablename() {$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:()
+tablename_	kingbase_from_clause_matcher_listener.h	/^        std::string tablename_;$/;"	m	class:KingbaseFromClauseMatcherListener	access:private
+to	column_relation_dag.h	/^    ColumnItem to;$/;"	m	struct:EquivalentCond	access:public
+to	column_relation_dag.h	/^    ColumnItemList to;$/;"	m	struct:Tables2Columns	access:public
+~ErrorVerboseListener	error_verbose_listener.hpp	/^  virtual ~ErrorVerboseListener () {}$/;"	f	class:ErrorVerboseListener	access:public	signature:()
+~KingbaseFromClauseMatcherListener	kingbase_from_clause_matcher_listener.h	/^        ~KingbaseFromClauseMatcherListener(){}$/;"	f	class:KingbaseFromClauseMatcherListener	access:public	signature:()
+~KingbaseGetColumnDAG	kingbase_get_column_dag_listener.hpp	/^    ~KingbaseGetColumnDAG() {}$/;"	f	class:KingbaseGetColumnDAG	access:public	signature:()
+~KingbaseGetSelectedListListener	kingbase_get_selected_list_listener.hpp	/^  ~KingbaseGetSelectedListListener () {}$/;"	f	class:KingbaseGetSelectedListListener	access:public	signature:()
+~KingbaseMaskListener	kingbase_mask_listener.h	/^    ~KingbaseMaskListener() {}$/;"	f	class:KingbaseMaskListener	access:public	signature:()
+~KingbaseTestListener	kingbase_test_listener.hpp	/^    ~KingbaseTestListener() {}$/;"	f	class:KingbaseTestListener	access:public	signature:()
