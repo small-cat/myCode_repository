@@ -1,4 +1,4 @@
-t /**
+ /**
  * KingBase v7 Sql Lexer
  * Copyright (c) 2019 Jona <mblrwuzy@gmail.com>
  *

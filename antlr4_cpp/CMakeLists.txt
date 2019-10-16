@@ -7,7 +7,7 @@ if(NOT CMAKE_BUILD_TYPE)
   message(WARNING "Build type not set, falling back to Release mode.
  To specify build type use:
  -DCMAKE_BUILD_TYPE=<mode> where <mode> is Debug or Release.")
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+ set(CMAKE_BUILD_TYPE "Release" CACHE STRING
        "Choose the type of build, options are: Debug Release."
        FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
@@ -51,7 +51,7 @@ if(WITH_DEMO)
   endif()
 endif(WITH_DEMO)
 
-add_compile_options(-g -gdwarf -std=c++11)
+add_compile_options(-g -gdwarf -std=c++11 -DDEBUG_ATN=1 -DDEBUG_DFA=1)
 
 # Initialize CXXFLAGS.
 if("${CMAKE_VERSION}" VERSION_GREATER 3.1.0)

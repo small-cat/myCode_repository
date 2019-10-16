@@ -153,7 +153,7 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
   TravelColumnDag(kingbase_dag.column_dag());
 
   MaskItemList mask_item_list_for_dag;
-  MaskItem item4 {"dept", "name", "MASK_DEPT"};
+  MaskItem item4 {"student", "name", "MASK_STUNAME"};
   mask_item_list_for_dag.push_back(item4);
   std::map<ColumnItem, ColumnItemList> column_relation_map = 
     kingbase_dag.GetColumnRelationsByMaskItemList(mask_item_list_for_dag);
@@ -173,14 +173,9 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
 
   std::cout << "\n========Mask Listener========\n";
   KingbaseMaskListener kingbase_mask_listener(&parser, &tokens, 
-      column_relation_map, mask_item_list_for_dag);
+      kingbase_dag.column_dag(), column_relation_map, mask_item_list_for_dag);
   walker.walk(&kingbase_mask_listener, tree);
   std::cout << kingbase_mask_listener.GetResult() << std::endl;
-
-  // test listener
-  std::cout << "\n========Test Listener========\n";
-  KingbaseTestListener test;
-  walker.walk(&test, tree);
 
 }
 

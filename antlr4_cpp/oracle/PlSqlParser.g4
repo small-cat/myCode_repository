@@ -97,11 +97,18 @@ unit_statement
     | grant_statement
 
     | procedure_call
+      
+      // select expr statement: select 1+2;
+    | select_expr_statement
     ;
 
 // DDL -> SQL Statements for Stored PL/SQL Units
 
 // Function DDLs
+
+select_expr_statement
+    : SELECT expression
+    ;
 
 drop_function
     : DROP FUNCTION function_name SEMICOLON

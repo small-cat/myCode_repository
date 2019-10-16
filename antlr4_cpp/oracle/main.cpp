@@ -23,6 +23,7 @@
 #include "get_table_listener.h"
 #include "item.h"
 #include "mask_listener.h"
+#include "error_verbose_listener.hpp"
 
 void ParseFile(const char* filename);
 void ParseString(const std::string &sql);
@@ -31,68 +32,33 @@ using namespace oracle;
 using namespace antlr4;
 
 void ParseFile(const char* filename) {
-    if (nullptr == filename)
-        return;
+  if (nullptr == filename)
+    return;
 
-    std::string line;
-    std::string sqlstmt;
-    std::ifstream f(filename);
-    if (!f)
-        return;
+  std::string line;
+  std::string sqlstmt;
+  std::ifstream f(filename);
+  if (!f)
+    return;
 
-    while (getline(f, line)) {
-        if (line.rfind(";") == line.length()) {
-            sqlstmt.append(line);
-            ParseString(sqlstmt);
-            sqlstmt.clear();
-        } else {
-            sqlstmt.append(line);
-            sqlstmt.append("\n");
-        }
+  while (getline(f, line)) {
+    if (line.rfind(";") == line.length()) {
+      sqlstmt.append(line);
+      ParseString(sqlstmt);
+      sqlstmt.clear();
+    } else {
+      sqlstmt.append(line);
+      sqlstmt.append("\n");
     }
+  }
 
-    if (!sqlstmt.empty()) {
-        ParseString(sqlstmt);
-    }
+  if (!sqlstmt.empty()) {
+    ParseString(sqlstmt);
+  }
 }
 
 void ParseString(const std::string &sql) {
-    ANTLRInputStream input(sql);
-    PlSqlLexer lexer(&input);
-    CommonTokenStream tokens(&lexer);
-    PlSqlParser parser(&tokens);
-
-    tree::ParseTree *tree = parser.sql_script();
-    std::cout << "sql: " << tokens.getText() << std::endl;
-}
-
-int main(int argc, char *argv[]) {
-    int ret;
-    extern char *optarg;
-    if (1 == argc) {
-        std::cout << "Usage: " << argv[0] << " [-f filename] [-e sqlstatement]" << std::endl;
-        return 0;
-    }
-
-    while ((ret = getopt(argc, argv, "f:e:")) != -1) {
-        switch (ret) {
-        case 'f':
-            ParseFile(optarg);
-            break;
-        case 'e':
-            {
-                std::string sqlstmt(optarg);
-                ParseString(sqlstmt);
-            }
-            break;
-        case '?':
-        default:
-            std::cout << "Usage: " << argv[0] << " [-f filename] [-e sqlstatement]" << std::endl;
-            break;
-        }
-    }
-  /*
-  ANTLRInputStream input(argv[1]);
+  ANTLRInputStream input(sql);
   PlSqlLexer lexer(&input);
   CommonTokenStream tokens(&lexer);
 
@@ -101,19 +67,41 @@ int main(int argc, char *argv[]) {
   }
 
   PlSqlParser parser(&tokens);
-  tree::ParseTree* tree = parser.sql_script();
-  std::cout << tree->getText() << std::endl;
 
+  /*
+  ErrorVerboseListener err_listener;
+  parser.removeErrorListeners();
+  parser.addErrorListener(&err_listener);
+  */
+
+  tree::ParseTree *tree = nullptr; 
+  try {
+    tree = parser.sql_script();
+  } catch (antlr4::RecognitionException e) {
+    std::cout << "Exceptions: " << e.what() << std::endl;
+    return;
+  }
+  parser.sql_script();
   std::cout << tree->toStringTree(&parser) << std::endl << std::endl;
+
+  /*
+  if (err_listener.has_error()) {
+    std::cout << err_listener.err_message() << std::endl;
+    return;
+  }
+  */
+
+  std::cout << "sql: " << tokens.getText() << std::endl;
+
 
   tree::ParseTreeWalker walker;
   FromClauseMatcherListener fl(&parser, std::string("SCOTT.student"));
   walker.walk(&fl, tree);
 
   if (fl.isMatcher()) {
-      std::cout << "matched\n";
+    std::cout << "matched\n";
   } else {
-      std::cout << "not matched\n";
+    std::cout << "not matched\n";
   }
 
   GetTableListener gl(&parser);
@@ -130,13 +118,40 @@ int main(int argc, char *argv[]) {
   MaskColumnItemList mask_col_item_list = gl.get_table_item_list(mask_item_list);
 
   for (auto item : mask_col_item_list) {
-      std::cout << item.table_item.table << ", " << item.mask_item.column << ", " << item.mask_item.mask_function << std::endl;
+    std::cout << item.table_item.table << ", " << item.mask_item.column << ", " << item.mask_item.mask_function << std::endl;
   }
 
   MaskListener ml(&tokens, mask_col_item_list);
   walker.walk(&ml, tree);
   std::cout << tokens.getText() << std::endl;
-  */
+
+}
+
+int main(int argc, char *argv[]) {
+  int ret;
+  extern char *optarg;
+  if (1 == argc) {
+    std::cout << "Usage: " << argv[0] << " [-f filename] [-e sqlstatement]" << std::endl;
+    return 0;
+  }
+
+  while ((ret = getopt(argc, argv, "f:e:")) != -1) {
+    switch (ret) {
+      case 'f':
+        ParseFile(optarg);
+        break;
+      case 'e':
+        {
+          std::string sqlstmt(optarg);
+          ParseString(sqlstmt);
+        }
+        break;
+      case '?':
+      default:
+        std::cout << "Usage: " << argv[0] << " [-f filename] [-e sqlstatement]" << std::endl;
+        break;
+    }
+  }
 
   return 0;
 }

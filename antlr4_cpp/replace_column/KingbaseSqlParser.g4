@@ -1262,8 +1262,8 @@ selected_list
     ;
 
 selected_list_element
-    : (tableview_name PERIOD)? ASTERISK
-    | (column_name | expression) (AS? column_alias)?
+    : (tableview_name PERIOD)? ASTERISK                 # selected_list_element_asterisk
+    | (column_name | expression) (AS? column_alias)?    # selected_list_element_column
     ;
 
 from_clause

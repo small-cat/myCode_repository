@@ -85,10 +85,10 @@ static void TravelColumnDag(const ColumnDAG &dag) {
   std::cout << "\n===========table to column list===========\n";
   for (auto tb2column : dag.table_to_column_list) {
     std::cout << "subquery_name: " << tb2column.subquery_name << std::endl;
-    std::cout << "table list ---> ";
+    std::cout << "table list [schema, table, alias]---> \n";
     for (auto table_item : tb2column.from) {
       std::cout << "[" << table_item.schema << ", " 
-        << table_item.table << ", " << table_item.alias << "],   ";
+        << table_item.table << ", " << table_item.alias << "], ";
     }
     std::cout << std::endl;
 
@@ -104,6 +104,12 @@ static void TravelColumnDag(const ColumnDAG &dag) {
 
 static bool StrCaseCmp(const std::string &str1, const std::string &str2) {
   return strcasecmp(str1.c_str(), str2.c_str()) == 0;
+}
+
+std::string& string_tolower(std::string &str) {
+  std::transform(str.begin(), str.end(), str.begin(), 
+      [](unsigned char c) -> unsigned char { return std::tolower(c); });
+  return str;
 }
 
 static bool IsItemInMap(std::map<ColumnItem, ColumnItemList> &map, 
@@ -332,6 +338,142 @@ static void GetColumnRelations(
 
   FindFromTableToColumnList(column_relations_map, item, dag, item);
 
+}
+
+/***********************************************************
+ * load columns from physical table_item, columns saved in column_list.
+ * here, we just load the columns from table.json file which contains all the
+ * database informations saved by java program.
+ * @author Jona
+ * @param 
+ *  @column_list: save all the columns from table_item
+ * @date 16/10/2019 
+***********************************************************/ 
+static void LoadFromPhysicalTable(ColumnItemList &column_list, TableItem table_item) {
+  // analogue table.json
+  std::map<std::string, std::vector<std::string>> tablename_to_columns;
+  tablename_to_columns["student"] = {"id", "stu_no", "sex", "name", "phone"};
+  tablename_to_columns["course"] = {"stu_no", "course_no", "course_name", "score"};
+  tablename_to_columns["grade"] = {"name", "grade_name"};
+
+  // sqls had been toupper, here should tolower first
+  auto column_string = tablename_to_columns[string_tolower(table_item.table)];
+  for (auto col_str : column_string) {
+    ColumnItem col_tmp;
+    col_tmp.column = col_str;
+    column_list.push_back(col_tmp);
+  }
+}
+
+/***********************************************************
+ * get all table columns from dag
+ * @author Jona
+ * @param 
+ *  @column_list: save column info 
+ *  @table_item: table which we want to get its columns
+ * @date 15/10/2019 
+***********************************************************/ 
+static void GetColumnsFromTable(ColumnDAG &dag, ColumnItemList &column_list, 
+    TableItem table_item) {
+
+  // find subquery_name if table_item is a subquery
+  std::string subquery_name;
+  for (auto tb2subquery : dag.table_to_subquery_list) {
+    if (StrCaseCmp(tb2subquery.table_name, table_item.table)) {
+      subquery_name = tb2subquery.subquery_name;
+      break;
+    }
+  }
+
+  if (subquery_name.empty()) {
+    // table_item is not a subquery, load it from physical table
+    // TODO: Not Implementes
+    LoadFromPhysicalTable(column_list, table_item);
+  } else {
+    for (auto tb2col : dag.table_to_column_list) {
+      if (!StrCaseCmp(tb2col.subquery_name, subquery_name)) {
+        continue;
+      }
+
+      // all the columns in current subquery are table_item's columns
+      for (auto col_tmp : tb2col.to) {
+        if (!StrCaseCmp(col_tmp.column, "*")) {
+          // if col_tmp has an alias name, its name in table_item should be alias
+          ColumnItem col_item_tmp;
+          col_item_tmp.column = col_tmp.alias.empty()? col_tmp.column : col_tmp.alias;
+          column_list.push_back(col_item_tmp);
+        } else {
+          // col_tmp also contains '*'
+          // find its table and recursive
+          // its table should be in tb2col.from, also in 2 situation
+          // 1. only '*'
+          if (col_tmp.table.empty()) {
+            for (auto table_tmp : tb2col.from) {
+              GetColumnsFromTable(dag, column_list, table_tmp);
+            }
+          } else {
+            // 2. tableA.*
+            for (auto table_tmp : tb2col.from) {
+              if (StrCaseCmp(table_tmp.table, col_tmp.table)
+                  || StrCaseCmp(table_tmp.alias, col_tmp.table)) {
+
+                GetColumnsFromTable(dag, column_list, table_tmp);
+              }
+            }
+          } // end else tableA.*
+        } // end else col_tmp also contains '*'
+      } 
+    } // end for (auto tb2col : dag.table_to_column_list)
+  }
+}
+
+/***********************************************************
+ * replace column info with star from ColumnDAG.
+ * @author Jona
+ * @param 
+ *  @col : column with star (like '*' or 'table.*' or 'schema.table.*')
+ * @date 15/10/2019 
+***********************************************************/ 
+static ColumnItemList GetAllColumnsInsteadOfStar(ColumnDAG &dag, ColumnItem col) {
+  ColumnItemList columns_replace_star;
+
+  if (!StrCaseCmp(col.column, "*")) {
+    return columns_replace_star;
+  }
+
+  // get table_item_list from top level query 
+  TableItemList table_list;
+  for (auto tb2col : dag.table_to_column_list) {
+    if (tb2col.subquery_name.empty()) {
+      // top level query
+      table_list = tb2col.from;
+    }
+  }
+
+  if (col.table.empty()) {
+    // only '*'
+    // here we should replace star with all columns in table_list
+    for (auto table_tmp : table_list) {
+      GetColumnsFromTable(dag, columns_replace_star, table_tmp);
+    }
+
+    return columns_replace_star;
+  }
+
+  // tableA.*
+  // here we should replace star with all columns in tableA
+  TableItem table_item;
+  for (auto table_tmp : table_list) {
+    if (StrCaseCmp(table_tmp.table, col.table) 
+        || StrCaseCmp(table_tmp.alias, col.table)) {
+      // get table item from table_list
+      table_item = table_tmp;
+      break;
+    }
+  }
+  GetColumnsFromTable(dag, columns_replace_star, table_item);
+
+  return columns_replace_star;
 }
 
 /***********************************************************

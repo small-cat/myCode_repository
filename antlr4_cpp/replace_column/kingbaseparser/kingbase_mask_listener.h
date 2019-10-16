@@ -23,10 +23,12 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
   public:
     KingbaseMaskListener(KingbaseSqlParser *parser, 
         antlr4::TokenStream *tokens, 
+        ColumnDAG column_dag, 
         std::map<ColumnItem, ColumnItemList> map_columns, 
         MaskItemList mask_item_list) 
       : parser_(parser), 
         rewriter_(tokens), 
+        column_dag_(column_dag), 
         column_relation_map_(map_columns), 
         mask_item_list_(mask_item_list) {
 
@@ -114,7 +116,7 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
     void exitSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {
     }
 
-    void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {
+    void enterSelected_list_element_column(KingbaseSqlParser::Selected_list_element_columnContext *ctx) {
       if (nullptr == ctx)
         return;
 
@@ -127,10 +129,10 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
       auto column_ctx = ctx->column_name();
       auto column_alias_ctx = ctx->column_alias();
       std::string select_ele;
-      bool matched = false;
 
       if (expr_ctx)
-        select_ele = tokens->getText(expr_ctx);
+        // we don't support expr so far
+        return;
       else if (column_ctx)
         select_ele = tokens->getText(column_ctx);
       else
@@ -138,29 +140,38 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
 
       // split
       ColumnItem column_item = get_column(select_ele);
-
-      // check column_item is mask or not
-      MaskItem mask_item_save;
-      for (auto mask_item : mask_item_list_) {
-        if ((matched = IsMaskColumn(column_relation_map_, mask_item, column_item))) {
-          mask_item_save = mask_item;
-          break;
-        }
+      if (column_alias_ctx) {
+        column_item.alias = tokens->getText(column_alias_ctx);
       }
 
-      if (matched) {
-        // encounter column with mask_function
-        if (expr_ctx) {
-          rewriter_.insertBefore(expr_ctx->start, mask_item_save.mask_function + "(");
-          rewriter_.insertAfter(expr_ctx->stop, ")" + (nullptr == column_alias_ctx ? " " + column_item.column : " " + column_alias_ctx->getText()));
-        } else if (column_ctx) {
-          rewriter_.insertBefore(column_ctx->start, mask_item_save.mask_function + "(");
-          rewriter_.insertAfter(column_ctx->stop, ")" + (nullptr == column_alias_ctx ? " " + column_item.column : " " + column_alias_ctx->getText()));
-        }
-      }
+      // if column_item.column == '*'
+      ColumnItemList columns_replace;
+      columns_replace.push_back(column_item);
+      ReplaceColumnWithMaskFunction(columns_replace, ctx->start, ctx->stop, 
+          column_item);
     }
-    void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {
-      // DO NOTHING
+
+    void enterSelected_list_element_asterisk(KingbaseSqlParser::Selected_list_element_asteriskContext *ctx) {
+      if (nullptr == ctx)
+        return;
+
+      if (!is_root_query_block_)
+        return;
+
+      antlr4::TokenStream *tokens = parser_->getTokenStream();
+
+      auto tableview_name_ctx = ctx->tableview_name();
+      ColumnItem col_item;
+      if (tableview_name_ctx) {
+        col_item.table = tokens->getText(tableview_name_ctx);
+      }
+      col_item.column = ctx->ASTERISK()->getText();
+
+      ColumnItemList columns_replace_star = 
+        GetAllColumnsInsteadOfStar(column_dag_, col_item);
+
+      ReplaceColumnWithMaskFunction(columns_replace_star, ctx->start, ctx->stop, 
+          col_item);
     }
 
     void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {
@@ -189,8 +200,6 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
         subquery_namev_.push_back(table_alias_string);
       }
     }
-    void exitTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {
-    }
 
     void enterIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {
       if (nullptr == ctx)
@@ -206,8 +215,6 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
         subquery_namev_.push_back(next_subquery_name);
       }
     }
-    void exitIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {
-    }
 
     std::string GetResult() {
       return rewriter_.getText();
@@ -215,6 +222,52 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
   private:
     bool StrCaseCmp(const std::string &s1, const std::string &s2) {
       return strcasecmp(s1.c_str(), s2.c_str()) == 0;
+    }
+
+    void ReplaceColumnWithMaskFunction(ColumnItemList &columns_replace_star, 
+        antlr4::Token* from, antlr4::Token* to, ColumnItem col_item) {
+      // check columns is mask or not
+      bool matched = false;
+      std::string replace_col_string;
+      decltype(columns_replace_star.size()) num = 0;
+
+      // if col_item is tableA.*, all the columns' table name should be tableA
+      std::string table_prefix;
+      if (StrCaseCmp(col_item.column, "*") && !col_item.table.empty()) {
+        table_prefix = col_item.table;
+      } 
+
+      for (auto col_tmp : columns_replace_star) {
+        num++;
+        MaskItem mask_item_save;
+        for (auto mask_item : mask_item_list_) {
+          if ((matched = IsMaskColumn(column_relation_map_, mask_item, col_tmp))) {
+            mask_item_save = mask_item;
+            break;
+          }
+        }
+
+        if (matched) {
+          // replace col_tmp with mask_function
+          if (table_prefix.empty()) {
+            table_prefix = col_tmp.table;
+          }
+          replace_col_string += mask_item_save.mask_function + "(" + 
+            (table_prefix.empty()? "" : table_prefix + ".") + col_tmp.column +
+            ")" + (col_tmp.alias.empty()? " " + col_tmp.column : " " + col_tmp.alias);
+        } else {
+          replace_col_string += (table_prefix.empty()? "" : table_prefix + ".")
+            + col_tmp.column + (col_tmp.alias.empty()? "" : " " + col_tmp.alias);
+        }
+
+        if (num < (columns_replace_star.size())) {
+          replace_col_string += ", ";
+        }
+      }
+
+      if (!replace_col_string.empty()) {
+        rewriter_.replace(from, to, replace_col_string);
+      }
     }
 
   private:
@@ -227,6 +280,7 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
     std::vector<std::string> subquery_name_save_;
     bool is_root_query_block_;
 
+    ColumnDAG column_dag_;
     std::map<ColumnItem, ColumnItemList> column_relation_map_;
     MaskItemList mask_item_list_;
 };

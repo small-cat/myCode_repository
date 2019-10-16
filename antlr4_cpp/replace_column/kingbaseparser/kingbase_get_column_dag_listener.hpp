@@ -226,7 +226,7 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
       column_or_expression_visited_ = false;
     }
 
-    void enterSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {
+    void enterSelected_list_element_column(KingbaseSqlParser::Selected_list_element_columnContext *ctx) {
       if (nullptr == ctx)
         return;
 
@@ -238,14 +238,10 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
       auto expr_ctx   = ctx->expression();
       auto alias_ctx  = ctx->column_alias();
 
-      if (ctx->ASTERISK()) {
-        select_list_ele_string = tokens->getText(ctx);
-      } else {
-        if (column_ctx)
-          select_list_ele_string = tokens->getText(column_ctx);
-        else if (expr_ctx)
-          select_list_ele_string = tokens->getText(expr_ctx);
-      }
+      if (column_ctx)
+        select_list_ele_string = tokens->getText(column_ctx);
+      else if (expr_ctx)
+        select_list_ele_string = tokens->getText(expr_ctx);
 
       ColumnItem column_item;
       column_item.clear();
@@ -262,7 +258,21 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
       // here we have got column_item, but antlr4 will still travel
       // Column_nameContext or ExpressionContext then, repeated
     }
-    void exitSelected_list_element(KingbaseSqlParser::Selected_list_elementContext *ctx) {
+
+    void enterSelected_list_element_asterisk(KingbaseSqlParser::Selected_list_element_asteriskContext *ctx) {
+      if (nullptr == ctx)
+        return;
+
+      antlr4::TokenStream *tokens = parser_->getTokenStream();
+
+      auto tableview_name_ctx = ctx->tableview_name();
+      ColumnItem col_item;
+
+      if (tableview_name_ctx) {
+        col_item.table = tokens->getText(tableview_name_ctx);
+      }
+      col_item.column = ctx->ASTERISK()->getText();
+      column_list_.push_back(col_item);
     }
 
     /* ****************************************************************** */
@@ -277,9 +287,6 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
         table_list_restore_.push_back(table_list_);
       }
       table_list_.clear();
-    }
-    void exitTable_ref_list(KingbaseSqlParser::Table_ref_listContext *ctx) {
-      // table_list_ save current query_block tables info
     }
 
     void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {
@@ -326,6 +333,12 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
     void enterTable_name(KingbaseSqlParser::Table_nameContext *ctx) {
       if (nullptr == ctx)
         return;
+
+      if (column_or_expression_visited_) {
+        // in Selected_list_elementContext, antlr4 will visit here only when
+        // ctx is tableview_name.*, but we don't need to visit here again.
+        return;
+      }
 
       antlr4::TokenStream *tokens = parser_->getTokenStream();
       std::string table_info = tokens->getText(ctx);

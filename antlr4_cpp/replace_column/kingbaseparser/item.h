@@ -29,17 +29,6 @@ struct TableItem {
   }
 };
 
-struct RegularColumn {
-  std::string schema;
-  std::string table;
-  std::string column;
-};
-
-typedef struct FuncColumn {
-  std::string func_name;
-  std::vector<std::string> arg_list;
-} FuncColumn;
-
 struct ColumnItem {
   std::string schema;
   std::string table;
