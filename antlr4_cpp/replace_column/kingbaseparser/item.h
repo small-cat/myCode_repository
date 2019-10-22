@@ -34,12 +34,22 @@ struct ColumnItem {
   std::string table;
   std::string column;
   std::string alias;
+  bool hasAs;
+
+  ColumnItem() {
+    schema.clear();
+    table.clear();
+    column.clear();
+    alias.clear();
+    hasAs = false;
+  }
 
   void clear() {
     schema.clear();
     table.clear();
     column.clear();
     alias.clear();
+    hasAs = false;
   }
 
   friend bool operator<(const ColumnItem& col1, const ColumnItem& col2) {

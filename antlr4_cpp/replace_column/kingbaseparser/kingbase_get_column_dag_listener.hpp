@@ -236,6 +236,7 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
 
       auto column_ctx = ctx->column_name();
       auto expr_ctx   = ctx->expression();
+      auto as_ctx     = ctx->AS();
       auto alias_ctx  = ctx->column_alias();
 
       if (column_ctx)
@@ -251,6 +252,10 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
 
       if (alias_ctx) 
         column_item.alias = tokens->getText(alias_ctx);
+
+      if (as_ctx) {
+        column_item.hasAs = true;
+      }
 
       column_list_.push_back(column_item);
 

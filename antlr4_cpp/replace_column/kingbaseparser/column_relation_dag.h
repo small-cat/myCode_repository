@@ -183,6 +183,7 @@ static void FindFromTableToColumnList(
             if (!IsItemInMap(map_columns, col_item)) {
               map_columns[key].push_back(col_item);
               col_item_save = col_item;
+              break;
             }
           } else {
             // col_item.table is not empty
@@ -190,13 +191,14 @@ static void FindFromTableToColumnList(
                 || (!tb_item_save.alias.empty() 
                   && StrCaseCmp(col_item.table, tb_item_save.alias))) {
 
-              if (!IsItemInMap(map_columns, col_item))
+              if (!IsItemInMap(map_columns, col_item)) {
                 map_columns[key].push_back(col_item);
+                col_item_save = col_item;
+                break;
+              }
             }
-          }
+          } // end else
 
-          col_item_save = col_item;
-          break;
         }
       } // end for
       
@@ -361,6 +363,7 @@ static void LoadFromPhysicalTable(ColumnItemList &column_list, TableItem table_i
   for (auto col_str : column_string) {
     ColumnItem col_tmp;
     col_tmp.column = col_str;
+    col_tmp.table = table_item.alias.empty() ? table_item.table : table_item.alias;
     column_list.push_back(col_tmp);
   }
 }
@@ -401,6 +404,7 @@ static void GetColumnsFromTable(ColumnDAG &dag, ColumnItemList &column_list,
           // if col_tmp has an alias name, its name in table_item should be alias
           ColumnItem col_item_tmp;
           col_item_tmp.column = col_tmp.alias.empty()? col_tmp.column : col_tmp.alias;
+          col_item_tmp.table = table_item.table;
           column_list.push_back(col_item_tmp);
         } else {
           // col_tmp also contains '*'

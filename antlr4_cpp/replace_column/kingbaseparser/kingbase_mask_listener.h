@@ -127,6 +127,7 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
 
       auto expr_ctx   = ctx->expression();
       auto column_ctx = ctx->column_name();
+      auto as_ctx     = ctx->AS();
       auto column_alias_ctx = ctx->column_alias();
       std::string select_ele;
 
@@ -144,11 +145,15 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
         column_item.alias = tokens->getText(column_alias_ctx);
       }
 
+      if (as_ctx) {
+        column_item.hasAs = true;
+      }
+
       // if column_item.column == '*'
       ColumnItemList columns_replace;
       columns_replace.push_back(column_item);
       ReplaceColumnWithMaskFunction(columns_replace, ctx->start, ctx->stop, 
-          column_item);
+          column_item, false);
     }
 
     void enterSelected_list_element_asterisk(KingbaseSqlParser::Selected_list_element_asteriskContext *ctx) {
@@ -171,7 +176,7 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
         GetAllColumnsInsteadOfStar(column_dag_, col_item);
 
       ReplaceColumnWithMaskFunction(columns_replace_star, ctx->start, ctx->stop, 
-          col_item);
+          col_item, true);
     }
 
     void enterTable_ref_aux(KingbaseSqlParser::Table_ref_auxContext *ctx) {
@@ -225,7 +230,7 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
     }
 
     void ReplaceColumnWithMaskFunction(ColumnItemList &columns_replace_star, 
-        antlr4::Token* from, antlr4::Token* to, ColumnItem col_item) {
+        antlr4::Token* from, antlr4::Token* to, ColumnItem col_item, bool is_star) {
       // check columns is mask or not
       bool matched = false;
       std::string replace_col_string;
@@ -233,10 +238,7 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
 
       // if col_item is tableA.*, all the columns' table name should be tableA
       std::string table_prefix;
-      if (StrCaseCmp(col_item.column, "*") && !col_item.table.empty()) {
-        table_prefix = col_item.table;
-      } 
-
+       
       for (auto col_tmp : columns_replace_star) {
         num++;
         MaskItem mask_item_save;
@@ -247,17 +249,28 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
           }
         }
 
+        if (StrCaseCmp(col_item.column, "*") && !col_item.table.empty()) {
+          table_prefix = col_item.table;
+        } else {
+          table_prefix = col_tmp.table;
+        }
+
         if (matched) {
           // replace col_tmp with mask_function
-          if (table_prefix.empty()) {
-            table_prefix = col_tmp.table;
-          }
           replace_col_string += mask_item_save.mask_function + "(" + 
-            (table_prefix.empty()? "" : table_prefix + ".") + col_tmp.column +
-            ")" + (col_tmp.alias.empty()? " " + col_tmp.column : " " + col_tmp.alias);
+            (table_prefix.empty() ? "" : table_prefix + ".") + col_tmp.column +
+            ")" + (col_tmp.hasAs ? " AS " : " ") + 
+            (col_tmp.alias.empty() ? col_tmp.column : col_tmp.alias);
         } else {
-          replace_col_string += (table_prefix.empty()? "" : table_prefix + ".")
-            + col_tmp.column + (col_tmp.alias.empty()? "" : " " + col_tmp.alias);
+
+          if (!is_star) {
+            // if not star
+            return;
+          }
+
+          replace_col_string += (table_prefix.empty() ? "" : table_prefix + ".")
+            + col_tmp.column + (col_tmp.hasAs ? " AS " : " ") +
+            (col_tmp.alias.empty()? "" : col_tmp.alias);
         }
 
         if (num < (columns_replace_star.size())) {
