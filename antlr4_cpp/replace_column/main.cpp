@@ -154,7 +154,9 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
 
   MaskItemList mask_item_list_for_dag;
   MaskItem item4 {"student", "name", "MASK_STUNAME"};
+  MaskItem item5 {"dept", "name", "MASK_DEPTNAME"};
   mask_item_list_for_dag.push_back(item4);
+  mask_item_list_for_dag.push_back(item5);
   std::map<ColumnItem, ColumnItemList> column_relation_map = 
     kingbase_dag.GetColumnRelationsByMaskItemList(mask_item_list_for_dag);
 

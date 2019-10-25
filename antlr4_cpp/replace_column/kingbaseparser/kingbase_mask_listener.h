@@ -243,7 +243,7 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
         num++;
         MaskItem mask_item_save;
         for (auto mask_item : mask_item_list_) {
-          if ((matched = IsMaskColumn(column_relation_map_, mask_item, col_tmp))) {
+          if ((matched = IsMaskColumn(column_dag_, column_relation_map_, mask_item, col_tmp))) {
             mask_item_save = mask_item;
             break;
           }

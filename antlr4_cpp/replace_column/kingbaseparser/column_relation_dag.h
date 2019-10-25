@@ -357,6 +357,7 @@ static void LoadFromPhysicalTable(ColumnItemList &column_list, TableItem table_i
   tablename_to_columns["student"] = {"id", "stu_no", "sex", "name", "phone"};
   tablename_to_columns["course"] = {"stu_no", "course_no", "course_name", "score"};
   tablename_to_columns["grade"] = {"name", "grade_name"};
+  tablename_to_columns["dept"] = {"name", "id", "dept_no"};
 
   // sqls had been toupper, here should tolower first
   auto column_string = tablename_to_columns[string_tolower(table_item.table)];
@@ -480,14 +481,29 @@ static ColumnItemList GetAllColumnsInsteadOfStar(ColumnDAG &dag, ColumnItem col)
   return columns_replace_star;
 }
 
+static TableItemList GetTableListFromTopLevelQueryInDag(ColumnDAG column_dag) {
+  auto tb2column_list = column_dag.table_to_column_list;
+
+  for (auto tb2col : tb2column_list) {
+    if (tb2col.subquery_name.empty()) {
+      return tb2col.from;
+    }
+  }
+
+  return {};
+}
+
 /***********************************************************
  * Check whether col_item is in column_relations_map[mask_item] or not, if it is,
  * add mask_functions for it.
+ * if col_item.table is empty, we should know its table from top level query in 
+ * column_dag
  * @author Jona
  * @param 
  * @date 23/09/2019 
 ***********************************************************/ 
-static bool IsMaskColumn(std::map<ColumnItem, ColumnItemList> &column_relations_map, 
+static bool IsMaskColumn(ColumnDAG column_dag, 
+    std::map<ColumnItem, ColumnItemList> &column_relations_map, 
     MaskItem &mask_item, ColumnItem &col_item) {
   ColumnItem citem;
   citem.table = mask_item.table;
@@ -499,8 +515,27 @@ static bool IsMaskColumn(std::map<ColumnItem, ColumnItemList> &column_relations_
       continue;
 
     // matched column
+    // if table is empty, we must know column is belong to which table
+    // so, here we should get it from dag first
+    //
+    // TODO: [FIXME] here we don't consider mask.schema 
+    // if col_item.schema is empty, get default schema first and then compare 
+    // with mitem.schema, otherwise, compare col_item.schema with mitem.schema
+    // directly
+    //
     if (col_item.table.empty()) {
-      return true;
+      TableItemList table_list_in_top_level = 
+        GetTableListFromTopLevelQueryInDag(column_dag);
+
+      if (table_list_in_top_level.empty()) {
+        return false;
+      } else {
+        for (auto tb_tmp : table_list_in_top_level) {
+          if (StrCaseCmp(tb_tmp.table, mitem.table)) {
+            return true;
+          }
+        }
+      }
     } else {
       if (StrCaseCmp(col_item.table, mitem.table))
         return true;
