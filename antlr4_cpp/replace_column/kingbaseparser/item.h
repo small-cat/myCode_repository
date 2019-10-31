@@ -53,7 +53,12 @@ struct ColumnItem {
   }
 
   friend bool operator<(const ColumnItem& col1, const ColumnItem& col2) {
-    int res = strcasecmp(col1.table.c_str(), col2.table.c_str());
+    int res = strcasecmp(col1.schema.c_str(), col2.schema.c_str());
+    if (res != 0) {
+      return res < 0;
+    }
+
+    res = strcasecmp(col1.table.c_str(), col2.table.c_str());
     if (res == 0) {
       return strcasecmp(col1.column.c_str(), col2.column.c_str()) < 0;
     } else
@@ -62,6 +67,7 @@ struct ColumnItem {
 };
 
 struct MaskItem {
+  std::string schema;
   std::string table;
   std::string column;
   std::string mask_function;

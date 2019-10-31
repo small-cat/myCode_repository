@@ -37,11 +37,15 @@ void FromClauseMatcherListener::enterTableview_name(PlSqlParser::Tableview_nameC
         _matcher = true;
 }
 
-bool FromClauseMatcherListener::isMatcher() {
+bool FromClauseMatcherListener::matcher() {
     return _matcher;
 }
 
 void FromClauseMatcherListener::exitTableview_name(PlSqlParser::Tableview_nameContext *ctx)  {
+}
+
+std::string FromClauseMatcherListener::table_name() {
+  return _strings;
 }
 
 }

@@ -153,8 +153,8 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
   TravelColumnDag(kingbase_dag.column_dag());
 
   MaskItemList mask_item_list_for_dag;
-  MaskItem item4 {"student", "name", "MASK_STUNAME"};
-  MaskItem item5 {"dept", "name", "MASK_DEPTNAME"};
+  MaskItem item4 {"SYSDBA", "student", "name", "MASK_STUNAME"};
+  MaskItem item5 {"SCOTT", "dept", "name", "MASK_DEPTNAME"};
   mask_item_list_for_dag.push_back(item4);
   mask_item_list_for_dag.push_back(item5);
   std::map<ColumnItem, ColumnItemList> column_relation_map = 
@@ -162,12 +162,12 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
 
   std::cout << "\n========show Column Relation Map========\n";
   for (auto iter=column_relation_map.begin(); iter!=column_relation_map.end(); ++iter) {
-    std::cout << "[" << iter->first.table << ", " << iter->first.column << ", "
+    std::cout << "[" << iter->first.schema << ", " << iter->first.table << ", " << iter->first.column << ", "
       << iter->first.alias << "]\n";
 
     std::cout << "[ ";
     for (auto col_item : iter->second) {
-      std::cout << "(" << col_item.table << ", " << col_item.column << ", "
+      std::cout << "(" << col_item.schema << ", " << col_item.table << ", " << col_item.column << ", "
         << col_item.alias << "), ";
     }
     std::cout << " ]\n";

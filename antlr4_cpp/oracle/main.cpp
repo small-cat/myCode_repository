@@ -21,20 +21,22 @@
 #include "PlSqlParser.h"
 #include "from_clause_matcher_listener.h"
 #include "get_table_listener.h"
-#include "item.h"
-#include "mask_listener.h"
+#include "oracle_mask_listener.h"
+#include "oracle_get_column_dag_listener.hpp"
 #include "error_verbose_listener.hpp"
+#include "oracle_replace_star_listener.hpp"
+#include "item.h"
 
-void ParseFile(const char* filename);
-void ParseString(const std::string &sql);
-
-using namespace oracle;
 using namespace antlr4;
 
-void ParseFile(const char* filename) {
-  if (nullptr == filename)
-    return;
+void ParseFile(const char* filename);
+void ParseString(std::string &sql);
+static void _ParseString(PlSqlParser &parser, CommonTokenStream &tokens);
+std::string string_toupper(std::string str);
+bool ReplaceStarWithColumns(std::string &sql);
 
+void ParseFile(const char* filename) {
+  if (nullptr == filename) return; 
   std::string line;
   std::string sqlstmt;
   std::ifstream f(filename);
@@ -57,74 +59,161 @@ void ParseFile(const char* filename) {
   }
 }
 
-void ParseString(const std::string &sql) {
-  ANTLRInputStream input(sql);
+void ParseString(std::string &sql) {
+  std::string msql = string_toupper(sql);
+  if (msql.find("SELECT") != std::string::npos
+      && msql.find("*") != std::string::npos) {
+    ReplaceStarWithColumns(msql);
+  }
+
+  ANTLRInputStream input(msql);
   PlSqlLexer lexer(&input);
   CommonTokenStream tokens(&lexer);
 
+  // show all the tokens
+  /*
+  tokens.fill();
   for (auto token : tokens.getTokens()) {
     std::cout << token->toString() << std::endl;
   }
+  */
 
   PlSqlParser parser(&tokens);
 
-  /*
-  ErrorVerboseListener err_listener;
+  // PredictionMode: LL, SLL
+  // try with simpler and faster SLL first
+  parser.getInterpreter<atn::ParserATNSimulator>()->setPredictionMode(
+      atn::PredictionMode::SLL);
   parser.removeErrorListeners();
-  parser.addErrorListener(&err_listener);
-  */
 
-  tree::ParseTree *tree = nullptr; 
+  // add error listener
+  ErrorVerboseListener err_verbose;
+  parser.addErrorListener(&err_verbose);
+  parser.setErrorHandler(std::make_shared<BailErrorStrategy>());
+
   try {
-    tree = parser.sql_script();
-  } catch (antlr4::RecognitionException e) {
-    std::cout << "Exceptions: " << e.what() << std::endl;
-    return;
-  }
-  parser.sql_script();
-  std::cout << tree->toStringTree(&parser) << std::endl << std::endl;
+    std::cout << "Try with SLL(*)" << std::endl;
+    _ParseString(parser, tokens);
+  } catch (ParseCancellationException ex) {
+    std::cout << "Syntax error, try with LL(*)" << std::endl;
+    std::cout << ex.what() << std::endl;
 
-  /*
-  if (err_listener.has_error()) {
-    std::cout << err_listener.err_message() << std::endl;
-    return;
-  }
-  */
+    // rewind input stream
+    tokens.reset();
+    parser.reset();
 
+    // back to default listener and strategy
+    parser.addErrorListener(&ConsoleErrorListener::INSTANCE);
+    parser.setErrorHandler(std::make_shared<DefaultErrorStrategy>());
+    parser.getInterpreter<atn::ParserATNSimulator>()->setPredictionMode(
+        atn::PredictionMode::LL);
+
+    _ParseString(parser, tokens);
+  }
+
+  // the following here is not apt
+  if (err_verbose.has_error())
+    std::cout << "Parse failed: " << err_verbose.err_message() << std::endl;
+}
+
+static void _ParseString(PlSqlParser &parser, CommonTokenStream &tokens) {
+  tree::ParseTree *tree = parser.sql_script();
   std::cout << "sql: " << tokens.getText() << std::endl;
-
+  std::cout << tree->toStringTree(&parser) << std::endl;
 
   tree::ParseTreeWalker walker;
-  FromClauseMatcherListener fl(&parser, std::string("SCOTT.student"));
-  walker.walk(&fl, tree);
+  FromClauseMatcherListener oracle_fml(&parser, std::string("employee"));
+  walker.walk(&oracle_fml, tree);
 
-  if (fl.isMatcher()) {
-    std::cout << "matched\n";
-  } else {
-    std::cout << "not matched\n";
-  }
-
-  GetTableListener gl(&parser);
-  walker.walk(&gl, tree);
+  if (oracle_fml.matcher())
+    std::cout << "matched table " << oracle_fml.table_name() << std::endl;
+  else
+    std::cout << "unmatched\n";
 
   MaskItemList mask_item_list;
   MaskItem item1 = {"student", "name", "MASK_NAME"};
-  MaskItem item2 = {"student", "sex", "MASK_SEX"};
-  MaskItem item3 = {"student", "phone", "MASK_PHONE"};
+  MaskItem item2 = {"student", "place", "MASK_SEX"};
+  MaskItem item3 = {"student", "number", "MASK_NUMBER"};
   mask_item_list.push_back(item1);
   mask_item_list.push_back(item2);
   mask_item_list.push_back(item3);
 
-  MaskColumnItemList mask_col_item_list = gl.get_table_item_list(mask_item_list);
+  GetTableListener oracle_gl(&parser);
+  walker.walk(&oracle_gl, tree);
+  MaskColumnItemList mask_col_item_list = 
+    oracle_gl.get_table_item_list(mask_item_list);
 
-  for (auto item : mask_col_item_list) {
-    std::cout << item.table_item.table << ", " << item.mask_item.column << ", " << item.mask_item.mask_function << std::endl;
+  // build column dag
+  std::cout << "\n======================\n";
+  std::cout << "========GetColumnDag========\n\n";
+  OracleGetColumnDAG oracle_dag(&parser);
+  walker.walk(&oracle_dag, tree);
+  TravelColumnDag(oracle_dag.column_dag());
+
+  MaskItemList mask_item_list_for_dag;
+  MaskItem item4 {"student", "name", "MASK_STUNAME"};
+  MaskItem item5 {"dept", "name", "MASK_DEPTNAME"};
+  mask_item_list_for_dag.push_back(item4);
+  mask_item_list_for_dag.push_back(item5);
+  std::map<ColumnItem, ColumnItemList> column_relation_map = 
+    oracle_dag.GetColumnRelationsByMaskItemList(mask_item_list_for_dag);
+
+  std::cout << "\n========show Column Relation Map========\n";
+  for (auto iter=column_relation_map.begin(); iter!=column_relation_map.end(); ++iter) {
+    std::cout << "[" << iter->first.table << ", " << iter->first.column << ", "
+      << iter->first.alias << "]\n";
+
+    std::cout << "[ ";
+    for (auto col_item : iter->second) {
+      std::cout << "(" << col_item.table << ", " << col_item.column << ", "
+        << col_item.alias << "), ";
+    }
+    std::cout << " ]\n";
   }
 
-  MaskListener ml(&tokens, mask_col_item_list);
-  walker.walk(&ml, tree);
-  std::cout << tokens.getText() << std::endl;
+  std::cout << "\n========Mask Listener========\n";
+  OracleMaskListener oracle_mask_listener(&parser, &tokens, 
+      oracle_dag.column_dag(), column_relation_map, mask_item_list_for_dag);
+  walker.walk(&oracle_mask_listener, tree);
+  std::cout << oracle_mask_listener.GetResult() << std::endl;
 
+}
+
+std::string string_toupper(std::string str) {
+  std::transform(str.begin(), str.end(), str.begin(), 
+      [](unsigned char c) -> unsigned char { return std::toupper(c); });
+  return str;
+}
+
+bool ReplaceStarWithColumns(std::string &sql) {
+  std::cout << "before replacing star: " << sql << std::endl;
+  ANTLRInputStream input(sql);
+  PlSqlLexer lexer(&input);
+  CommonTokenStream tokens(&lexer);
+  PlSqlParser parser(&tokens);
+
+  // add error listener
+  ErrorVerboseListener err_verbose;
+  parser.removeErrorListeners();
+  parser.addErrorListener(&err_verbose);
+
+  tree::ParseTree *tree = parser.sql_script();
+  if (err_verbose.has_error()) {
+    std::cout << "Parse failed: " << err_verbose.err_message() << std::endl;
+    return false;
+  }
+
+  tree::ParseTreeWalker walker;
+  OracleGetColumnDAG oracle_dag(&parser);
+  walker.walk(&oracle_dag, tree);
+  TravelColumnDag(oracle_dag.column_dag());
+
+  OracleReplaceStarListener oracle_rp_star(&parser, &tokens, oracle_dag.column_dag());
+  walker.walk(&oracle_rp_star, tree);
+
+  sql = oracle_rp_star.GetResult();
+  std::cout << "after replacing star: " << sql << std::endl;
+  return true;
 }
 
 int main(int argc, char *argv[]) {

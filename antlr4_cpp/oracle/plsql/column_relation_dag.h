@@ -58,8 +58,19 @@ struct ColumnDAG {
     }
 };
 
-static const std::string SUBQUERY_SUFFIX = "_SUBQUERY_SECSMART";
-static const std::string SUBQUERY_WITHCLAUSE = "_WITHCLAUSE_SECSMART";
+static const int SUBQUERY_SUFFIX = 0;
+static const int SUBQUERY_WITHCLAUSE = 1;
+static const int SUBQUERY_TABLE_PREFIX = 2;
+static const int SUBQUERY_IN_ELEMENTS_PREFIX = 3;
+static const int SUBQUERY_ATOM_PREFIX = 4;
+
+static std::map<int, std::string> SUBQUERY_NAMES_PART = {
+  {SUBQUERY_SUFFIX, "_SUBQUERY_SECSMART"}, 
+  {SUBQUERY_WITHCLAUSE, "_WITHCLAUSE_SECSMART"}, 
+  {SUBQUERY_TABLE_PREFIX, "TABLE_REF_SECSMART_"},
+  {SUBQUERY_IN_ELEMENTS_PREFIX, "IN_ELEMENTS_SECSMART_"},
+  {SUBQUERY_ATOM_PREFIX, "ATOM_SECSMART_"}
+};
 
 static void TravelColumnDag(const ColumnDAG &dag) {
   Table2Subquery tb2subquery;
@@ -325,7 +336,6 @@ static void GetColumnRelations(
   // push item self into map first
   // we ignore root query block, so here should add column itself first
   ColumnItem item;
-  item.schema = mask_item.schema;
   item.table  = mask_item.table;
   item.column = mask_item.column;
   column_relations_map[item].push_back(item);
@@ -359,6 +369,7 @@ static void LoadFromPhysicalTable(ColumnItemList &column_list, TableItem table_i
   tablename_to_columns["course"] = {"stu_no", "course_no", "course_name", "score"};
   tablename_to_columns["grade"] = {"name", "grade_name"};
   tablename_to_columns["dept"] = {"name", "id", "dept_no"};
+  tablename_to_columns["\"dt_test\""] = {"test_id", "test_name", "test_others"};
 
   // sqls had been toupper, here should tolower first
   auto column_string = tablename_to_columns[string_tolower(table_item.table)];
@@ -368,6 +379,20 @@ static void LoadFromPhysicalTable(ColumnItemList &column_list, TableItem table_i
     col_tmp.table = table_item.alias.empty() ? table_item.table : table_item.alias;
     column_list.push_back(col_tmp);
   }
+}
+
+static bool CheckTableValid(std::string table_name) {
+  if (table_name.empty()) {
+    return false;
+  }
+
+  for (auto iter = SUBQUERY_NAMES_PART.begin(); iter != SUBQUERY_NAMES_PART.end(); iter++) {
+    if (table_name.find(iter->second) != std::string::npos) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /***********************************************************
@@ -394,6 +419,10 @@ static void GetColumnsFromTable(ColumnDAG &dag, ColumnItemList &column_list,
     // table_item is not a subquery, load it from physical table
     // TODO: Not Implementes
     LoadFromPhysicalTable(column_list, table_item);
+
+    if (column_list.empty()) {
+      std::cout << "table: " << table_item.table << "has no columns or not exist." << std::endl;
+    }
   } else {
     for (auto tb2col : dag.table_to_column_list) {
       if (!StrCaseCmp(tb2col.subquery_name, subquery_name)) {
@@ -406,7 +435,12 @@ static void GetColumnsFromTable(ColumnDAG &dag, ColumnItemList &column_list,
           // if col_tmp has an alias name, its name in table_item should be alias
           ColumnItem col_item_tmp;
           col_item_tmp.column = col_tmp.alias.empty()? col_tmp.column : col_tmp.alias;
-          col_item_tmp.table = table_item.table;
+
+          // check table name is valid or not
+          if (CheckTableValid(table_item.table)) {
+            col_item_tmp.table = table_item.table;
+          }
+
           column_list.push_back(col_item_tmp);
         } else {
           // col_tmp also contains '*'
@@ -507,18 +541,9 @@ static bool IsMaskColumn(ColumnDAG column_dag,
     std::map<ColumnItem, ColumnItemList> &column_relations_map, 
     MaskItem &mask_item, ColumnItem &col_item) {
   ColumnItem citem;
-  citem.schema = mask_item.schema;
   citem.table = mask_item.table;
   citem.column = mask_item.column;
   auto column_list = column_relations_map[citem];
-  TableItem table_item_save;
-
-  TableItemList table_list_in_top_level = 
-    GetTableListFromTopLevelQueryInDag(column_dag);
-
-  if (table_list_in_top_level.empty()) {
-    return false;
-  }
 
   for (auto mitem : column_list) {
     if (!StrCaseCmp(col_item.column, mitem.column))
@@ -533,25 +558,23 @@ static bool IsMaskColumn(ColumnDAG column_dag,
     // with mitem.schema, otherwise, compare col_item.schema with mitem.schema
     // directly
     //
-    for (auto tb_tmp : table_list_in_top_level) {
-      if ((col_item.table.empty() && StrCaseCmp(tb_tmp.table, mitem.table))
-          || (!col_item.table.empty() && StrCaseCmp(tb_tmp.table, col_item.table))) {
-        table_item_save = tb_tmp;
-        break;
+    if (col_item.table.empty()) {
+      TableItemList table_list_in_top_level = 
+        GetTableListFromTopLevelQueryInDag(column_dag);
+
+      if (table_list_in_top_level.empty()) {
+        return false;
+      } else {
+        for (auto tb_tmp : table_list_in_top_level) {
+          if (StrCaseCmp(tb_tmp.table, mitem.table)) {
+            return true;
+          }
+        }
       }
+    } else {
+      if (StrCaseCmp(col_item.table, mitem.table))
+        return true;
     }
-
-    if (!StrCaseCmp(table_item_save.table, mitem.table)) {
-      continue;
-    }
-
-    // schema
-    if (!StrCaseCmp(table_item_save.schema, mitem.schema)
-        && !StrCaseCmp(col_item.schema, mitem.schema)) {
-      continue;
-    }
-
-    return true;
   }
   return false;
 }

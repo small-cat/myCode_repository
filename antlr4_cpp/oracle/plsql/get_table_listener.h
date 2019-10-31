@@ -13,7 +13,6 @@
 #include "PlSqlParser.h"
 #include "PlSqlParserBaseListener.h"
 #include "item.h"
-#include "common.h"
 
 namespace oracle {
 class GetTableListener : public PlSqlParserBaseListener {

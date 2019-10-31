@@ -59,7 +59,8 @@ class FromClauseMatcherListener : public PlSqlParserBaseListener {
         }
         void exitSelected_list_element(PlSqlParser::Selected_list_elementContext *ctx) {}
 
-        bool isMatcher();
+        bool matcher();
+        std::string table_name();
     private:
         PlSqlParser *_parser;
         std::string _strings;
