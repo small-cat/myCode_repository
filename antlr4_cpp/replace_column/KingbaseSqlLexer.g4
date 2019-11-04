@@ -2422,7 +2422,7 @@ START_CMD
     : '@' {IsNewlineAtPos(-2)}? '@'? ~('\r' | '\n')* NEWLINE_EOF
     ;
 
-REGULAR_ID: SIMPLE_LETTER (SIMPLE_LETTER | '$' | '_' | '#' | [0-9])*;
+REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '$' | '_' | '#' | [0-9])*;
 
 SPACES: [ \t\r\n]+ -> channel(HIDDEN);
 

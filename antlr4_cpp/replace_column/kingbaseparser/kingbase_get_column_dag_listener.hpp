@@ -49,6 +49,7 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
 
       join_on_part_ = false;
       column_or_expression_visited_ = false;
+      in_for_update_clause_ = false;
       count_for_name_ = 0;
     }
     ~KingbaseGetColumnDAG() {}
@@ -128,14 +129,17 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
         return;
       }
 
+      if (in_for_update_clause_) {
+        // here in for update clause, ignore column_item
+        return;
+      }
+
       ColumnItem column_item;
       column_item.clear();
 
       // push_back column into column_list_
       column_item = get_column(ctx->getText());
       column_list_.push_back(column_item);
-    }
-    void exitColumn_name(KingbaseSqlParser::Column_nameContext *ctx) {
     }
 
     /***********************************************************
@@ -417,8 +421,6 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
       // prevent entering A and B 
       join_on_part_ = false;
     }
-    void exitRelational_expression(KingbaseSqlParser::Relational_expressionContext *ctx) {
-    }
 
     void enterIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {
       if (nullptr == ctx)
@@ -440,7 +442,16 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
         subquery_namev_.push_back(next_subquery_name);
       }
     }
-    void exitIn_elements(KingbaseSqlParser::In_elementsContext *ctx) {
+
+    void enterFor_update_clause(KingbaseSqlParser::For_update_clauseContext *ctx) {
+      if (nullptr == ctx) {
+        return;
+      }
+
+      in_for_update_clause_ = true;
+    }
+    void exitFor_update_clause(KingbaseSqlParser::For_update_clauseContext *ctx) {
+      in_for_update_clause_ = false;
     }
 
     ColumnDAG column_dag() {
@@ -484,6 +495,7 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
 
     bool join_on_part_;
     bool column_or_expression_visited_;
+    bool in_for_update_clause_;
     int count_for_name_;
 };
 

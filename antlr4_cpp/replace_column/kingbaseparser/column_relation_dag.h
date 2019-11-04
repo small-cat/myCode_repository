@@ -113,14 +113,13 @@ std::string& string_tolower(std::string &str) {
 }
 
 static bool IsItemInMap(std::map<ColumnItem, ColumnItemList> &map, 
-    ColumnItem &item) {
-  for (auto iter=map.begin(); iter!=map.end(); ++iter) {
-    for (auto col_item : iter->second) {
-      if (StrCaseCmp(item.table, col_item.table)
-          && StrCaseCmp(item.column, col_item.column)) {
-        // item exists in map, don't add again
-        return true;
-      }
+    ColumnItem &key, ColumnItem &item) {
+  auto col_list = map[key];
+  for (auto col_item : col_list) {
+    if (StrCaseCmp(item.table, col_item.table)
+        && StrCaseCmp(item.column, col_item.column)) {
+      // item exists in map, don't add again
+      return true;
     }
   }
 
@@ -155,6 +154,17 @@ static void FindFromTableToColumnList(
           || (!table_item.alias.empty()
             && StrCaseCmp(table_item.alias, column_item.table))) {
         // matched table name
+        //
+        //matched schema again if schema is not empty
+        if (!table_item.schema.empty()) {
+          if (!column_item.schema.empty()) {
+            // this case may occur if several schemas have same tables
+            if (!StrCaseCmp(column_item.schema, table_item.schema)) {
+              continue;
+            }
+          }
+        } 
+
         matched = true;
         tb_item_save = table_item;
         break;
@@ -171,6 +181,7 @@ static void FindFromTableToColumnList(
               && StrCaseCmp(col_item.column, column_item.alias))
             || (!col_item.alias.empty() 
               && StrCaseCmp(col_item.alias, column_item.column))) {
+
           if (col_item.table.empty()) {
             // with clause subquery_name contains SUBQUERY_WITHCLAUSE and always
             // has no table_name, sometimes simple sql sentences also have no
@@ -179,10 +190,10 @@ static void FindFromTableToColumnList(
               cur_query_name = tb_item_save.table;
             } 
             col_item.table = tb_item_save.table;
+            col_item_save = col_item;
 
-            if (!IsItemInMap(map_columns, col_item)) {
+            if (!IsItemInMap(map_columns, key, col_item)) {
               map_columns[key].push_back(col_item);
-              col_item_save = col_item;
               break;
             }
           } else {
@@ -191,9 +202,9 @@ static void FindFromTableToColumnList(
                 || (!tb_item_save.alias.empty() 
                   && StrCaseCmp(col_item.table, tb_item_save.alias))) {
 
-              if (!IsItemInMap(map_columns, col_item)) {
+              col_item_save = col_item;
+              if (!IsItemInMap(map_columns, key, col_item)) {
                 map_columns[key].push_back(col_item);
-                col_item_save = col_item;
                 break;
               }
             }
@@ -202,10 +213,18 @@ static void FindFromTableToColumnList(
         }
       } // end for
       
+      if (col_item_save.column.empty()) {
+        // clear 
+        tb_item_save.clear();
+        matched = false;
+        continue;
+      }
       // Here, column_item matched in table_to_column_list.from(table_list), but
       // not matched in table_to_column_list.to(column_list), in this case, sqls
       // may be like:
       //  select A.a, B.b from A join (select c b, d from C) B on A.d = B.d;
+      // in this case, we confirm that current subquery is not the one we find
+      // continue
     } else {
       // not matched, item not belong to current subquery, find next
       continue;
@@ -249,7 +268,7 @@ static void FindFromTableToColumnList(
             for (auto mcol_item : table_to_col.to) {
               if (StrCaseCmp(mcol_item.column, col_item_save.column)
                   || (!mcol_item.alias.empty() && StrCaseCmp(mcol_item.alias, col_item_save.column))) {
-                if (!IsItemInMap(map_columns, mcol_item)) {
+                if (!IsItemInMap(map_columns, key, mcol_item)) {
                   map_columns[key].push_back(mcol_item);
 
                   FindFromTableToColumnList(map_columns, key, column_dag, mcol_item);
@@ -294,11 +313,11 @@ static void FindFromTableToColumnList(
       //cond.from
       if (StrCaseCmp(cond.from.column, column_item.column)) {
         // column_item had been called FindFromTableToColumnList
-        if (!IsItemInMap(map_columns, cond.from)) {
+        if (!IsItemInMap(map_columns, key, cond.from)) {
           map_columns[key].push_back(cond.from);
         }
       } else {
-        if (!IsItemInMap(map_columns, cond.from)) {
+        if (!IsItemInMap(map_columns, key, cond.from)) {
           map_columns[key].push_back(cond.from);
           FindFromTableToColumnList(map_columns, key, column_dag, cond.from);
         }
@@ -306,10 +325,10 @@ static void FindFromTableToColumnList(
 
       // cond.to
       if (StrCaseCmp(cond.to.column, column_item.column)) {
-        if (!IsItemInMap(map_columns, cond.to))
+        if (!IsItemInMap(map_columns, key, cond.to))
           map_columns[key].push_back(cond.to);
       } else {
-        if (!IsItemInMap(map_columns, cond.to)) {
+        if (!IsItemInMap(map_columns, key, cond.to)) {
           map_columns[key].push_back(cond.to);
           FindFromTableToColumnList(map_columns, key, column_dag, cond.to);
         }
@@ -442,6 +461,7 @@ static void GetColumnsFromTable(ColumnDAG &dag, ColumnItemList &column_list,
 ***********************************************************/ 
 static ColumnItemList GetAllColumnsInsteadOfStar(ColumnDAG &dag, ColumnItem col) {
   ColumnItemList columns_replace_star;
+  ColumnItemList col_replace_star_save;
 
   if (!StrCaseCmp(col.column, "*")) {
     return columns_replace_star;
@@ -459,8 +479,16 @@ static ColumnItemList GetAllColumnsInsteadOfStar(ColumnDAG &dag, ColumnItem col)
   if (col.table.empty()) {
     // only '*'
     // here we should replace star with all columns in table_list
+    col_replace_star_save.clear();
     for (auto table_tmp : table_list) {
-      GetColumnsFromTable(dag, columns_replace_star, table_tmp);
+      GetColumnsFromTable(dag, col_replace_star_save, table_tmp);
+
+      // replace tablename with table_tmp.table in col_replace_star_save
+      for (auto col_tmp : col_replace_star_save) {
+        col_tmp.table = table_tmp.table;
+        columns_replace_star.push_back(col_tmp);
+      }
+      col_replace_star_save.clear();
     }
 
     return columns_replace_star;
@@ -477,7 +505,15 @@ static ColumnItemList GetAllColumnsInsteadOfStar(ColumnDAG &dag, ColumnItem col)
       break;
     }
   }
-  GetColumnsFromTable(dag, columns_replace_star, table_item);
+
+  col_replace_star_save.clear();
+  GetColumnsFromTable(dag, col_replace_star_save, table_item);
+
+  // replace all column.table to table_item.table
+  for (auto col_tmp : col_replace_star_save) {
+    col_tmp.table = table_item.table;
+    columns_replace_star.push_back(col_tmp);
+  }
 
   return columns_replace_star;
 }
@@ -503,6 +539,7 @@ static TableItemList GetTableListFromTopLevelQueryInDag(ColumnDAG column_dag) {
  * @param 
  * @date 23/09/2019 
 ***********************************************************/ 
+/*
 static bool IsMaskColumn(ColumnDAG column_dag, 
     std::map<ColumnItem, ColumnItemList> &column_relations_map, 
     MaskItem &mask_item, ColumnItem &col_item) {
@@ -555,5 +592,69 @@ static bool IsMaskColumn(ColumnDAG column_dag,
   }
   return false;
 }
+*/
+static bool IsMaskColumn(ColumnDAG column_dag, 
+    std::map<ColumnItem, ColumnItemList> &column_relations_map, 
+    MaskItem &mask_item, ColumnItem &col_item) {
+  ColumnItem citem;
+  citem.schema = mask_item.schema;
+  citem.table = mask_item.table;
+  citem.column = mask_item.column;
+  auto column_list = column_relations_map[citem];
+  TableItem table_item_save;
 
+  TableItemList table_list_in_top_level = 
+    GetTableListFromTopLevelQueryInDag(column_dag);
+
+  if (table_list_in_top_level.empty()) {
+    return false;
+  }
+
+  if (!col_item.table.empty()) {
+    for (auto tb_tmp : table_list_in_top_level) {
+      if (StrCaseCmp(tb_tmp.table, col_item.table)
+          || StrCaseCmp(tb_tmp.alias, col_item.table)) {
+        table_item_save = tb_tmp;
+        break;
+      }
+    }
+  }
+
+  for (auto mitem : column_list) {
+    if (!StrCaseCmp(col_item.column, mitem.column))
+      continue;
+
+    // matched column
+    // if table is empty, we must know column is belong to which table
+    // so, here we should get it from dag first
+    //
+    // TODO: [FIXME] here we don't consider mask.schema 
+    // if col_item.schema is empty, get default schema first and then compare 
+    // with mitem.schema, otherwise, compare col_item.schema with mitem.schema
+    // directly
+    //
+    
+    if (col_item.table.empty()) {
+      for (auto tb_tmp : table_list_in_top_level) {
+        if (StrCaseCmp(tb_tmp.table, mitem.table)) {
+          table_item_save = tb_tmp;
+          break;
+        }
+      }
+    }
+
+    if (!StrCaseCmp(table_item_save.table, mitem.table)) {
+      continue;
+    }
+
+    // schema
+    if (!StrCaseCmp(table_item_save.schema, mitem.schema)
+        && !StrCaseCmp(col_item.schema, mitem.schema)) {
+      continue;
+    }
+
+    return true;
+  }
+  return false;
+}
 #endif

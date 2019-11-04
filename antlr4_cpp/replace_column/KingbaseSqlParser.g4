@@ -777,7 +777,7 @@ column_with_datatype
 
 column_constraint
     : (CONSTRAINT regular_id)? 
-      (NOT NULL_ 
+      (NOT NULL_
       | UNIQUE (INDEX expression /* OptColumnCompressInfo */)?
         (USING INDEX TABLESPACE tablespace)?
       | PRIMARY KEY (INDEX expression /* OptColumnCompressInfo */)?
@@ -1241,7 +1241,7 @@ subquery_operation_part
 query_block
     : SELECT top_clause? (DISTINCT | ALL)? 
       selected_list from_clause where_clause? hierarchical_query_clause? 
-      group_by_clause? order_by_clause? limit_clause? for_update_clause?
+      group_by_clause? window_clause? order_by_clause? limit_clause? for_update_clause?
     ;
 
 top_clause
@@ -1417,7 +1417,7 @@ fetch_clause
     ;
 
 for_update_clause
-    : FOR (UPDATE | SHARE) for_update_of_part? for_update_options?
+    : (FOR (UPDATE | SHARE) for_update_of_part? for_update_options?)+
     ;
 
 for_update_of_part
@@ -1425,9 +1425,7 @@ for_update_of_part
     ;
 
 for_update_options
-    : SKIP_ LOCKED
-    | NOWAIT
-    | WAIT expression
+    : NOWAIT
     ;
 
 update_statement
@@ -1844,23 +1842,39 @@ standard_prediction_function_keyword
     ;
 
 over_clause
-    : OVER LEFT_PAREN query_partition_clause? (order_by_clause windowing_clause?)? RIGHT_PAREN
+    : OVER regular_id
+    | OVER LEFT_PAREN query_partition_clause? order_by_clause? window_clause? RIGHT_PAREN
     ;
 
-windowing_clause
-    : windowing_type
-      (BETWEEN windowing_elements AND windowing_elements | windowing_elements)
+window_clause
+    : WINDOW (COMMA? window_part)+
     ;
 
-windowing_type
-    : ROWS
-    | RANGE
+window_part
+    : regular_id AS LEFT_PAREN window_definition RIGHT_PAREN
     ;
 
-windowing_elements
+window_definition
+    : regular_id? (PARTITION BY expression (COMMA expression)*)? 
+      (ORDER BY expression (ASC | DESC | USING expression)? (NULLS (FIRST | LAST)?)?)?
+      frame_clause?
+    ;
+
+frame_clause
+    : (RANGE | ROWS)? frame_part
+    ;
+
+frame_part
+    : frame_start_or_end
+    | BETWEEN frame_start_or_end AND frame_start_or_end
+    ;
+
+frame_start_or_end
     : UNBOUNDED PRECEDING
+    | expression PRECEDING
     | CURRENT ROW
-    | concatenation (PRECEDING | FOLLOWING)
+    | expression FOLLOWING
+    | UNBOUNDED FOLLOWING
     ;
 
 collect_order_by_part
