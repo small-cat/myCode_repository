@@ -274,13 +274,7 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
 
       antlr4::TokenStream *tokens = parser_->getTokenStream();
 
-      auto tableview_name_ctx = ctx->tableview_name();
-      ColumnItem col_item;
-
-      if (tableview_name_ctx) {
-        col_item.table = tokens->getText(tableview_name_ctx);
-      }
-      col_item.column = ctx->ASTERISK()->getText();
+      ColumnItem col_item = get_column(tokens->getText(ctx));
       column_list_.push_back(col_item);
     }
 
@@ -456,6 +450,10 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
 
     ColumnDAG column_dag() {
       return column_dag_;
+    }
+
+    void set_column_dag(ColumnDAG &column_dag) {
+      column_dag_ = column_dag;
     }
 
     /***********************************************************

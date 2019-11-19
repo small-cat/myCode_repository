@@ -152,6 +152,17 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
   walker.walk(&kingbase_dag, tree);
   TravelColumnDag(kingbase_dag.column_dag());
 
+  std::cout << std::endl;
+  std::cout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
+  std::cout << "replace all the stars in dag" << std::endl;
+  std::cout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
+  auto replace_star_column_dag = kingbase_dag.column_dag();
+  ReplaceAllStarInDag(replace_star_column_dag);
+  TravelColumnDag(replace_star_column_dag);
+  std::cout << std::endl;
+
+  kingbase_dag.set_column_dag(replace_star_column_dag);
+
   MaskItemList mask_item_list_for_dag;
   MaskItem item4 {"SYSDBA", "student", "name", "MASK_STUNAME"};
   MaskItem item5 {"SCOTT", "dept", "name", "MASK_DEPTNAME"};
@@ -168,7 +179,7 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
     std::cout << "[ ";
     for (auto col_item : iter->second) {
       std::cout << "(" << col_item.schema << ", " << col_item.table << ", " << col_item.column << ", "
-        << col_item.alias << "), ";
+        << col_item.alias << ", " << col_item.effect << "), ";
     }
     std::cout << " ]\n";
   }

@@ -109,12 +109,6 @@ class KingbaseMaskListener : public KingbaseSqlParserBaseListener {
         subquery_namev_.push_back(cur_subquery_name);
       }
     }
-    void exitSubquery_operation_part(KingbaseSqlParser::Subquery_operation_partContext *ctx) {
-    }
-
-    void enterSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {}
-    void exitSelected_list(KingbaseSqlParser::Selected_listContext *ctx) {
-    }
 
     void enterSelected_list_element_column(KingbaseSqlParser::Selected_list_element_columnContext *ctx) {
       if (nullptr == ctx)

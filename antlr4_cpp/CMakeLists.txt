@@ -115,6 +115,7 @@ if(WITH_DEMO)
  add_subdirectory(demo)
  add_subdirectory(kingbase)
  add_subdirectory(replace_column)
+ add_subdirectory(hive)
 endif(WITH_DEMO)
 
 # Generate CMake Package Files only if install is active

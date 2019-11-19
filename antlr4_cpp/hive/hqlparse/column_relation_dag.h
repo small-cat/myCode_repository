@@ -58,8 +58,19 @@ struct ColumnDAG {
     }
 };
 
-static const std::string SUBQUERY_SUFFIX = "_SUBQUERY_SECSMART";
-static const std::string SUBQUERY_WITHCLAUSE = "_WITHCLAUSE_SECSMART";
+static const int SUBQUERY_SUFFIX = 0;
+static const int SUBQUERY_WITHCLAUSE = 1;
+static const int SUBQUERY_TABLE_PREFIX = 2;
+static const int SUBQUERY_IN_ELEMENTS_PREFIX = 3;
+static const int SUBQUERY_ATOM_PREFIX = 4;
+
+static std::map<int, std::string> SUBQUERY_NAMES_PART = {
+  {SUBQUERY_SUFFIX, "_SUBQUERY_SECSMART"}, 
+  {SUBQUERY_WITHCLAUSE, "_WITHCLAUSE_SECSMART"}, 
+  {SUBQUERY_TABLE_PREFIX, "TABLE_REF_SECSMART_"}, 
+  {SUBQUERY_IN_ELEMENTS_PREFIX, "IN_ELEMENTS_SECSMART_"}, 
+  {SUBQUERY_ATOM_PREFIX, "ATOM_SECSMART_"}
+};
 
 static void TravelColumnDag(const ColumnDAG &dag) {
   Table2Subquery tb2subquery;
