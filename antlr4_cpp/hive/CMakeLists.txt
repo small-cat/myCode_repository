@@ -4,12 +4,12 @@ if(NOT UNIX)
 endif()
 
 set(antlr4-hive-GENERATED_SRC
-   ${PROJECT_SOURCE_DIR}/hive/generated/HplsqlLexer.cpp 
-   ${PROJECT_SOURCE_DIR}/hive/generated/HplsqlParser.cpp
-   ${PROJECT_SOURCE_DIR}/hive/generated/HplsqlBaseListener.cpp
-   ${PROJECT_SOURCE_DIR}/hive/generated/HplsqlBaseVisitor.cpp
-   ${PROJECT_SOURCE_DIR}/hive/generated/HplsqlListener.cpp
-   ${PROJECT_SOURCE_DIR}/hive/generated/HplsqlVisitor.cpp
+   ${PROJECT_SOURCE_DIR}/hive/generated/HqlsqlLexer.cpp 
+   ${PROJECT_SOURCE_DIR}/hive/generated/HqlsqlParser.cpp
+   ${PROJECT_SOURCE_DIR}/hive/generated/HqlsqlParserBaseListener.cpp
+   ${PROJECT_SOURCE_DIR}/hive/generated/HqlsqlParserBaseVisitor.cpp
+   ${PROJECT_SOURCE_DIR}/hive/generated/HqlsqlParserListener.cpp
+   ${PROJECT_SOURCE_DIR}/hive/generated/HqlsqlParserVisitor.cpp
  )
 
 set(antlr4-hive-deparate_debuginfo
@@ -30,9 +30,9 @@ add_custom_command(OUTPUT ${antlr4-hive-GENERATED_SRC}
    COMMAND 
    ${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/hive/generated/
    COMMAND
-   "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/hive/generated/ ${PROJECT_SOURCE_DIR}/hive/Hplsql.g4
+   "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/hive/generated/ ${PROJECT_SOURCE_DIR}/hive/HqlsqlLexer.g4 ${PROJECT_SOURCE_DIR}/hive/HqlsqlParser.g4
    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-   DEPENDS ${PROJECT_SOURCE_DIR}/hive/Hplsql.g4 
+   DEPENDS ${PROJECT_SOURCE_DIR}/hive/HqlsqlLexer.g4 ${PROJECT_SOURCE_DIR}/hive/HqlsqlParser.g4
    )
 
 include_directories(

@@ -16,7 +16,11 @@
 */
 
 // HPL/SQL Procedural SQL Extension Grammar 
-grammar Hplsql;
+parser grammar HqlsqlParser;
+
+options {
+    tokenVocab=HqlsqlLexer;
+}
 
 @parser::postinclude {
 #include <strings.h>
@@ -44,12 +48,12 @@ proc_block :
      | stmt+ T_GO?
      ;
 
-stmt : 
-       assignment_stmt
-     | allocate_cursor_stmt
-     | alter_table_stmt
+stmt
+     : alter_stmt
+     | allocate_cursor_stmt 
      | associate_locator_stmt
      | begin_transaction_stmt
+     | abort_transactions_stmt
      | break_stmt
      | call_stmt
      | collect_stats_stmt
@@ -58,8 +62,8 @@ stmt :
      | copy_from_local_stmt
      | copy_stmt
      | commit_stmt
-     | create_database_stmt
-     | create_function_stmt
+     | create_database_stmt 
+     | create_function_stmt 
      | create_index_stmt
      | create_local_temp_table_stmt
      | create_package_stmt
@@ -67,8 +71,6 @@ stmt :
      | create_procedure_stmt
      | create_table_stmt
      | declare_stmt
-     | delete_stmt
-     | describe_stmt
      | drop_stmt
      | end_transaction_stmt
      | exec_stmt 
@@ -78,13 +80,9 @@ stmt :
      | for_range_stmt
      | if_stmt     
      | include_stmt
-     | insert_stmt
-     | insert_directory_stmt
      | get_diag_stmt
-     | grant_stmt
      | leave_stmt
      | map_object_stmt
-     | merge_stmt
      | open_stmt
      | print_stmt
      | quit_stmt
@@ -92,25 +90,55 @@ stmt :
      | resignal_stmt
      | return_stmt
      | rollback_stmt
-     | select_stmt
      | signal_stmt
      | summary_stmt
-     | update_stmt
-     | use_stmt
-     | truncate_stmt
+     | use_stmt 
+     | truncate_table_stmt 
      | values_into_stmt
      | while_stmt
      | label    
-     | hive     
-     | host
-     | null_stmt
-     | expr_stmt     
+     | hive    
+     | host 
+       
+     // view/index manipulation
+     | create_view_stmt 
+     | create_macro_stmt
+     | reload_function 
+       
+     // role manipulation
+     | create_role_stmt
+     | grant_revoke_role_stmt
+     | grant_revoke_privilege_stmt
+
+     // dml 
+     | load_file_stmt
+     | insert_stmt
+     | update_stmt
+     | delete_stmt
+     | merge_stmt
+     | analyze_table_stmt
+
+     // queries
+     | select_stmt
+
+     // show desc
+     | show_stmt
+     | describe_stmt
+
+     // import / export
+     | import_stmt
+     | export_stmt
+       
+     | explain_stmt
+     | assignment_stmt
      | semicolon_stmt      // Placed here to allow null statements ;;...          
      ;
      
 semicolon_stmt :
        T_SEMICOLON
-     | '@' | '#' | '/' 
+     | T_AT_SIGN
+     | T_POUND_SIGN
+     | T_DIV_SIGN
      ;
 
 exception_block :       // Exception block
@@ -120,18 +148,11 @@ exception_block :       // Exception block
 exception_block_item : 
        T_WHEN L_ID T_THEN block ~(T_WHEN | T_END)       
      ;
-     
-null_stmt :             // NULL statement (no operation)
-       T_NULL
-     ;
 
-expr_stmt :             // Standalone expression
-       {!(strcasecmp(_input->LT(1)->getText().c_str(), "GO") == 0)}? expr
-     ;
-
-assignment_stmt :       // Assignment statement
+// Assignment statement
+assignment_stmt : 
        T_SET set_session_option
-     | T_SET? assignment_stmt_item (T_COMMA assignment_stmt_item)*  
+     | (T_SET | T_RESET)? assignment_stmt_item (T_COMMA assignment_stmt_item)*  
      ;
 
 assignment_stmt_item : 
@@ -140,18 +161,43 @@ assignment_stmt_item :
      | assignment_stmt_select_item
      ;
 
+// in hive doc, we just find "partition (a=b)", but no "partition (a<b)"
+// this case appears in samples (holly shittttttt)
 assignment_stmt_single_item : 
-       ident T_COLON? T_EQUAL expr
-     | T_OPEN_P ident T_CLOSE_P T_COLON? T_EQUAL expr
+       assignment_expr T_COLON? (bool_expr_binary_operator assignment_expr)*
+     | T_OPEN_P assignment_expr T_CLOSE_P T_COLON? T_EQUAL assignment_expr
      ;
 
 assignment_stmt_multiple_item : 
-       T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P T_COLON? T_EQUAL T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P
+       T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P T_COLON? T_EQUAL T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P
      ;
 
 assignment_stmt_select_item : 
-       (ident | (T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P)) T_COLON? T_EQUAL T_OPEN_P select_stmt T_CLOSE_P
+       (expr | (T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P)) T_COLON? T_EQUAL T_OPEN_P select_stmt T_CLOSE_P
      ;
+
+assignment_expr
+    : (ident | assignment_reserverd_words) (T_PERIOD (ident | assignment_reserverd_words))*
+    | expr
+    ;
+
+assignment_reserverd_words
+    : T_WINDOW
+    | T_FROM
+    | T_SET
+    | T_CHECK
+    | T_EXTERNAL
+    | T_TABLES
+    | T_TABLE
+    | T_LIMIT
+    | T_UNION
+    | T_BUCKET
+    | T_INTERVAL
+    | T_DISABLE
+    | T_REBUILD
+    | T_PERCENTS
+    | T_EXPORT
+    ;
      
 allocate_cursor_stmt:
        T_ALLOCATE ident T_CURSOR T_FOR ((T_RESULT T_SET) | T_PROCEDURE) ident
@@ -164,6 +210,10 @@ associate_locator_stmt :
 begin_transaction_stmt :
        T_BEGIN T_TRANSACTION
      ;
+
+abort_transactions_stmt
+    : T_ABORT T_TRANSACTIONS ident+
+    ;
 
 break_stmt :
        T_BREAK
@@ -194,8 +244,8 @@ declare_stmt_item :
      ;
 
 declare_var_item :
-       ident (T_COMMA ident)* T_AS? dtype dtype_len? dtype_attr* dtype_default? 
-     | ident T_CONSTANT T_AS? dtype dtype_len? dtype_default 
+       ident (T_COMMA ident)* T_AS? dtype dtype_attr* dtype_default? 
+     | ident T_CONSTANT T_AS? dtype dtype_default 
      ;
 
 declare_condition_item :    // Condition declaration 
@@ -223,7 +273,7 @@ declare_temporary_table_item :     // DECLARE TEMPORARY TABLE statement
      ;
      
 create_table_stmt :
-       T_CREATE T_TABLE (T_IF T_NOT T_EXISTS)? table_name create_table_preoptions? create_table_definition 
+       T_CREATE (T_TEMPORARY | T_EXTERNAL)? T_TABLE (T_IF T_NOT T_EXISTS)? table_name create_table_definition 
      ;
      
 create_local_temp_table_stmt :
@@ -231,32 +281,82 @@ create_local_temp_table_stmt :
      ;
      
 create_table_definition :
-      (T_AS? T_OPEN_P select_stmt T_CLOSE_P | T_AS? select_stmt | T_OPEN_P create_table_columns T_CLOSE_P | T_LIKE table_name) create_table_options?
+       create_table_options? 
+     | T_LIKE table_name location_part?
      ;
      
 create_table_columns :         
-       create_table_columns_item (T_COMMA create_table_columns_item)*
+       create_table_columns_item (T_COMMA create_table_columns_item)* constraint_specification?
      ;
        
 create_table_columns_item :
-       column_name dtype dtype_len? dtype_attr* create_table_column_inline_cons* 
-     | (T_CONSTRAINT ident)? create_table_column_cons
+       column_name dtype column_constrains_specification? comment_part?
      ;
      
 column_name :
        ident
      ;
 
-create_table_column_inline_cons :
-       dtype_default
+old_column_name
+    : ident
+    ;
+
+new_column_name
+    : ident
+    ;
+
+constraint_specification
+    : constraint_spec+
+    ;
+
+constraint_spec
+    : T_COMMA T_PRIMARY T_KEY paren_column_list T_DISABLE T_NOVALIDATE T_RELY T_DIV_SIGN T_NORELY
+    | T_COMMA T_CONSTRAINT constraint_name T_FOREIGN T_KEY paren_column_list 
+      T_REFERENCES table_name paren_column_list T_DISABLE T_NOVALIDATE
+    | T_COMMA T_CONSTRAINT constraint_name T_UNIQUE paren_column_list T_DISABLE T_NOVALIDATE T_RELY T_DIV_SIGN T_NORELY
+    | T_COMMA T_CONSTRAINT constraint_name T_CHECK expr? (T_ENABLE | T_DISABLE) T_NOVALIDATE T_RELY T_DIV_SIGN T_NORELY
+    ;
+
+constraint_name
+    : ident
+    ;
+
+paren_column_list
+    : T_OPEN_P column_name_list T_CLOSE_P
+    ;
+
+column_name_list
+    : column_name_ele (T_COMMA column_name_ele)*
+    ;
+
+column_name_ele
+    : column_name dtype? (T_ASC | T_DESC)? comment_part?
+    ;
+
+paren_col_values
+    : T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P
+    ;
+
+column_constrains_specification :
+     T_PRIMARY T_KEY
      | T_NOT? T_NULL
-     | T_PRIMARY T_KEY
      | T_UNIQUE
-     | T_REFERENCES table_name T_OPEN_P ident T_CLOSE_P create_table_fk_action*
-     | T_IDENTITY T_OPEN_P L_INT (T_COMMA L_INT)* T_CLOSE_P
-     | T_AUTO_INCREMENT
-     | T_ENABLE
+     | T_DEFAULT default_value
+     | T_CHECK expr? T_ENABLE
+     | T_DISABLE T_NOVALIDATE T_RELY T_DIV_SIGN T_NORELY
      ;
+
+default_value
+    : T_LITERAL
+    | T_CURRENT_USER T_OPEN_P T_CLOSE_P
+    | T_CURRENT_DATE T_OPEN_P T_CLOSE_P
+    | T_CURRENT_TIMESTAMP T_OPEN_P T_CLOSE_P
+    | T_NULL
+    ;
+
+create_table_column_comment :
+       T_COMMENT expr
+                            ;
      
 create_table_column_cons :
        T_PRIMARY T_KEY T_CLUSTERED? T_OPEN_P ident (T_ASC | T_DESC)? (T_COMMA ident (T_ASC | T_DESC)?)* T_CLOSE_P T_ENABLE? index_storage_clause?
@@ -280,43 +380,75 @@ create_table_preoptions_td_item :
        T_NO? (T_LOG | T_FALLBACK)
      ;
      
-create_table_options :
-       create_table_options_item+        
-     ;
-     
-create_table_options_item :
-       T_ON T_COMMIT (T_DELETE | T_PRESERVE) T_ROWS 
-     | create_table_options_ora_item
-     | create_table_options_db2_item  
-     | create_table_options_td_item
-     | create_table_options_hive_item  
-     | create_table_options_mssql_item
-     | create_table_options_mysql_item       
-     ;
+create_table_options
+    : create_table_option+
+    ;
 
-create_table_options_ora_item :
-       T_SEGMENT T_CREATION (T_IMMEDIATE | T_DEFERRED)
-     | (T_PCTFREE | T_PCTUSED | T_INITRANS | T_MAXTRANS) L_INT 
-     | T_NOCOMPRESS 
-     | (T_LOGGING | T_NOLOGGING)
-     | T_STORAGE T_OPEN_P (ident | L_INT)+ T_CLOSE_P
-     | T_TABLESPACE ident
-     ;
+create_table_option
+    : T_OPEN_P create_table_columns T_CLOSE_P 
+    | comment_part
+    | partition_by_part
+    | cluster_by_part
+    | skewed_by_part T_ON T_OPEN_P col_values T_CLOSE_P stored_as_part?
+    | row_format_part
+    | location_part
+    | property_values_part
+    | T_AS select_stmt
+    ;
 
-create_table_options_db2_item :
-       T_INDEX? T_IN ident
-     | T_WITH T_REPLACE
-     | T_DISTRIBUTE T_BY T_HASH T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P
-     | T_NOT? T_LOGGED 
-     | T_COMPRESS (T_YES | T_NO)
-     | T_DEFINITION T_ONLY
-     | T_WITH T_RESTRICT T_ON T_DROP
-     ;
-     
-create_table_options_td_item :
-       T_UNIQUE? T_PRIMARY T_INDEX T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P
-     | T_WITH T_DATA
-     ;
+partition_by_part
+    : T_PARTITIONED T_BY paren_column_list
+    ;
+
+cluster_by_part
+    : T_CLUSTERED T_BY paren_column_list (T_SORTED T_BY paren_column_list)? T_INTO int_number T_BUCKETS
+    ;
+
+skewed_by_part
+    : T_SKEWED T_BY paren_column_list
+    ;
+
+col_values
+    : paren_col_values (T_COMMA paren_col_values)*
+    ;
+
+stored_as_part
+    : T_STORED T_AS (T_DIRECTORIES | file_format)
+    ;
+
+row_format_part
+    : (T_ROW T_FORMAT row_format | stored_as_part)+
+    | T_STORED T_BY expr property_values?
+    ;
+
+file_format
+    : T_SEQUENCEFILE
+    | T_TEXTFILE
+    | T_RCFILE
+    | T_ORC
+    | T_PARQUET
+    | T_AVRO
+    | T_JSONFILE
+    | T_INPUTFORMAT expr T_OUTPUTFORMAT expr
+    ;
+
+row_format
+    : T_DELIMITED (T_FIELDS terminated_by (T_ESCAPED T_BY by_char)?)? 
+      terminated_by_part* (T_NULL T_DEFINED T_AS by_char)?
+    | T_SERDE expr property_values?
+    ;
+
+terminated_by_part
+    : (T_COLLECTION T_ITEMS | T_MAP T_KEYS | T_LINES) terminated_by
+    ;
+
+terminated_by
+    : T_TERMINATED T_BY by_char
+    ;
+
+by_char
+    : expr
+    ;
     
 create_table_options_hive_item :
        create_table_hive_row_format
@@ -328,10 +460,10 @@ create_table_hive_row_format :
      ;
      
 create_table_hive_row_format_fields :
-       T_FIELDS T_TERMINATED T_BY expr (T_ESCAPED T_BY expr)?
-     | T_COLLECTION T_ITEMS T_TERMINATED T_BY expr
-     | T_MAP T_KEYS T_TERMINATED T_BY expr
-     | T_LINES T_TERMINATED T_BY expr
+       T_FIELDS terminated_by (T_ESCAPED T_BY expr)?
+     | T_COLLECTION T_ITEMS terminated_by
+     | T_MAP T_KEYS terminated_by
+     | T_LINES terminated_by
      | T_NULL T_DEFINED T_AS expr
      ;
      
@@ -340,71 +472,314 @@ create_table_options_mssql_item :
      | T_TEXTIMAGE_ON ident
      ;
 
-create_table_options_mysql_item :
-       T_AUTO_INCREMENT T_EQUAL? expr
-     | T_COMMENT T_EQUAL? expr
-     | T_DEFAULT? (T_CHARACTER T_SET | T_CHARSET) T_EQUAL? expr
-     | T_ENGINE T_EQUAL? expr
-     ;
-     
+// view manipulations
+create_view_stmt
+    : T_CREATE T_VIEW (T_IF T_NOT T_EXISTS)? view_name create_view_options? 
+      property_values_part? T_AS select_stmt
+    ;
+
+create_view_options
+    : paren_column_list comment_part?
+    | (T_DISABLE T_REWRITE)? comment_part? create_view_option
+    ;
+
+create_view_option
+    : T_PARTITIONED T_ON paren_column_list
+    | T_CLUSTERED T_ON paren_column_list
+    | T_DISTRIBUTED T_ON paren_column_list T_SORTED T_ON paren_column_list
+    | row_format_part
+    | location_part
+    ; 
+
+// create macro
+create_macro_stmt
+    : T_CREATE T_TEMPORARY T_MACRO ident paren_column_list expr
+    ;
+
+// role manipulations
+create_role_stmt
+    : T_CREATE T_ROLE role_name
+    ;
+
+grant_revoke_role_stmt
+    : T_GRANT T_ROLE role_names T_TO principal_specifications with_option_for?
+    | T_REVOKE with_option_for? T_ROLE role_names T_FROM principal_specifications
+    ;
+
+with_option_for
+    : T_WITH? T_ADMIN T_OPTION T_FOR?
+    | T_WITH? T_GRANT T_OPTION T_FOR?
+    ;
+
+role_name
+    : ident
+    ;
+
+role_names
+    : role_name (T_COMMA role_name)*
+    ;
+
+grant_revoke_privilege_stmt
+    : (T_GRANT | T_REVOKE) with_option_for? privilege_columns (T_ON object_specification)?
+      (T_TO | T_FROM) principal_specifications with_option_for?
+    | T_REVOKE T_ALL T_PRIVILEGES T_COMMA with_option_for T_FROM ident (T_COMMA ident)*
+    ;
+
+privilege_columns
+    : priv_type paren_column_list? (priv_type paren_column_list?)*
+    ;
+
+priv_type
+    : T_ALL 
+    | T_ALTER 
+    | T_UPDATE 
+    | T_CREATE 
+    | T_DROP 
+    | T_INDEX 
+    | T_LOCK  
+    | T_SELECT 
+    | T_SHOW_DATABASE 
+    ;
+
+object_specification
+    : T_TABLE table_name
+    | T_DATABASE db_name
+    ;
+
+// alter stmt
+alter_stmt
+    : alter_table_stmt                                                              # alter_table_stmt_label 
+    | T_ALTER tk=(T_DATABASE | T_SCHEMA | T_VIEW) ident T_SET alter_option          # alter_db_schema_view
+    | T_ALTER T_MATERIALIZED T_VIEW view_name (T_ENABLE|T_DISABLE) T_REWRITE        # alter_materialized_view
+    | T_ALTER T_INDEX ident T_ON table_name partition_assignment_list? T_REBUILD    # alter_index
+    ;
+
+alter_option
+    : property_values_part
+    | T_OWNER (T_USER | T_ROLE) ident
+    | location_part
+    ;
+
 alter_table_stmt :
-       T_ALTER T_TABLE table_name alter_table_item
+       T_ALTER T_TABLE table_name alter_table_item_options 
      ;
      
-alter_table_item :
-       alter_table_add_constraint
-     ;
-     
-alter_table_add_constraint :
-       T_ADD2 (T_CONSTRAINT ident)? alter_table_add_constraint_item
-     ;
-     
-alter_table_add_constraint_item :
-       T_PRIMARY T_KEY T_CLUSTERED? T_OPEN_P ident (T_ASC | T_DESC)? (T_COMMA ident (T_ASC | T_DESC)?)* T_CLOSE_P T_ENABLE? index_storage_clause?
-     | T_FOREIGN T_KEY T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P T_REFERENCES table_name T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P create_table_fk_action*
-     | T_DEFAULT expr T_FOR ident
-     ;
-     
-dtype :                  // Data types
-       T_CHAR
-     | T_CHARACTER
-     | T_BIGINT
-     | T_BINARY_DOUBLE
-     | T_BINARY_FLOAT
-     | T_BINARY_INTEGER
-     | T_BIT
-     | T_DATE
-     | T_DATETIME
-     | T_DEC
-     | T_DECIMAL
-     | T_DOUBLE T_PRECISION?
-     | T_FLOAT
-     | T_INT
-     | T_INT2
-     | T_INT4
-     | T_INT8
-     | T_INTEGER
-     | T_NCHAR
-     | T_NVARCHAR
-     | T_NUMBER
-     | T_NUMERIC
-     | T_PLS_INTEGER
-     | T_REAL
-     | T_RESULT_SET_LOCATOR T_VARYING
-     | T_SIMPLE_FLOAT
-     | T_SIMPLE_DOUBLE
-     | T_SIMPLE_INTEGER
-     | T_SMALLINT
-     | T_SMALLDATETIME
-     | T_STRING
-     | T_SYS_REFCURSOR
-     | T_TIMESTAMP
-     | T_TINYINT
-     | T_VARCHAR
-     | T_VARCHAR2
-     | T_XML
-     | ident ('%' (T_TYPE | T_ROWTYPE))?             // User-defined or derived data type
-     ;
+alter_table_item_options
+    : alter_table_properties
+    | alter_table_partition_properties
+    | alter_table_or_partition_options
+    | alter_table_column_properties
+    ;
+
+alter_table_properties
+    : T_RENAME T_TO new_table_name
+    | set_tblproperties
+    | add_serde_properties
+    | table_storage_properties
+    | table_skewed_properties
+    | table_constraints
+    ;
+
+set_tblproperties
+    : T_SET T_TBLPROPERTIES (property_values_part | T_OPEN_P assignment_stmt_single_item T_CLOSE_P)
+    ;
+
+add_serde_properties
+    : partition_assignment_list? T_SET (property_values_part | T_SERDE ident property_values?)
+    ;
+
+table_storage_properties
+    : T_CLUSTERED T_BY paren_column_list (T_SORTED T_BY paren_column_list)? 
+      T_INTO ident T_BUCKETS 
+    | T_NOT stored_as_part
+    ;
+
+table_skewed_properties
+    : T_SKEWED T_BY paren_column_list T_ON paren_column_list (T_COMMA paren_column_list)*
+      stored_as_part
+    | T_NOT T_SKEWED
+    | T_SET T_SKEWED T_LOCATION T_OPEN_P assignment_stmt_single_item (T_COMMA assignment_stmt_single_item)* T_CLOSE_P
+    ;
+
+table_constraints
+    : add_constraint_property
+    | change_column_property
+    | drop_constraint_property
+    ;
+
+add_constraint_property
+    : T_ADD T_CONSTRAINT constraint_name T_PRIMARY T_KEY paren_column_list T_DISABLE T_NOVALIDATE
+    | T_ADD T_CONSTRAINT constraint_name T_FOREIGN T_KEY paren_column_list 
+      T_REFERENCES table_name paren_column_list T_DISABLE T_NOVALIDATE T_RELY
+    | T_ADD T_CONSTRAINT constraint_name T_UNIQUE paren_column_list T_DISABLE T_NOVALIDATE
+    ;
+
+change_column_property
+    : T_CHANGE T_COLUMN column_name column_name dtype T_CONSTRAINT 
+      constraint_name (T_NOT T_NULL T_ENABLE | T_DEFAULT default_value T_ENABLE
+                      | T_CHECK expr T_ENABLE)
+    ;
+
+drop_constraint_property
+    : T_DROP T_CONSTRAINT constraint_name
+    ;
+
+new_table_name
+    : ident
+    ;
+
+alter_table_partition_properties
+    : add_partition_property
+    | partition_assignment_list T_RENAME T_TO partition_assignment_list
+    | T_EXCHANGE T_PARTITION T_OPEN_P partition_spec (T_COMMA partition_spec)* T_CLOSE_P T_WITH T_TABLE table_name
+    | recover_partition_property
+    | drop_partition_property
+    | archive_partition_property
+    ;
+
+add_partition_property
+    : T_ADD (T_IF T_NOT T_EXISTS)? add_partition_property_options
+    ;
+
+add_partition_property_options
+    : add_partition_property_option (T_COMMA add_partition_property_option)*
+    ;
+
+add_partition_property_option
+    : partition_assignment_list (T_LOCATION ident)?
+    ;
+
+recover_partition_property
+    : T_RECOVER T_PARTITIONS
+    ;
+
+drop_partition_property
+    : T_DROP (T_IF T_EXISTS)? partition_assignment_list (T_COMMA partition_assignment_list)* 
+      (T_IGNORE T_PROTECTION)? T_PURGE?
+    ;
+
+archive_partition_property
+    : (T_ARCHIVE | T_UNARCHIVE) partition_assignment_list
+    ;
+
+alter_table_or_partition_options
+    : partition_assignment_list? T_SET (T_FILEFORMAT | T_LOCATION) (file_format | ident)
+    | T_TOUCH partition_assignment_list?
+    | partition_assignment_list? (T_ENABLE | T_DISABLE) (T_OFFLINE | T_NO_DROP T_CASCADE?)
+    | partition_assignment_list? T_COMPACT ident (T_AND T_WAIT)? property_values? 
+    | partition_assignment_list? (T_CONCATENATE | T_UPDATE T_COLUMNS) 
+    ;
+
+alter_table_column_properties
+    : partition_assignment_list? T_CHANGE T_COLUMN? old_column_name new_column_name 
+      dtype comment_part (T_FIRST|T_AFTER column_name)? (T_CASCADE | T_RESTRICT)?
+    | partition_assignment_list? (T_ADD | T_REPLACE) T_COLUMNS paren_column_list (T_CASCADE | T_RESTRICT)?
+    ;
+
+// show stmt
+show_stmt
+    : T_SHOW (T_DATABASES|T_SCHEMAS) (T_LIKE expr)?
+    | T_SHOW T_TABLES (T_IN ident) expr?
+    | T_SHOW T_MATERIALIZED? T_VIEWS ((T_IN | T_FROM) ident)? (T_LIKE expr)?
+    | T_SHOW T_PARTITIONS table_name partition_assignment_list
+    | T_SHOW T_TABLE T_EXTENDED ((T_IN | T_FROM) ident)? T_LIKE expr partition_assignment_list?
+    | T_SHOW T_TBLPROPERTIES table_name paren_column_list
+    | T_SHOW T_CREATE T_TABLE table_name
+    | T_SHOW T_FORMATTED? (T_INDEX|T_INDEXES) T_ON ident ((T_FROM|T_IN) ident)?
+    | T_SHOW T_COLUMNS (T_IN | T_FROM) table_name ((T_FROM|T_IN) ident)?
+    | T_SHOW T_FUNCTIONS (T_LIKE expr)?
+    | T_SHOW T_GRANT principal_specification (T_ON object_specification paren_column_list?)?
+    | T_SHOW T_ROLE T_GRANT principal_specification
+    | T_SHOW T_CURRENT? T_ROLES
+    | T_SHOW T_PRINCIPALS ident
+    | T_SHOW T_LOCKS (T_DATABASE | T_SCHEMA)? ident partition_assignment_list? T_EXTENDED?
+    | T_SHOW T_CONF T_LESS ident T_GREATER
+    | T_SHOW T_TRANSACTIONS
+    | T_SHOW T_COMPACTIONS
+    | T_SHOW T_PARTITIONS partition_assignment_list?
+    ; 
+
+principal_specification
+    : (T_USER | T_ROLE) ident
+    ;
+
+principal_specifications
+    : principal_specification (T_COMMA principal_specification)*
+    ;
+
+// import/export
+import_stmt
+    : T_IMPORT (T_EXTERNAL? T_TABLE table_name partition_assignment_list?)? T_FROM
+      L_S_STRING location_part?
+    ;
+
+export_stmt
+    :  T_EXPORT T_TABLE table_name partition_assignment_list? T_TO L_S_STRING 
+      ( T_FOR expr_func )?
+    ;
+
+// explain stmt
+explain_stmt
+    : T_EXPLAIN (T_EXTENDED
+                |T_FORMATTED? T_CBO (T_COST | T_JOINCOST)?
+                |T_AST
+                |T_DEPENDENCY
+                |T_AUTHORIZATION
+                |T_LOCKS
+                |T_VECTORIZATION T_ONLY? (T_SUMMARY | T_OPERATOR | T_EXPRESSION | T_DETAIL)?
+                |T_ANALYZE)? stmt
+    ;
+
+dtype
+    : data_type dtype_len?
+    ;
+
+data_type
+    : primitive_type
+    | array_type
+    | map_type
+    | struct_type
+    | union_type
+    ;
+
+primitive_type
+    : T_TINYINT
+    | T_SMALLINT
+    | T_INT
+    | T_BIGINT
+    | T_BOOLEAN
+    | T_FLOAT
+    | T_DOUBLE
+    | T_DOUBLE T_PRECISION
+    | T_STRING
+    | T_BINARY     
+    | T_TIMESTAMP (T_WITH T_LOCAL T_TIME T_ZONE)?
+    | T_DECIMAL  
+    | T_DECIMAL T_OPEN_P expr T_COMMA expr T_CLOSE_P
+    | T_DATE     
+    | T_VARCHAR 
+    | T_CHAR
+    ;
+
+array_type
+    : T_ARRAY T_LESS dtype T_GREATER
+    ;
+
+map_type
+    : T_MAP T_LESS primitive_type T_COMMA dtype T_GREATER
+    ;
+
+struct_type
+    : T_STRUCT T_LESS struct_type_type (T_COMMA struct_type_type)* T_GREATER
+    ;
+
+struct_type_type
+    : column_name T_COLON dtype comment_part?
+    ;
+
+union_type
+    : T_UNIONTYPE T_LESS dtype (T_COMMA dtype)* T_GREATER
+    ;
      
 dtype_len :             // Data type length or size specification
        T_OPEN_P (L_INT | T_MAX) (T_CHAR | T_BYTE)? (T_COMMA L_INT)? T_CLOSE_P
@@ -422,20 +797,62 @@ dtype_default :
      ;
  
 create_database_stmt :
-      T_CREATE (T_DATABASE | T_SCHEMA) (T_IF T_NOT T_EXISTS)? expr create_database_option* 
+      T_CREATE (T_DATABASE | T_SCHEMA) (T_IF T_NOT T_EXISTS)? ident create_database_option
     ;
 
 create_database_option :
-      T_COMMENT expr
-    | T_LOCATION expr
+      comment_part? location_part? property_values?
+    ;
+
+comment_part
+    : T_COMMENT expr
+    ;
+
+location_part
+    : T_LOCATION expr
+    ;
+
+property_values
+    : T_WITH T_OVERWRITE? property_values_part
+    ;
+
+property_values_part
+    : (T_DBPROPERTIES | T_TBLPROPERTIES | T_IDXPROPERTIES | T_SERDEPROPERTIES)? T_OPEN_P 
+      assignment_stmt_single_item (T_COMMA assignment_stmt_single_item)* T_CLOSE_P
     ;
      
-create_function_stmt : 
-      (T_ALTER | T_CREATE (T_OR T_REPLACE)? | T_REPLACE)? T_FUNCTION ident create_routine_params? create_function_return (T_AS | T_IS)? declare_block_inplace? single_block_stmt 
+create_function_stmt
+    : create_temporary_function
+    | create_permanent_function
+    | create_function_procedure
     ;
-     
+
+create_function_procedure
+    : (T_ALTER | T_CREATE (T_OR T_REPLACE)? | T_REPLACE)? T_FUNCTION ident create_routine_params? create_function_return (T_AS | T_IS)? declare_block_inplace? single_block_stmt
+    ;
+
+create_temporary_function
+    : T_CREATE T_TEMPORARY T_FUNCTION ident T_AS expr
+    ;
+
+create_permanent_function
+    : T_CREATE T_FUNCTION ident T_AS expr permanent_function_options?
+    ;
+
+permanent_function_options
+    : permanent_function_option (T_COMMA permanent_function_option)*
+    ;
+
+permanent_function_option
+    : T_USING (T_JAR|T_FILE|T_ARCHIVE) ident
+    ;
+
+reload_function
+    : T_RELOAD (T_FUNCTIONS|T_FUNCTION)
+    ;
+
 create_function_return :
-       (T_RETURN | T_RETURNS) dtype dtype_len?
+       (T_RETURN | T_RETURNS) dtype
      ;
      
 create_package_stmt :
@@ -473,16 +890,12 @@ create_procedure_stmt :
 create_routine_params :
        T_OPEN_P T_CLOSE_P
      | T_OPEN_P create_routine_param_item (T_COMMA create_routine_param_item)* T_CLOSE_P
-     | {!(strcasecmp(_input->LT(1)->getText().c_str(), "IS") == 0) &&
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "AS") == 0) &&
-        !((strcasecmp(_input->LT(1)->getText().c_str(), "DYNAMIC") == 0) && (strcasecmp(_input->LT(2)->getText().c_str(), "RESULT") == 0))
-        }? 
-       create_routine_param_item (T_COMMA create_routine_param_item)* 
+     | create_routine_param_item (T_COMMA create_routine_param_item)* 
      ;
      
 create_routine_param_item :
-       (T_IN | T_OUT | T_INOUT | T_IN T_OUT)? ident dtype dtype_len? dtype_attr* dtype_default? 
-     | ident (T_IN | T_OUT | T_INOUT | T_IN T_OUT)? dtype dtype_len? dtype_attr* dtype_default? 
+       (T_IN | T_OUT | T_INOUT | T_IN T_OUT)? ident dtype dtype_attr* dtype_default? 
+     | ident (T_IN | T_OUT | T_INOUT | T_IN T_OUT)? dtype dtype_attr* dtype_default? 
      ;
      
 create_routine_options :
@@ -491,12 +904,13 @@ create_routine_options :
 create_routine_option :
        T_LANGUAGE T_SQL       
      | T_SQL T_SECURITY (T_CREATOR | T_DEFINER | T_INVOKER | T_OWNER)
-     | T_DYNAMIC? T_RESULT T_SETS L_INT
+     | T_DYNAMIC? T_RESULT T_SETS int_number
      ;
      
 drop_stmt :             // DROP statement
-       T_DROP T_TABLE (T_IF T_EXISTS)? table_name
-     | T_DROP (T_DATABASE | T_SCHEMA) (T_IF T_EXISTS)? expr
+       T_DROP T_MATERIALIZED? tk=(T_TABLE | T_VIEW | T_INDEX | T_ROLE) (T_IF T_EXISTS)? ident T_PURGE?           # drop_table_view_role_index_stmt
+     | T_DROP (T_DATABASE | T_SCHEMA) (T_IF T_EXISTS)? ident (T_RESTRICT | T_CASCADE)?    # drop_db_schema_stmt
+     | T_DROP T_TEMPORARY? tk=(T_MACRO | T_FUNCTION) (T_IF T_EXISTS)? ident    # drop_macro_func_stmt
      ;
 
 end_transaction_stmt :
@@ -522,7 +936,7 @@ if_tsql_stmt :
      ;
      
 if_bteq_stmt :
-       '.' T_IF bool_expr T_THEN single_block_stmt 
+       T_PERIOD T_IF bool_expr T_THEN single_block_stmt 
      ;
 
 elseif_block :
@@ -536,10 +950,42 @@ else_block :
 include_stmt :          // INCLUDE statement
        T_INCLUDE (file_name | expr)
      ;  
-     
-insert_stmt :           // INSERT statement
-       T_INSERT (T_OVERWRITE T_TABLE | T_INTO T_TABLE?) table_name insert_stmt_cols? (select_stmt | insert_stmt_rows)
-     ;
+
+// load file
+load_file_stmt
+    : T_LOAD T_DATA T_LOCAL? T_INPATH string T_OVERWRITE? T_INTO T_TABLE table_name
+      partition_assignment_list? (T_INPUTFORMAT L_S_STRING T_SERDE L_S_STRING)?
+    ;
+
+// INSERT statement
+insert_stmt
+    : insert_into_table_from_sql
+    | insert_into_tables_from_query
+    | insert_into_files_from_query
+    | insert_into_mutiples
+    ;
+
+insert_into_table_from_sql
+    : T_INSERT T_INTO T_TABLE table_name partition_assignment_list? insert_stmt_cols? 
+      insert_stmt_rows
+    ;
+
+insert_into_tables_from_query
+    : insert_tables_overwrite_into from_clause?
+    ;
+
+insert_tables_overwrite_into
+    : T_INSERT (T_OVERWRITE | T_INTO) T_TABLE table_name (partition_assignment_list (T_IF T_NOT T_EXISTS)?)? 
+      select_stmt
+    ;
+
+insert_into_files_from_query
+    : insert_directory_stmt
+    ;
+
+insert_into_mutiples
+    : from_clause (insert_tables_overwrite_into | insert_directory_stmt)+
+    ;
      
 insert_stmt_cols :
        T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P 
@@ -554,7 +1000,7 @@ insert_stmt_row:
      ;
 
 insert_directory_stmt :
-       T_INSERT T_OVERWRITE T_LOCAL? T_DIRECTORY expr_file expr_select
+       T_INSERT T_OVERWRITE T_LOCAL? T_DIRECTORY expr_file row_format_part? expr_select
      ;
      
 exit_stmt :
@@ -571,19 +1017,11 @@ get_diag_stmt_item :
      ;
      
 get_diag_stmt_exception_item :
-       T_EXCEPTION L_INT ident T_EQUAL T_MESSAGE_TEXT
+       T_EXCEPTION int_number ident T_EQUAL T_MESSAGE_TEXT
      ;
 
 get_diag_stmt_rowcount_item :
        ident T_EQUAL T_ROW_COUNT
-     ;
-     
-grant_stmt :            
-       T_GRANT grant_stmt_item (T_COMMA grant_stmt_item)* T_TO T_ROLE ident
-     ;
-     
-grant_stmt_item :
-       T_EXECUTE T_ON T_PROCEDURE ident
      ;
      
 leave_stmt :
@@ -656,7 +1094,9 @@ commit_stmt :           // COMMIT statement
      ;
      
 create_index_stmt :     // CREATE INDEX statement
-       T_CREATE T_UNIQUE? T_INDEX ident T_ON table_name T_OPEN_P create_index_col (T_COMMA create_index_col)* T_CLOSE_P
+       T_CREATE T_INDEX ident T_ON T_TABLE table_name paren_column_list T_AS dtype
+       (T_WITH T_DEFERRED T_REBUILD)? property_values_part? (T_IN T_TABLE table_name)?
+       row_format_part? location_part? property_values_part? comment_part?
      ;
      
 create_index_col : 
@@ -677,7 +1117,7 @@ print_stmt :            // PRINT statement
      ;
 
 quit_stmt :
-       '.'? T_QUIT expr?
+       T_PERIOD? T_QUIT expr?
      ;
      
 raise_stmt :
@@ -727,12 +1167,20 @@ summary_stmt :         // SUMMARY statement
        T_SUMMARY (T_TOP expr)? T_FOR (select_stmt | table_name where_clause? (T_LIMIT expr)?)
      ;
      
-truncate_stmt :
-       T_TRUNCATE T_TABLE? table_name
+truncate_table_stmt :
+       T_TRUNCATE T_TABLE? table_name partition_assignment_list? 
      ;
 
+partition_assignment_list
+    : T_PARTITION T_OPEN_P? partition_spec T_CLOSE_P?
+    ;
+
+partition_spec
+    : T_OPEN_P assignment_stmt_single_item (T_COMMA assignment_stmt_single_item)* T_CLOSE_P
+    ;
+
 use_stmt :              // USE statement
-       T_USE expr
+       T_USE (expr | T_DEFAULT)
      ;
      
 values_into_stmt :     // VALUES INTO statement
@@ -752,23 +1200,30 @@ for_range_stmt :        // FOR (Integer range) statement
      ;
      
 label :
-       L_LABEL
+       label_pattern
      | T_LESS T_LESS L_ID T_GREATER T_GREATER
      ;
+
+// L_LABEL defined as a token lexer, conflicts with some other rules who contains T_COLON
+// so redefined here as a rule instead of a token
+label_pattern     
+    : (L_ALPHA | L_DIGIT | '_')* ':'            
+    ;
 
 using_clause :          // USING var,... clause
        T_USING expr (T_COMMA expr)*
      ;
 
-select_stmt :            // SELECT statement
-       cte_select_stmt? fullselect_stmt       
-     ;
+// SELECT statement
+select_stmt
+    : cte_select_stmt? fullselect_stmt       
+    ;
      
 cte_select_stmt :
-       T_WITH cte_select_stmt_item (T_COMMA cte_select_stmt_item)*
+       T_WITH common_table_expression (T_COMMA common_table_expression)*
      ;
      
-cte_select_stmt_item :
+common_table_expression :
        ident cte_select_cols? T_AS T_OPEN_P fullselect_stmt T_CLOSE_P
      ;
      
@@ -792,11 +1247,11 @@ fullselect_set_clause :
      ;
   
 subselect_stmt : 
-       (T_SELECT | T_SEL) select_list into_clause? from_clause? where_clause? group_by_clause? (having_clause | qualify_clause)? order_by_clause? select_options?
+       from_clause? T_SELECT select_list select_option*
      ;
 
 select_list :           
-       select_list_set? select_list_limit? select_list_item (T_COMMA select_list_item)*
+       select_list_set? select_list_limit? select_list_item (T_COMMA select_list_item)* select_list_use_option?
      ;
 
 select_list_set :
@@ -808,22 +1263,23 @@ select_list_limit :
        T_TOP expr
      ;
 
-select_list_item :
-       ((ident T_EQUAL)? expr select_list_alias? | select_list_asterisk)  
-     ;
+select_list_item
+    : (ident T_EQUAL)? bool_expr select_list_alias? 
+    | select_list_asterisk
+    ;
      
 select_list_alias :
-       {!(strcasecmp(_input->LT(1)->getText().c_str(), "INTO") == 0) && !(strcasecmp(_input->LT(1)->getText().c_str(), "FROM") == 0)}? T_AS? ident
-     | T_OPEN_P T_TITLE L_S_STRING T_CLOSE_P
+       T_AS? expr
      ;
      
 select_list_asterisk :
-       (L_ID '.')? '*' 
+       (ident T_PERIOD)? '*' 
      ;
-     
-into_clause :
-       T_INTO ident (T_COMMA ident)*
-     ;
+
+// TODO: can not find from hive documentation, just occur in samples.
+select_list_use_option
+    : T_USING expr (T_AS (paren_column_list | column_name_ele))?
+    ; 
      
 from_clause :           
        T_FROM from_table_clause (from_join_clause)*
@@ -832,56 +1288,112 @@ from_clause :
 from_table_clause :
        from_table_name_clause
      | from_subselect_clause
-     | from_table_values_clause
      ;
      
+// The TABLESAMPLE clause can be added to any table in the FROM clause. 
+// from https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Sampling
 from_table_name_clause :
-       table_name from_alias_clause?
-     ;     
+       table_name from_table_clause_option* 
+     ;
+
+from_table_clause_option
+    : table_sample_clause
+    | from_alias_clause
+    | lateral_view
+    ;
+
+lateral_view
+    : T_LATERAL T_VIEW T_OUTER? ident T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P ident T_AS column_name_list
+    ; 
+
+table_sample_clause
+    : table_sampling 
+    | block_sampling
+    ;
+
+//TABLESAMPLE (BUCKET x OUT OF y [ON colname])
+//T_TABLESAMPLE T_OPEN_P T_BUCKET L_DIGIT T_OUT T_OF L_DIGIT (T_ON expr)? T_CLOSE_P
+table_sampling
+    : T_TABLESAMPLE T_OPEN_P T_BUCKET numbers T_OUT T_OF numbers (T_ON expr)? T_CLOSE_P
+    ;
+
+block_sampling
+    : T_TABLESAMPLE T_OPEN_P block_sampling_option T_CLOSE_P
+    ;
+
+block_sampling_option
+    : numbers (T_PERCENTS | size_types | T_ROWS)
+    ;
+
+numbers
+    : dec_number
+    | int_number
+    ;
+
+// size type is B b K k M m G b
+// conflict, use L_ID directly
+size_types
+    : L_ID
+    ;
 
 from_subselect_clause :
-       T_OPEN_P select_stmt T_CLOSE_P from_alias_clause?
+       T_OPEN_P select_stmt T_CLOSE_P from_table_clause_option*
      ;
      
 from_join_clause :
        T_COMMA from_table_clause
-     | from_join_type_clause from_table_clause T_ON bool_expr
+     | from_join_type_clause from_table_clause on_condition?
      ;
      
 from_join_type_clause :
        T_INNER? T_JOIN
      | (T_LEFT | T_RIGHT | T_FULL) T_OUTER? T_JOIN
+     | T_LEFT T_SEMI T_JOIN
+     | T_CROSS T_JOIN
      ;
-     
-from_table_values_clause:
-       T_TABLE T_OPEN_P T_VALUES from_table_values_row (T_COMMA from_table_values_row)* T_CLOSE_P from_alias_clause?
-     ;
-     
-from_table_values_row:
-       expr
-     | T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P 
+          
+from_alias_clause :
+       T_AS? expr (T_OPEN_P L_ID (T_COMMA L_ID)* T_CLOSE_P)? 
      ;
 
-from_alias_clause :
-       {!(strcasecmp(_input->LT(1)->getText().c_str(), "EXEC") == 0) &&
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "EXECUTE") == 0) && 
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "INNER") == 0) &&
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "LEFT") == 0) &&
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "GROUP") == 0) &&
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "ORDER") == 0) &&
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "LIMIT") == 0) &&
-        !(strcasecmp(_input->LT(1)->getText().c_str(), "WITH") == 0)}?
-       T_AS? ident (T_OPEN_P L_ID (T_COMMA L_ID)* T_CLOSE_P)? 
-     ;
+on_condition
+    : T_ON bool_expr
+    | T_ON expr T_IS T_DISTINCT T_FROM expr
+    ;
      
 table_name :
        ident
      ;
+
+view_name
+    : ident
+    ;
+
+db_name
+    : ident
+    ;
      
-where_clause :           
-       T_WHERE bool_expr
-     ;
- 
+select_option
+    : from_clause
+    | where_clause
+    | group_by_clause
+    | having_clause
+    | order_by_clause
+    | cluster_by_clause
+    | limit_clause
+    | window_clause
+    ;
+
+// I don't find documentations about window clause syntax from hive website.
+window_clause
+    : T_WINDOW ident expr_func_over_clause
+    ;
+
+where_clause
+    : T_WHERE bool_expr
+    ;
+
+// GroupByQuery
 group_by_clause :
        T_GROUP T_BY expr (T_COMMA expr)*
      ;
@@ -890,41 +1402,49 @@ having_clause :
        T_HAVING bool_expr
      ;     
      
-qualify_clause :           
-       T_QUALIFY bool_expr
-     ;  
+limit_clause
+    : T_LIMIT (T_COMMA L_INT)? L_INT
+    ;
 
 order_by_clause :
-       T_ORDER T_BY expr (T_ASC | T_DESC)? (T_COMMA expr (T_ASC | T_DESC)?)*
-     ;
-     
-select_options :
-       select_options_item+
+       (T_ORDER | T_SORT) T_BY expr order_by_clause_option (T_COMMA expr order_by_clause_option)*
      ;
 
-select_options_item :
-       T_LIMIT expr
-     | T_WITH (T_RR | T_RS | T_CS | T_UR) (T_USE T_AND T_KEEP (T_EXCLUSIVE | T_UPDATE | T_SHARE) T_LOCKS)?
-     ;
+order_by_clause_option
+    : col_order? col_null_order?
+    ;
+
+col_order
+    : T_ASC
+    | T_DESC
+    ;
+
+col_null_order
+    : T_NULLS T_FIRST 
+    | T_NULLS T_LAST
+    ;
+
+// [CLUSTER BY col_list | [DISTRIBUTE BY col_list] [SORT BY col_list]]
+cluster_by_clause
+    : T_CLUSTER T_BY expr (T_COMMA expr)*
+    | ((T_DISTRIBUTE | T_SORT) T_BY expr (T_COMMA expr)*)+ 
+    ;
 
 update_stmt :                              // UPDATE statement
-       T_UPDATE update_table T_SET update_assignment where_clause? update_upsert?
+       T_UPDATE table_name T_SET update_assignment where_clause? update_upsert?
      ;
      
 update_assignment :
        assignment_stmt_item (T_COMMA assignment_stmt_item)*
-     ;
-
-update_table :
-       (table_name from_clause? | T_OPEN_P select_stmt T_CLOSE_P) (T_AS? ident)?
-     ;     
+     ;   
      
 update_upsert :
        T_ELSE insert_stmt
      ;
      
-merge_stmt :                              // MERGE statement
-       T_MERGE T_INTO merge_table T_USING merge_table T_ON bool_expr merge_condition+
+// MERGE statement
+merge_stmt :                              
+       T_MERGE T_INTO merge_table T_AS T_T T_USING expr T_AS T_S T_ON bool_expr merge_condition+
      ;
      
 merge_table :
@@ -941,19 +1461,26 @@ merge_action :
      | T_UPDATE T_SET assignment_stmt_item (T_COMMA assignment_stmt_item)* where_clause? 
      | T_DELETE
      ;
-     
+
+// existing table analyze
+analyze_table_stmt
+    : T_ANALYZE T_TABLE table_name partition_assignment_list? T_COMPUTE T_STATISTICS
+      (T_FOR T_COLUMNS)? (T_CACHE T_METADATA)? T_NOSCAN?
+    ;
+
+// delete stmt
 delete_stmt :                             
        T_DELETE T_FROM? table_name delete_alias? (where_clause | T_ALL)?
      ;
 
 delete_alias :
-       {!(strcasecmp(_input->LT(1)->getText().c_str(), "ALL") == 0)}?
        T_AS? ident
      ;
  
-describe_stmt :
-       (T_DESCRIBE | T_DESC) T_TABLE? table_name 
-     ;
+describe_stmt
+    : T_DESCRIBE tk=(T_DATABASE | T_SCHEMA) T_EXTENDED? db_name     # desc_db_schema
+    | T_DESCRIBE (T_EXTENDED|T_FORMATTED)? ident column_name? partition_assignment_list? # desc_table_view_column
+    ;
      
 bool_expr :                               // Boolean condition
        T_NOT? T_OPEN_P bool_expr T_CLOSE_P 
@@ -980,7 +1507,16 @@ bool_expr_single_in :
     ;
 
 bool_expr_multi_in :
-      T_OPEN_P expr (T_COMMA expr)* T_CLOSE_P T_NOT? T_IN T_OPEN_P select_stmt T_CLOSE_P 
+      paren_expr_list T_NOT? T_IN T_OPEN_P 
+      (paren_expr_list (T_COMMA paren_expr_list)* | select_stmt) T_CLOSE_P 
+    ;
+
+paren_expr_list
+    : T_OPEN_P expr_list T_CLOSE_P
+    ;
+
+expr_list
+    : expr (T_COMMA expr)*
     ;
     
 bool_expr_binary :
@@ -1007,11 +1543,17 @@ bool_expr_binary_operator :
 expr :
        expr interval_item
      | expr T_MUL expr 
-     | expr T_DIV expr  
-     | expr T_ADD expr  
+     | expr T_DIV_SIGN expr  
+     | expr T_DIV expr
+     | expr T_ADD_SIGN expr  
      | expr T_SUB expr   
+     | expr T_PERCENT expr
+     | expr T_PIPE expr
+     | expr T_EXPONENT expr
+     | expr T_AND_SIGN expr
      | T_OPEN_P select_stmt T_CLOSE_P 
      | T_OPEN_P expr T_CLOSE_P 
+     | expr_unary
      | expr_interval 
      | expr_concat
      | expr_case
@@ -1021,6 +1563,11 @@ expr :
      | expr_func                          
      | expr_atom    
      ;
+
+expr_unary
+    : T_EXCLAMATION expr
+    | T_SUB expr
+    ;
 
 expr_atom : 
        date_literal
@@ -1034,7 +1581,7 @@ expr_atom :
      ;
      
 expr_interval :
-       T_INTERVAL expr interval_item  
+       T_INTERVAL expr interval_item (T_TO interval_item)?
      ;
 interval_item :
        T_DAY 
@@ -1043,10 +1590,13 @@ interval_item :
      | T_MICROSECONDS  
      | T_SECOND 
      | T_SECONDS  
+     | T_YEAR
+     | T_MONTH
+     | T_MINUTE
      ;
      
 expr_concat :                  // String concatenation operator
-       expr_concat_item (T_PIPE | T_CONCAT) expr_concat_item ((T_PIPE | T_CONCAT) expr_concat_item)*
+       expr_concat_item (T_PIPE T_PIPE | T_CONCAT) expr_concat_item ((T_PIPE T_PIPE | T_CONCAT) expr_concat_item)*
      ;
      
 expr_concat_item : 
@@ -1072,7 +1622,7 @@ expr_case_searched :
      ;
      
 expr_cursor_attribute :
-      ident '%' (T_ISOPEN | T_FOUND | T_NOTFOUND)
+      ident T_PERCENT (T_ISOPEN | T_FOUND | T_NOTFOUND)
     ;
      
 expr_agg_window_func :
@@ -1090,6 +1640,7 @@ expr_agg_window_func :
      | T_RANK T_OPEN_P T_CLOSE_P expr_func_over_clause
      | T_ROW_NUMBER T_OPEN_P T_CLOSE_P expr_func_over_clause
      | T_STDEV T_OPEN_P expr_func_all_distinct? expr T_CLOSE_P expr_func_over_clause?   
+     | T_STD T_OPEN_P expr_func_all_distinct? expr T_CLOSE_P expr_func_over_clause?  
      | T_SUM T_OPEN_P expr_func_all_distinct? expr T_CLOSE_P expr_func_over_clause?
      | T_VAR T_OPEN_P expr_func_all_distinct? expr T_CLOSE_P expr_func_over_clause?
      | T_VARIANCE T_OPEN_P expr_func_all_distinct? expr T_CLOSE_P expr_func_over_clause?
@@ -1101,16 +1652,36 @@ expr_func_all_distinct :
      ; 
 
 expr_func_over_clause :
-       T_OVER T_OPEN_P expr_func_partition_by_clause? order_by_clause? T_CLOSE_P
+       (T_OVER | T_AS?) (T_OPEN_P expr_func_over_clause_options* T_CLOSE_P | ident)
      ; 
+
+expr_func_over_clause_options
+    : expr_func_partition_by_clause
+    | order_by_clause
+    | func_partition_clause_option
+    | T_DISTRIBUTE T_BY expr (T_COMMA expr)*
+    ;
 
 expr_func_partition_by_clause :
        T_PARTITION T_BY expr (T_COMMA expr)*
      ; 
-     
+
+//(ROWS | RANGE) BETWEEN (UNBOUNDED | [num]) PRECEDING AND ([num] PRECEDING | CURRENT ROW | (UNBOUNDED | [num]) FOLLOWING)
+//(ROWS | RANGE) BETWEEN CURRENT ROW AND (CURRENT ROW | (UNBOUNDED | [num]) FOLLOWING)
+//(ROWS | RANGE) BETWEEN [num] FOLLOWING AND (UNBOUNDED | [num]) FOLLOWING
+func_partition_clause_option 
+    : (T_ROWS | T_RANGE) T_BETWEEN? func_partition_clause_part
+    ;
+
+func_partition_clause_part
+    : (T_UNBOUNDED | L_INT?) T_PRECEDING T_AND? (L_INT? T_PRECEDING | T_CURRENT T_ROW | (T_UNBOUNDED | L_INT?) T_FOLLOWING)?
+    | T_CURRENT T_ROW T_AND? (T_CURRENT T_ROW | (T_UNBOUNDED | L_INT?) T_FOLLOWING)?
+    | L_INT? T_FOLLOWING T_AND? (T_UNBOUNDED | L_INT?) T_FOLLOWING
+    ;
+
 expr_spec_func : 
        T_ACTIVITY_COUNT
-     | T_CAST T_OPEN_P expr T_AS  dtype dtype_len? T_CLOSE_P
+     | T_CAST T_OPEN_P (expr T_AS  dtype | dtype T_AS expr) (T_FORMAT expr)? T_CLOSE_P
      | T_COUNT T_OPEN_P (expr | '*') T_CLOSE_P
      | T_CURRENT_DATE | T_CURRENT T_DATE
      | (T_CURRENT_TIMESTAMP | T_CURRENT T_TIMESTAMP) (T_OPEN_P expr T_CLOSE_P)?
@@ -1129,8 +1700,9 @@ expr_spec_func :
      | T_USER
      ;
      
+// as a matter of fact, expr_func_over_clause can only accur in window functions
 expr_func : 
-       ident T_OPEN_P expr_func_params? T_CLOSE_P 
+       ident T_OPEN_P expr_func_params? T_CLOSE_P expr_func_over_clause?
      ;
 
 expr_func_params : 
@@ -1138,8 +1710,8 @@ expr_func_params :
      ;
 
 func_param : 
-       {!(strcasecmp(_input->LT(1)->getText().c_str(), "INTO") == 0)}? (ident T_EQUAL T_GREATER?)? expr  
-     ;     
+       (ident T_EQUAL T_GREATER?)? (expr | '*' )  
+     ;
    
 expr_select :
        select_stmt
@@ -1162,7 +1734,7 @@ hive_item :
      ;  
 
 host :     
-       '!' host_cmd  ';'                   // OS command
+       T_EXCLAMATION host_cmd  T_SEMICOLON                   // OS command
      | host_stmt
      ;
 
@@ -1175,32 +1747,41 @@ host_stmt :
      ;
      
 file_name :
-       L_FILE | ('/' | '.' '/')? ident ('/' ident)*
+       file_pattern | (T_DIV_SIGN | T_PERIOD T_DIV_SIGN)? ident (T_DIV_SIGN ident)*
      ;
+
+// File path (a/b/c Linux path causes conflicts with division operator and handled at parser level)
+file_pattern
+    : (L_ALPHA+ ':' '\\'?)? L_ID ('\\' L_ID)* 
+    ; 
      
-date_literal :                             // DATE 'YYYY-MM-DD' literal
+// DATE 'YYYY-MM-DD' literal
+date_literal :
        T_DATE string
      ;
 
-timestamp_literal :                       // TIMESTAMP 'YYYY-MM-DD HH:MI:SS.FFF' literal
+// TIMESTAMP 'YYYY-MM-DD HH:MI:SS.FFF' literal
+timestamp_literal : 
        T_TIMESTAMP string
      ;
      
 ident :
-       '-'? (L_ID | non_reserved_words) ('.' (L_ID | non_reserved_words))*
+       T_SUB? (L_ID | non_reserved_words) (T_PERIOD (L_ID | non_reserved_words))*
      ;
      
-string :                                   // String literal (single or double quoted)
-       L_S_STRING                          # single_quotedString
+// String literal (single or double quoted)
+// a.b.c.d['abcd'.d]
+string 
+     : L_S_STRING                          # single_quotedString
      | L_D_STRING                          # double_quotedString
      ;
 
 int_number :                               // Integer (positive or negative)
-     ('-' | '+')? L_INT
+     (T_SUB | T_ADD_SIGN)? L_INT
      ;
 
 dec_number :                               // Decimal number (positive or negative)
-     ('-' | '+')? L_DEC
+     (T_SUB | T_ADD_SIGN)? L_DEC
      ;
      
 bool_literal :                            // Boolean literal
@@ -1215,7 +1796,7 @@ null_const :                              // NULL constant
 non_reserved_words :                      // Tokens that are not reserved words and can be used as identifiers
        T_ACTION 
      | T_ACTIVITY_COUNT
-     | T_ADD2
+     | T_ADD
      | T_ALL 
      | T_ALLOCATE
      | T_ALTER
@@ -1332,14 +1913,14 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_FOREIGN
      | T_FORMAT     
      | T_FOUND        
-     | T_FROM  
+     // | T_FROM  reserved word
      | T_FULL     
      | T_FUNCTION
      | T_GET
      | T_GLOBAL
      | T_GO
      | T_GRANT
-     | T_GROUP        
+     //| T_GROUP        
      | T_HANDLER      
      | T_HASH
      | T_HAVING       
@@ -1363,7 +1944,6 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_INT8
      | T_INTEGER      
      | T_INTERSECT  
-     | T_INTERVAL     
      | T_INTO 
      | T_INVOKER     
      | T_ITEMS     
@@ -1380,7 +1960,7 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_LEAVE     
      | T_LEFT     
      | T_LIKE 
-     | T_LIMIT  
+     // | T_LIMIT  
      | T_LINES     
      | T_LOCAL    
      | T_LOCATION 
@@ -1391,7 +1971,6 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_LOGGED    
      | T_LOGGING     
      | T_LOOP    
-     | T_MAP  
      | T_MATCHED     
      | T_MAX   
      | T_MAXTRANS     
@@ -1420,10 +1999,10 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_ONLY
      | T_OPEN         
      | T_OR           
-     | T_ORDER   
+     //| T_ORDER   
      | T_OUT     
      | T_OUTER
-     | T_OVER
+     // | T_OVER
      | T_OVERWRITE
      | T_OWNER
      | T_PACKAGE
@@ -1470,12 +2049,10 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_SECOND
      | T_SECONDS
      | T_SECURITY
-     | T_SEGMENT
-     | T_SEL          
+     | T_SEGMENT         
      | T_SELECT 
      | T_SESSION 
      | T_SESSIONS
-     | T_SET 
      | T_SETS     
      | T_SHARE
      | T_SIGNAL
@@ -1491,7 +2068,8 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_STATS
      | T_STATISTICS     
      | T_STEP    
-     | T_STDEV     
+     | T_STDEV   
+     | T_STD
      | T_STORAGE
      | T_STORED
      | T_STRING   
@@ -1515,7 +2093,6 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_TRIM
      | T_TRUE
      | T_TRUNCATE
-     // T_UNION reserved word   
      | T_UNIQUE     
      | T_UPDATE  
      | T_UR     
@@ -1539,438 +2116,95 @@ non_reserved_words :                      // Tokens that are not reserved words 
      | T_XACT_ABORT
      | T_XML
      | T_YES
+     | T_T
+     | T_S
+     | T_SERDE
+       
+     | T_PURGE
+     | T_BUCKETS
+     | T_SKEWED
+     | T_DIRECTORIES
+     | T_SERDEPROPERTIES
+     | T_RENAME
+     | T_SORTED
+     | T_SORT
+     | T_CHANGE
+     | T_EXCHANGE
+     | T_RECOVER
+     | T_PARTITIONS
+     | T_PROTECTION
+     | T_ARCHIVE
+     | T_UNARCHIVE
+     | T_TOUCH
+     | T_OFFLINE
+     | T_NO_DROP
+     | T_COMPACT
+     | T_CONCATENATE
+     | T_WAIT
+     | T_COLUMNS
+     | T_FIRST
+     | T_LAST
+     | T_NULLS
+     | T_AFTER
+     | T_MATERIALIZED
+     | T_REWRITE
+     | T_PARTITIONED
+     | T_DISTRIBUTED
+     | T_MACRO
+     | T_SHOW
+     | T_EXTENDED
+     | T_FORMATTED
+     | T_SEMI
+     | T_CROSS
+     | T_LATERAL
+     | T_RELOAD
+     | T_LOAD
+     | T_INPATH
+     | T_PRINCIPALS
+     | T_COMPACTIONS
+     | T_CONF
+     | T_ADMIN
+     | T_OPTION
+     | T_PRIVILEGES
+     | T_LOCK
+     | T_SHOW_DATABASE
+     | T_COMPUTE
+     | T_CACHE
+     | T_METADATA
+     | T_NOSCAN
+     | T_UNIONTYPE
+     | T_MAP
+     | T_ARRAY
+     | T_STRUCT
+     | T_ANALYZE
+     | T_EXPLAIN
+     | T_CBO
+     | T_AST
+     | T_DEPENDENCY
+     | T_AUTHORIZATION
+     | T_VECTORIZATION
+     | T_COST
+     | T_JOINCOST
+     | T_OPERATOR
+     | T_EXPRESSION
+     | T_DETAIL
+     | T_UNBOUNDED
+     | T_PRECEDING
+     | T_FOLLOWING
+     | T_RANGE
+     | T_TYPE
+     | T_FILEFORMAT
+     | T_SEQUENCEFILE
+     | T_TEXTFILE
+     | T_RCFILE
+     | T_ORC
+     | T_PARQUET
+     | T_AVRO
+     | T_JSONFILE
+     | T_INPUTFORMAT
+     | T_YEAR
+     | T_MONTH
+     | T_MINUTE
+     | T_TIME
+     | T_ZONE
      ;
-
-// Lexer rules
-T_ACTION          : A C T I O N ; 
-T_ADD2            : A D D ;
-T_ALL             : A L L ;
-T_ALLOCATE        : A L L O C A T E ;
-T_ALTER           : A L T E R ;
-T_AND             : A N D ;
-T_ANSI_NULLS      : A N S I '_' N U L L S ;
-T_ANSI_PADDING    : A N S I '_' P A D D I N G ;
-T_AS              : A S ;
-T_ASC             : A S C ;
-T_ASSOCIATE       : A S S O C I A T E ; 
-T_AT              : A T ;
-T_AUTO_INCREMENT  : A U T O '_' I N C R E M E N T ;
-T_AVG             : A V G ; 
-T_BATCHSIZE       : B A T C H S I Z E ;
-T_BEGIN           : B E G I N ;
-T_BETWEEN         : B E T W E E N ; 
-T_BIGINT          : B I G I N T ;
-T_BINARY_DOUBLE   : B I N A R Y '_' D O U B L E ;
-T_BINARY_FLOAT    : B I N A R Y '_' F L O A T ;
-T_BINARY_INTEGER  : B I N A R Y '_' I N T E G E R ;
-T_BIT             : B I T ;
-T_BODY            : B O D Y ; 
-T_BREAK           : B R E A K ;
-T_BY              : B Y ;
-T_BYTE            : B Y T E ; 
-T_CALL            : C A L L ;
-T_CALLER          : C A L L E R ;
-T_CASCADE         : C A S C A D E ; 
-T_CASE            : C A S E ;
-T_CASESPECIFIC    : C A S E S P E C I F I C ; 
-T_CAST            : C A S T ;
-T_CHAR            : C H A R ;
-T_CHARACTER       : C H A R A C T E R ;
-T_CHARSET         : C H A R S E T ;
-T_CLIENT          : C L I E N T ;
-T_CLOSE           : C L O S E ;
-T_CLUSTERED       : C L U S T E R E D;
-T_CMP             : C M P ; 
-T_COLLECT         : C O L L E C T ; 
-T_COLLECTION      : C O L L E C T I O N ; 
-T_COLUMN          : C O L U M N ;
-T_COMMENT         : C O M M E N T;
-T_CONSTANT        : C O N S T A N T ;
-T_COMMIT          : C O M M I T ; 
-T_COMPRESS        : C O M P R E S S ;
-T_CONCAT          : C O N C A T;
-T_CONDITION       : C O N D I T I O N ;
-T_CONSTRAINT      : C O N S T R A I N T ; 
-T_CONTINUE        : C O N T I N U E ;
-T_COPY            : C O P Y ;
-T_COUNT           : C O U N T ;
-T_COUNT_BIG       : C O U N T '_' B I G;
-T_CREATE          : C R E A T E ;
-T_CREATION        : C R E A T I O N ; 
-T_CREATOR         : C R E A T O R ;
-T_CS              : C S;
-T_CURRENT         : C U R R E N T ;
-T_CURRENT_SCHEMA  : C U R R E N T '_' S C H E M A ;
-T_CURSOR          : C U R S O R ;
-T_DATABASE        : D A T A B A S E ;
-T_DATA            : D A T A ;
-T_DATE            : D A T E ;
-T_DATETIME        : D A T E T I M E ; 
-T_DAY             : D A Y ;
-T_DAYS            : D A Y S ;
-T_DEC             : D E C ;
-T_DECIMAL         : D E C I M A L ;
-T_DECLARE         : D E C L A R E ;
-T_DEFAULT         : D E F A U L T ;
-T_DEFERRED        : D E F E R R E D ; 
-T_DEFINED         : D E F I N E D ; 
-T_DEFINER         : D E F I N E R ;
-T_DEFINITION      : D E F I N I T I O N ; 
-T_DELETE          : D E L E T E ;
-T_DELIMITED       : D E L I M I T E D ; 
-T_DELIMITER       : D E L I M I T E R ; 
-T_DESC            : D E S C ;
-T_DESCRIBE        : D E S C R I B E ; 
-T_DIAGNOSTICS     : D I A G N O S T I C S ;
-T_DIR             : D I R ;
-T_DIRECTORY       : D I R E C T O R Y ; 
-T_DISTINCT        : D I S T I N C T ;
-T_DISTRIBUTE      : D I S T R I B U T E ;
-T_DO              : D O ;
-T_DOUBLE          : D O U B L E ;
-T_DROP            : D R O P ;
-T_DYNAMIC         : D Y N A M I C ; 
-T_ELSE            : E L S E ;
-T_ELSEIF          : E L S E I F ;
-T_ELSIF           : E L S I F ;
-T_ENABLE          : E N A B L E ;
-T_END             : E N D ;
-T_ENGINE          : E N G I N E ;
-T_ESCAPED         : E S C A P E D ; 
-T_EXCEPT          : E X C E P T ;
-T_EXEC            : E X E C ;
-T_EXECUTE         : E X E C U T E ;
-T_EXCEPTION       : E X C E P T I O N ;
-T_EXCLUSIVE       : E X C L U S I V E ; 
-T_EXISTS          : E X I S T S ; 
-T_EXIT            : E X I T ;
-T_FALLBACK        : F A L L B A C K ;
-T_FALSE           : F A L S E ;
-T_FETCH           : F E T C H ;
-T_FIELDS          : F I E L D S ; 
-T_FILE            : F I L E ;
-T_FILES           : F I L E S ; 
-T_FLOAT           : F L O A T ;
-T_FOR             : F O R ;
-T_FOREIGN         : F O R E I G N ; 
-T_FORMAT          : F O R M A T ;
-T_FOUND           : F O U N D ;
-T_FROM            : F R O M ; 
-T_FULL            : F U L L ;
-T_FUNCTION        : F U N C T I O N ;
-T_GET             : G E T ;
-T_GLOBAL          : G L O B A L ; 
-T_GO              : G O ;
-T_GRANT           : G R A N T ; 
-T_GROUP           : G R O U P ;
-T_HANDLER         : H A N D L E R ;
-T_HASH            : H A S H ;
-T_HAVING          : H A V I N G ;
-T_HDFS            : H D F S ; 
-T_HIVE            : H I V E ;
-T_HOST            : H O S T ;
-T_IDENTITY        : I D E N T I T Y ; 
-T_IF              : I F ;
-T_IGNORE          : I G N O R E ; 
-T_IMMEDIATE       : I M M E D I A T E ;
-T_IN              : I N ;
-T_INCLUDE         : I N C L U D E ;
-T_INDEX           : I N D E X ;
-T_INITRANS        : I N I T R A N S ;
-T_INNER           : I N N E R ; 
-T_INOUT           : I N O U T;
-T_INSERT          : I N S E R T ;
-T_INT             : I N T ;
-T_INT2            : I N T '2';
-T_INT4            : I N T '4';
-T_INT8            : I N T '8';
-T_INTEGER         : I N T E G E R ;
-T_INTERSECT       : I N T E R S E C T ;
-T_INTERVAL        : I N T E R V A L ; 
-T_INTO            : I N T O ;
-T_INVOKER         : I N V O K E R ;
-T_IS              : I S ;
-T_ISOPEN          : I S O P E N ;
-T_ITEMS           : I T E M S ; 
-T_JOIN            : J O I N ;
-T_KEEP            : K E E P; 
-T_KEY             : K E Y ;
-T_KEYS            : K E Y S ;
-T_LANGUAGE        : L A N G U A G E ;
-T_LEAVE           : L E A V E ;
-T_LEFT            : L E F T ;
-T_LIKE            : L I K E ; 
-T_LIMIT           : L I M I T ;
-T_LINES           : L I N E S ; 
-T_LOCAL           : L O C A L ;
-T_LOCATION        : L O C A T I O N ;
-T_LOCATOR         : L O C A T O R ; 
-T_LOCATORS        : L O C A T O R S ; 
-T_LOCKS           : L O C K S ; 
-T_LOG             : L O G ; 
-T_LOGGED          : L O G G E D ; 
-T_LOGGING         : L O G G I N G ; 
-T_LOOP            : L O O P ;
-T_MAP             : M A P ; 
-T_MATCHED         : M A T C H E D ; 
-T_MAX             : M A X ;
-T_MAXTRANS        : M A X T R A N S ; 
-T_MERGE           : M E R G E ; 
-T_MESSAGE_TEXT    : M E S S A G E '_' T E X T ;
-T_MICROSECOND     : M I C R O S E C O N D ;
-T_MICROSECONDS    : M I C R O S E C O N D S;
-T_MIN             : M I N ;
-T_MULTISET        : M U L T I S E T ; 
-T_NCHAR           : N C H A R ; 
-T_NEW             : N E W ;
-T_NVARCHAR        : N V A R C H A R ; 
-T_NO              : N O ;
-T_NOCOUNT         : N O C O U N T ;
-T_NOCOMPRESS      : N O C O M P R E S S ; 
-T_NOLOGGING       : N O L O G G I N G ;
-T_NONE            : N O N E ;
-T_NOT             : N O T ;
-T_NOTFOUND        : N O T F O U N D ; 
-T_NULL            : N U L L ;
-T_NUMERIC         : N U M E R I C ; 
-T_NUMBER          : N U M B E R ;
-T_OBJECT          : O B J E C T ; 
-T_OFF             : O F F ;
-T_ON              : O N ;
-T_ONLY            : O N L Y ;
-T_OPEN            : O P E N ;
-T_OR              : O R ;
-T_ORDER           : O R D E R;
-T_OUT             : O U T ;
-T_OUTER           : O U T E R ;
-T_OVER            : O V E R ;
-T_OVERWRITE       : O V E R W R I T E ; 
-T_OWNER           : O W N E R ; 
-T_PACKAGE         : P A C K A G E ; 
-T_PARTITION       : P A R T I T I O N ; 
-T_PCTFREE         : P C T F R E E ; 
-T_PCTUSED         : P C T U S E D ;
-T_PLS_INTEGER     : P L S '_' I N T E G E R ;
-T_PRECISION       : P R E C I S I O N ; 
-T_PRESERVE        : P R E S E R V E ; 
-T_PRIMARY         : P R I M A R Y ;
-T_PRINT           : P R I N T ; 
-T_PROC            : P R O C ;
-T_PROCEDURE       : P R O C E D U R E ;
-T_QUALIFY         : Q U A L I F Y ;
-T_QUERY_BAND      : Q U E R Y '_' B A N D ; 
-T_QUIT            : Q U I T ; 
-T_QUOTED_IDENTIFIER : Q U O T E D '_' I D E N T I F I E R ;
-T_RAISE           : R A I S E ;
-T_REAL            : R E A L ; 
-T_REFERENCES      : R E F E R E N C E S ; 
-T_REGEXP          : R E G E X P ;
-T_REPLACE         : R E P L A C E ; 
-T_RESIGNAL        : R E S I G N A L ;
-T_RESTRICT        : R E S T R I C T ; 
-T_RESULT          : R E S U L T ; 
-T_RESULT_SET_LOCATOR : R E S U L T '_' S E T '_' L O C A T O R ;
-T_RETURN          : R E T U R N ;
-T_RETURNS         : R E T U R N S ;
-T_REVERSE         : R E V E R S E ;
-T_RIGHT           : R I G H T ;
-T_RLIKE           : R L I K E ;
-T_ROLE            : R O L E ;
-T_ROLLBACK        : R O L L B A C K ;
-T_ROW             : R O W ; 
-T_ROWS            : R O W S ; 
-T_ROWTYPE         : R O W T Y P E ; 
-T_ROW_COUNT       : R O W '_' C O U N T ;
-T_RR              : R R;
-T_RS              : R S ;
-T_PWD             : P W D ; 
-T_TRIM            : T R I M ;
-T_SCHEMA          : S C H E M A ;
-T_SECOND          : S E C O N D ;
-T_SECONDS         : S E C O N D S;
-T_SECURITY        : S E C U R I T Y ; 
-T_SEGMENT         : S E G M E N T ; 
-T_SEL             : S E L ;
-T_SELECT          : S E L E C T ; 
-T_SET             : S E T ;
-T_SESSION         : S E S S I O N ; 
-T_SESSIONS        : S E S S I O N S ;
-T_SETS            : S E T S;
-T_SHARE           : S H A R E ; 
-T_SIGNAL          : S I G N A L ;
-T_SIMPLE_DOUBLE   : S I M P L E '_' D O U B L E ;
-T_SIMPLE_FLOAT    : S I M P L E '_' F L O A T ;
-T_SIMPLE_INTEGER  : S I M P L E '_' I N T E G E R ;
-T_SMALLDATETIME   : S M A L L D A T E T I M E ;
-T_SMALLINT        : S M A L L I N T ;
-T_SQL             : S Q L ; 
-T_SQLEXCEPTION    : S Q L E X C E P T I O N ;
-T_SQLINSERT       : S Q L I N S E R T ;
-T_SQLSTATE        : S Q L S T A T E ;
-T_SQLWARNING      : S Q L W A R N I N G ;
-T_STATS           : S T A T S ; 
-T_STATISTICS      : S T A T I S T I C S ;
-T_STEP            : S T E P ; 
-T_STORAGE         : S T O R A G E ; 
-T_STORED          : S T O R E D ;
-T_STRING          : S T R I N G ;
-T_SUBDIR          : S U B D I R ; 
-T_SUBSTRING       : S U B S T R I N G ; 
-T_SUM             : S U M ;
-T_SUMMARY         : S U M M A R Y ;
-T_SYS_REFCURSOR   : S Y S '_' R E F C U R S O R ; 
-T_TABLE           : T A B L E ;
-T_TABLESPACE      : T A B L E S P A C E ; 
-T_TEMPORARY       : T E M P O R A R Y ;
-T_TERMINATED      : T E R M I N A T E D ; 
-T_TEXTIMAGE_ON    : T E X T I M A G E '_' O N ;
-T_THEN            : T H E N ;
-T_TIMESTAMP       : T I M E S T A M P ;
-T_TINYINT         : T I N Y I N T ;
-T_TITLE           : T I T L E ;
-T_TO              : T O ; 
-T_TOP             : T O P ;
-T_TRANSACTION     : T R A N S A C T I O N ;
-T_TRUE            : T R U E ;
-T_TRUNCATE        : T R U N C A T E;
-T_TYPE            : T Y P E ; 
-T_UNION           : U N I O N ;
-T_UNIQUE          : U N I Q U E ;
-T_UPDATE          : U P D A T E ; 
-T_UR              : U R ;
-T_USE             : U S E ;
-T_USING           : U S I N G ;
-T_VALUE           : V A L U E ;
-T_VALUES          : V A L U E S ;
-T_VAR             : V A R ;
-T_VARCHAR         : V A R C H A R ;
-T_VARCHAR2        : V A R C H A R '2' ;
-T_VARYING         : V A R Y I N G ;
-T_VOLATILE        : V O L A T I L E ;
-T_WHEN            : W H E N ;
-T_WHERE           : W H E R E ;
-T_WHILE           : W H I L E ;
-T_WITH            : W I T H ; 
-T_WITHOUT         : W I T H O U T ;
-T_WORK            : W O R K ;
-T_XACT_ABORT      : X A C T '_' A B O R T ;
-T_XML             : X M L ;
-T_YES             : Y E S ; 
-
-// Functions with specific syntax
-T_ACTIVITY_COUNT       : A C T I V I T Y '_' C O U N T ;
-T_CUME_DIST            : C U M E '_' D I S T ; 
-T_CURRENT_DATE         : C U R R E N T '_' D A T E ;
-T_CURRENT_TIMESTAMP    : C U R R E N T '_' T I M E S T A M P ;
-T_CURRENT_USER         : C U R R E N T '_' U S E R ;
-T_DENSE_RANK           : D E N S E '_' R A N K ;
-T_FIRST_VALUE          : F I R S T '_' V A L U E; 
-T_LAG                  : L A G ;
-T_LAST_VALUE           : L A S T '_' V A L U E; 
-T_LEAD                 : L E A D ; 
-T_MAX_PART_STRING      : M A X '_' P A R T '_' S T R I N G ;
-T_MIN_PART_STRING      : M I N '_' P A R T '_' S T R I N G ;
-T_MAX_PART_INT         : M A X '_' P A R T '_' I N T ;
-T_MIN_PART_INT         : M I N '_' P A R T '_' I N T ;
-T_MAX_PART_DATE        : M A X '_' P A R T '_' D A T E ;
-T_MIN_PART_DATE        : M I N '_' P A R T '_' D A T E ;
-T_PART_COUNT           : P A R T '_' C O U N T ; 
-T_PART_LOC             : P A R T '_' L O C ;
-T_RANK                 : R A N K ;
-T_ROW_NUMBER           : R O W '_' N U M B E R;
-T_STDEV                : S T D E V ;
-T_SYSDATE              : S Y S D A T E ;
-T_VARIANCE             : V A R I A N C E ; 
-T_USER                 : U S E R; 
-
-T_ADD          : '+' ;
-T_COLON        : ':' ;
-T_COMMA        : ',' ;
-T_PIPE         : '||' ;
-T_DIV          : '/' ;
-T_DOT2         : '..' ;
-T_EQUAL        : '=' ;
-T_EQUAL2       : '==' ;
-T_NOTEQUAL     : '<>' ;
-T_NOTEQUAL2    : '!=' ;
-T_GREATER      : '>' ;
-T_GREATEREQUAL : '>=' ;
-T_LESS         : '<' ;
-T_LESSEQUAL    : '<=' ;
-T_MUL          : '*' ;
-T_OPEN_B       : '{' ;
-T_OPEN_P       : '(' ;
-T_OPEN_SB      : '[' ;
-T_CLOSE_B      : '}' ; 
-T_CLOSE_P      : ')' ;
-T_CLOSE_SB     : ']' ;
-T_SEMICOLON    : ';' ;
-T_SUB          : '-' ;
-
-L_ID        : L_ID_PART                                                // Identifier
-            ;
-L_S_STRING  : '\'' (('\'' '\'') | ('\\' '\'') | ~('\''))* '\''         // Single quoted string literal
-            ;
-L_D_STRING  : '"' (L_STR_ESC_D | .)*? '"'                              // Double quoted string literal
-            ;
-L_INT       : L_DIGIT+ ;                                               // Integer
-L_DEC       : L_DIGIT+ '.' ~'.' L_DIGIT*                               // Decimal number
-            | '.' L_DIGIT+
-            ;
-L_WS        : L_BLANK+ -> skip ;                                       // Whitespace
-L_M_COMMENT : '/*' .*? '*/' -> channel(HIDDEN) ;                       // Multiline comment
-L_S_COMMENT : ('--' | '//')  .*? '\r'? '\n' -> channel(HIDDEN) ;       // Single line comment
-
-L_FILE      : ([a-zA-Z] ':' '\\'?)? L_ID ('\\' L_ID)*                  // File path (a/b/c Linux path causes conflicts with division operator and handled at parser level)
-            ; 
-
-L_LABEL     : ([a-zA-Z] | L_DIGIT | '_')* ':'            
-            ;
-            
-fragment
-L_ID_PART  :
-             [a-zA-Z] ([a-zA-Z] | L_DIGIT | '_')*                           // Identifier part
-            | '$' '{' .*? '}'
-            | ('_' | '@' | ':' | '#' | '$') ([a-zA-Z] | L_DIGIT | '_' | '@' | ':' | '#' | '$')+     // (at least one char must follow special char)
-            | '"' .*? '"'                                                   // Quoted identifiers
-            | '[' .*? ']'
-            | '`' .*? '`'
-            ;
-fragment
-L_STR_ESC_D :                                                          // Double quoted string escape sequence
-              '""' | '\\"' 
-            ;            
-fragment
-L_DIGIT     : [0-9]                                                    // Digit
-            ;
-fragment
-L_BLANK     : (' ' | '\t' | '\r' | '\n')
-            ;
-
-// Support case-insensitive keywords and allowing case-sensitive identifiers
-fragment A : ('a'|'A') ;
-fragment B : ('b'|'B') ;
-fragment C : ('c'|'C') ;
-fragment D : ('d'|'D') ;
-fragment E : ('e'|'E') ;
-fragment F : ('f'|'F') ;
-fragment G : ('g'|'G') ;
-fragment H : ('h'|'H') ;
-fragment I : ('i'|'I') ;
-fragment J : ('j'|'J') ;
-fragment K : ('k'|'K') ;
-fragment L : ('l'|'L') ;
-fragment M : ('m'|'M') ;
-fragment N : ('n'|'N') ;
-fragment O : ('o'|'O') ;
-fragment P : ('p'|'P') ;
-fragment Q : ('q'|'Q') ;
-fragment R : ('r'|'R') ;
-fragment S : ('s'|'S') ;
-fragment T : ('t'|'T') ;
-fragment U : ('u'|'U') ;
-fragment V : ('v'|'V') ;
-fragment W : ('w'|'W') ;
-fragment X : ('x'|'X') ;
-fragment Y : ('y'|'Y') ;
-fragment Z : ('z'|'Z') ;

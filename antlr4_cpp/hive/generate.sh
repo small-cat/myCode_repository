@@ -26,6 +26,4 @@ set -o errexit
 #java -cp $CLASSPATH org.antlr.v4.Tool -Dlanguage=Cpp -listener -visitor -o generated/ -package oracle PlSqlLexer.g4 PlSqlParser.g4
 #java -cp $CLASSPATH org.antlr.v4.Tool -Dlanguage=Cpp -listener -visitor -o generated/ -package antlrcpptest -XdbgST TLexer.g4 TParser.g4
 #java -cp $CLASSPATH org.antlr.v4.Tool -Dlanguage=Java -listener -visitor -o generated/ TLexer.g4 TParser.g4
-java -Xmx500M -cp /home/jona/software/antlr4/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Cpp -long-messages -listener -o generated/ Hplsql.g4
-
-# sed -i 's/;;/;/g' generated/KingbaseSqlParser.h
+java -Xmx500M -cp /home/jona/software/antlr4/antlr-4.7.1-complete.jar org.antlr.v4.Tool -Dlanguage=Cpp -long-messages -listener -o generated/ HqlsqlLexer.g4 HqlsqlParser.g4

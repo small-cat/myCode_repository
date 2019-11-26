@@ -8,6 +8,11 @@ namespace parser {
 struct OperateObject {
   std::string objectName;
   std::vector<std::string> subObjectName;
+
+  void clear() {
+    objectName.clear();
+    subObjectName.clear();
+  }
 };
 
 struct OperateInfo {

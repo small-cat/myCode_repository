@@ -16,8 +16,8 @@
 #include <iostream>
 #include <fstream>
 
-#include <HplsqlParser.h>
-#include <HplsqlLexer.h>
+#include <HqlsqlParser.h>
+#include <HqlsqlLexer.h>
 
 #include "antlr4-runtime.h"
 #include "error_verbose_listener.hpp"
@@ -68,8 +68,9 @@ void TravelOperateInfo(std::vector<parser::OperateInfo> operateinfo_list) {
     for (auto obj : opinfo.objects) {
       std::cout << "    objectName: " << obj.objectName << std::endl;
 
+      std::cout << "    subObjectName: ";
       for (auto objname : obj.subObjectName) {
-        std::cout << "    " << objname << ", ";
+        std::cout << objname << ", ";
       }
       std::cout << std::endl;
     }

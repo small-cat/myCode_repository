@@ -10,8 +10,8 @@
 #include "error_verbose_listener.hpp"
 #include "get_operate_info_listener.h"
 
-#include "HplsqlParser.h"
-#include "HplsqlLexer.h"
+#include "HqlsqlParser.h"
+#include "HqlsqlLexer.h"
 
 using namespace antlr4;
 using namespace antlr4_hive_parser;
@@ -30,7 +30,7 @@ std::vector<OperateInfo> IParser::Parse(const std::string &operateStr) {
 
   // call antlr functions to parse
   ANTLRInputStream input(operateStr);
-  HplsqlLexer lexer(&input);
+  HqlsqlLexer lexer(&input);
   CommonTokenStream tokens(&lexer);
 
   tokens.fill();
@@ -38,7 +38,7 @@ std::vector<OperateInfo> IParser::Parse(const std::string &operateStr) {
     std::cout << token->toString() << std::endl;
   }
 
-  HplsqlParser parser(&tokens);
+  HqlsqlParser parser(&tokens);
   ErrorVerboseListener err_listener;
   parser.removeErrorListeners();
   parser.addErrorListener(&err_listener);
@@ -46,12 +46,12 @@ std::vector<OperateInfo> IParser::Parse(const std::string &operateStr) {
   tree::ParseTree *tree = parser.program();
   tree::ParseTreeWalker walker;
 
+  std::cout << tree->toStringTree(&parser) << std::endl;
   if (err_listener.has_error()) {
     std::cout << "Parse failed: " << operateStr << std::endl;
+    std::cout << err_listener.err_message() << std::endl;
     return {};
   }
-
-  std::cout << tree->toStringTree(&parser) << std::endl;
 
   GetOperateInfoListener operate_info_listener(&parser);
   walker.walk(&operate_info_listener, tree);
