@@ -244,8 +244,8 @@ public:
   virtual void enterCreate_view_options(HqlsqlParser::Create_view_optionsContext * /*ctx*/) override { }
   virtual void exitCreate_view_options(HqlsqlParser::Create_view_optionsContext * /*ctx*/) override { }
 
-  virtual void enterCreate_view_option(HqlsqlParser::Create_view_optionContext * /*ctx*/) override { }
-  virtual void exitCreate_view_option(HqlsqlParser::Create_view_optionContext * /*ctx*/) override { }
+  virtual void enterCreate_materialized_view_option(HqlsqlParser::Create_materialized_view_optionContext * /*ctx*/) override { }
+  virtual void exitCreate_materialized_view_option(HqlsqlParser::Create_materialized_view_optionContext * /*ctx*/) override { }
 
   virtual void enterCreate_macro_stmt(HqlsqlParser::Create_macro_stmtContext * /*ctx*/) override { }
   virtual void exitCreate_macro_stmt(HqlsqlParser::Create_macro_stmtContext * /*ctx*/) override { }
@@ -289,6 +289,9 @@ public:
   virtual void enterAlter_index(HqlsqlParser::Alter_indexContext * /*ctx*/) override { }
   virtual void exitAlter_index(HqlsqlParser::Alter_indexContext * /*ctx*/) override { }
 
+  virtual void enterAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext * /*ctx*/) override { }
+  virtual void exitAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext * /*ctx*/) override { }
+
   virtual void enterAlter_option(HqlsqlParser::Alter_optionContext * /*ctx*/) override { }
   virtual void exitAlter_option(HqlsqlParser::Alter_optionContext * /*ctx*/) override { }
 
@@ -306,6 +309,9 @@ public:
 
   virtual void enterAdd_serde_properties(HqlsqlParser::Add_serde_propertiesContext * /*ctx*/) override { }
   virtual void exitAdd_serde_properties(HqlsqlParser::Add_serde_propertiesContext * /*ctx*/) override { }
+
+  virtual void enterSerde_class_name(HqlsqlParser::Serde_class_nameContext * /*ctx*/) override { }
+  virtual void exitSerde_class_name(HqlsqlParser::Serde_class_nameContext * /*ctx*/) override { }
 
   virtual void enterTable_storage_properties(HqlsqlParser::Table_storage_propertiesContext * /*ctx*/) override { }
   virtual void exitTable_storage_properties(HqlsqlParser::Table_storage_propertiesContext * /*ctx*/) override { }

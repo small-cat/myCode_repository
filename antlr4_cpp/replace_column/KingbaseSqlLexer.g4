@@ -342,7 +342,7 @@ CYCLE:			'CYCLE'|'cycle';
 DANGLING:			'DANGLING'|'dangling';
 DATABASE:			'DATABASE'|'database';
 DATA:			'DATA'|'data';
-DATAFILE:			'DATAFILE'|'datafile';
+DATAFILE:			QS_DATAFILE;
 DATAFILES:			'DATAFILES'|'datafiles';
 DATAGUARDCONFIG:			'DATAGUARDCONFIG'|'dataguardconfig';
 DATAMOVEMENT:			'DATAMOVEMENT'|'datamovement';
@@ -2359,6 +2359,7 @@ fragment QS_BRACE   : QUOTE '{' .*? '}' QUOTE ;
 fragment QS_BRACK   : QUOTE '[' .*? ']' QUOTE ;
 fragment QS_PAREN   : QUOTE '(' .*? ')' QUOTE ;
 fragment QS_OTHER_CH: ~('<' | '{' | '[' | '(' | ' ' | '\t' | '\n' | '\r');
+fragment QS_DATAFILE: QUOTE ('DATAFILE' | 'datafile') QUOTE;
 
 DELIMITED_ID: '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' ;
 
@@ -2381,6 +2382,7 @@ BINDVAR
     | ':' DELIMITED_ID  // not used in SQL but spotted in v$sqltext when using cursor_sharing
     | ':' UNSIGNED_INTEGER
     | QUESTION_MARK // not in SQL, not in Oracle, not in OCI, use this for JDBC
+    | '$' UNSIGNED_INTEGER
     ;
 
 NOT_EQUAL_OP:              '!='

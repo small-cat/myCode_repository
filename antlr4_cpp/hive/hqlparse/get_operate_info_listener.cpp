@@ -9,8 +9,10 @@
 #include "IParser.h"
 
 namespace antlr4_hive_parser { 
-GetOperateInfoListener::GetOperateInfoListener(HqlsqlParser *parser) 
-  : parser_(parser) {}
+GetOperateInfoListener::GetOperateInfoListener(HqlsqlParser *parser) :
+  parser_(parser), 
+  in_set_assignment_stmt_(false), 
+  in_update_stmt_(false) {}
 
 GetOperateInfoListener::~GetOperateInfoListener() {}
 
@@ -74,9 +76,14 @@ void GetOperateInfoListener::enterDrop_db_schema_stmt(HqlsqlParser::Drop_db_sche
 void GetOperateInfoListener::enterDrop_table_view_role_index_stmt(HqlsqlParser::Drop_table_view_role_index_stmtContext* ctx) {
   auto tk_type = ctx->tk;   // token
   auto ident_ctx = ctx->ident();
+  auto materialized_ctx = ctx->T_MATERIALIZED();
 
-  operate_info_.objectType = StringToUpper(tk_type->getText());
-  SetOperateInfo(operate_info_, "DROP", StringToUpper(tk_type->getText()));
+  if (materialized_ctx) {
+    SetOperateInfo(operate_info_, "DROP", "MATERIALIZED VIEW");
+  } else {
+    SetOperateInfo(operate_info_, "DROP", StringToUpper(tk_type->getText()));
+  }
+
   parser::OperateObject obj = GetOperateObject(ident_ctx->getText());
   AddOperateObject(obj);
 }
@@ -176,7 +183,13 @@ void GetOperateInfoListener::enterCreate_index_stmt(HqlsqlParser::Create_index_s
 }
 
 void GetOperateInfoListener::enterCreate_view_stmt(HqlsqlParser::Create_view_stmtContext* ctx) {
-  SetOperateInfo(operate_info_, "CREATE", "VIEW");
+  auto materialized_ctx = ctx->T_MATERIALIZED();
+
+  if (materialized_ctx) {
+    SetOperateInfo(operate_info_, "CREATE", "MATERIALIZED VIEW");
+  } else {
+    SetOperateInfo(operate_info_, "CREATE", "VIEW");
+  }
 
   auto view_name_ctx = ctx->view_name();
   parser::OperateObject obj = GetOperateObject(view_name_ctx->getText());
@@ -253,11 +266,19 @@ void GetOperateInfoListener::enterInsert_directory_stmt(HqlsqlParser::Insert_dir
 }
 
 void GetOperateInfoListener::enterUpdate_stmt(HqlsqlParser::Update_stmtContext* ctx) {
+  in_update_stmt_ = true;
+
   auto table_name_ctx = ctx->table_name();
   SetOperateInfo(operate_info_, "UPDATE", "TABLE");
 
-  parser::OperateObject obj = GetOperateObject(table_name_ctx->getText());
-  AddOperateObject(obj);
+  operate_object_.objectName = StringTrim(table_name_ctx->getText(), "`");
+}
+
+void GetOperateInfoListener::exitUpdate_stmt(HqlsqlParser::Update_stmtContext* ctx) {
+  operate_info_.objects.push_back(operate_object_);
+  operate_info_list_.push_back(operate_info_);
+
+  in_update_stmt_ = false;
 }
 
 void GetOperateInfoListener::enterDelete_stmt(HqlsqlParser::Delete_stmtContext* ctx) {
@@ -296,9 +317,19 @@ void GetOperateInfoListener::enterDesc_db_schema(HqlsqlParser::Desc_db_schemaCon
   AddOperateObject(obj);
 }
 
+// we can not identify which is to describe, table, view or column
 void GetOperateInfoListener::enterDesc_table_view_column(HqlsqlParser::Desc_table_view_columnContext* ctx) {
-  // TODO: [FIXME]
-  // I don't understand the syntax in documentation
+  auto ident_ctx = ctx->ident();
+  auto column_ctx = ctx->column_name();
+
+  SetOperateInfo(operate_info_, "DESCRIBE", "TABLE/VIEW/COLUMN");
+  parser::OperateObject obj = GetOperateObject(ident_ctx->getText());
+
+  if (column_ctx) {
+    obj.subObjectName.push_back(column_ctx->getText());
+  }
+
+  AddOperateObject(obj);
 }
 
 void GetOperateInfoListener::enterImport_stmt(HqlsqlParser::Import_stmtContext* ctx) {
@@ -317,14 +348,56 @@ void GetOperateInfoListener::enterImport_stmt(HqlsqlParser::Import_stmtContext* 
 void GetOperateInfoListener::enterExport_stmt(HqlsqlParser::Export_stmtContext* ctx) {
   auto table_name_ctx = ctx->table_name();
 
-  SetOperateInfo(operate_info_, "IMPORT", "TABLE");
+  SetOperateInfo(operate_info_, "EXPORT", "TABLE");
   parser::OperateObject obj = GetOperateObject(table_name_ctx->getText());
+  AddOperateObject(obj);
+}
+
+// save all the variables
+void GetOperateInfoListener::enterAssignment_stmt(HqlsqlParser::Assignment_stmtContext* ctx) {
+  in_set_assignment_stmt_ = true;
+
+  auto token_type = ctx->tk;
+
+  if (token_type) {
+    SetOperateInfo(operate_info_, StringToUpper(token_type->getText()), "VARIABLES");
+  } else
+    SetOperateInfo(operate_info_, "SET", "VARIABLES");
+
+  operate_object_.clear();
+  operate_object_.objectName = "VARIABLES";
+}
+
+void GetOperateInfoListener::exitAssignment_stmt(HqlsqlParser::Assignment_stmtContext* ctx) {
+  operate_info_.objects.push_back(operate_object_);
+  operate_info_list_.push_back(operate_info_);
+  in_set_assignment_stmt_ = false;
+}
+
+void GetOperateInfoListener::enterAssignment_stmt_single_item(HqlsqlParser::Assignment_stmt_single_itemContext* ctx) {
+  if (nullptr == ctx) {
+    return;
+  }
+
+  if (!in_set_assignment_stmt_ && !in_update_stmt_) {
+    return;
+  }
+
+  auto assign_expr_ctx = ctx->assignment_expr(0);
+  operate_object_.subObjectName.push_back(assign_expr_ctx->getText());
+}
+
+void GetOperateInfoListener::enterAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext* ctx) {
+  SetOperateInfo(operate_info_, "ALTER", "VIEW");
+
+  auto view_name_ctx = ctx->view_name();
+  parser::OperateObject obj = GetOperateObject(view_name_ctx->getText());
   AddOperateObject(obj);
 }
 
 parser::OperateObject GetOperateInfoListener::GetOperateObject(std::string objectName) {
   parser::OperateObject obj;
-  obj.objectName = objectName;
+  obj.objectName = StringTrim(objectName, "`");
 
   return obj;
 }
@@ -334,6 +407,24 @@ std::string GetOperateInfoListener::StringToUpper(std::string str) {
       [](unsigned char c) -> unsigned char { return std::toupper(c); });
 
   return str;
+}
+
+std::string GetOperateInfoListener::StringTrim(std::string src, const std::string delim) {
+  if (delim.empty()) {
+    return src;
+  }
+
+  if (src.empty()) {
+    return "";
+  }
+
+  size_t n = 0;
+  while ((n = src.find(delim)) != std::string::npos) {
+    // delete delim from src
+    src.erase(n, delim.length());
+  }
+
+  return src;
 }
 
 void GetOperateInfoListener::AddOperateObject(parser::OperateObject &obj) {

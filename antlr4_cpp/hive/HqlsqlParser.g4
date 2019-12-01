@@ -152,7 +152,7 @@ exception_block_item :
 // Assignment statement
 assignment_stmt : 
        T_SET set_session_option
-     | (T_SET | T_RESET)? assignment_stmt_item (T_COMMA assignment_stmt_item)*  
+     | tk=(T_SET | T_RESET)? assignment_stmt_item (T_COMMA assignment_stmt_item)*  
      ;
 
 assignment_stmt_item : 
@@ -474,17 +474,19 @@ create_table_options_mssql_item :
 
 // view manipulations
 create_view_stmt
-    : T_CREATE T_VIEW (T_IF T_NOT T_EXISTS)? view_name create_view_options? 
-      property_values_part? T_AS select_stmt
+    : T_CREATE T_VIEW (T_IF T_NOT T_EXISTS)? view_name paren_column_list? create_view_options* T_AS select_stmt
+    | T_CREATE T_MATERIALIZED T_VIEW (T_IF T_NOT T_EXISTS)? view_name create_materialized_view_option* T_AS select_stmt
     ;
 
 create_view_options
-    : paren_column_list comment_part?
-    | (T_DISABLE T_REWRITE)? comment_part? create_view_option
+    : comment_part
+    | property_values_part
     ;
 
-create_view_option
-    : T_PARTITIONED T_ON paren_column_list
+create_materialized_view_option
+    : create_view_options
+    | T_DISABLE T_REWRITE
+    | T_PARTITIONED T_ON paren_column_list
     | T_CLUSTERED T_ON paren_column_list
     | T_DISTRIBUTED T_ON paren_column_list T_SORTED T_ON paren_column_list
     | row_format_part
@@ -552,6 +554,7 @@ alter_stmt
     | T_ALTER tk=(T_DATABASE | T_SCHEMA | T_VIEW) ident T_SET alter_option          # alter_db_schema_view
     | T_ALTER T_MATERIALIZED T_VIEW view_name (T_ENABLE|T_DISABLE) T_REWRITE        # alter_materialized_view
     | T_ALTER T_INDEX ident T_ON table_name partition_assignment_list? T_REBUILD    # alter_index
+    | T_ALTER T_VIEW view_name T_AS select_stmt                                     # alter_view_as_select
     ;
 
 alter_option
@@ -585,7 +588,13 @@ set_tblproperties
     ;
 
 add_serde_properties
-    : partition_assignment_list? T_SET (property_values_part | T_SERDE ident property_values?)
+    : partition_assignment_list? T_SET (property_values_part | T_SERDE serde_class_name property_values?)
+    ;
+
+serde_class_name
+    : ident
+    | L_S_STRING
+    | L_D_STRING
     ;
 
 table_storage_properties
@@ -1228,8 +1237,12 @@ common_table_expression :
      ;
      
 cte_select_cols :
-       T_OPEN_P ident (T_COMMA ident)* T_CLOSE_P
+       T_OPEN_P cte_select_col (T_COMMA cte_select_col)* T_CLOSE_P
      ;
+
+cte_select_col
+    : ident
+    ;
      
 fullselect_stmt : 
        fullselect_stmt_item (fullselect_set_clause fullselect_stmt_item)* 
@@ -1264,17 +1277,17 @@ select_list_limit :
      ;
 
 select_list_item
-    : (ident T_EQUAL)? bool_expr select_list_alias? 
-    | select_list_asterisk
+    : select_list_item_normal 
+    | select_list_item_asterisk
+    ;
+
+select_list_item_normal
+    : (ident T_EQUAL)? ( ident | bool_expr) (T_AS? expr)? 
     ;
      
-select_list_alias :
-       T_AS? expr
-     ;
-     
-select_list_asterisk :
-       (ident T_PERIOD)? '*' 
-     ;
+select_list_item_asterisk
+    : (ident T_PERIOD)? '*' 
+    ;
 
 // TODO: can not find from hive documentation, just occur in samples.
 select_list_use_option
@@ -1337,7 +1350,7 @@ size_types
     ;
 
 from_subselect_clause :
-       T_OPEN_P select_stmt T_CLOSE_P from_table_clause_option*
+       T_OPEN_P select_stmt T_CLOSE_P (T_AS? expr)?
      ;
      
 from_join_clause :
@@ -1444,7 +1457,7 @@ update_upsert :
      
 // MERGE statement
 merge_stmt :                              
-       T_MERGE T_INTO merge_table T_AS T_T T_USING expr T_AS T_S T_ON bool_expr merge_condition+
+       T_MERGE T_INTO merge_table T_AS? T_T T_USING expr T_AS? T_S T_ON bool_expr merge_condition+
      ;
      
 merge_table :

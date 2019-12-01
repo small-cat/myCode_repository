@@ -171,7 +171,7 @@ public:
 
     virtual antlrcpp::Any visitCreate_view_options(HqlsqlParser::Create_view_optionsContext *context) = 0;
 
-    virtual antlrcpp::Any visitCreate_view_option(HqlsqlParser::Create_view_optionContext *context) = 0;
+    virtual antlrcpp::Any visitCreate_materialized_view_option(HqlsqlParser::Create_materialized_view_optionContext *context) = 0;
 
     virtual antlrcpp::Any visitCreate_macro_stmt(HqlsqlParser::Create_macro_stmtContext *context) = 0;
 
@@ -201,6 +201,8 @@ public:
 
     virtual antlrcpp::Any visitAlter_index(HqlsqlParser::Alter_indexContext *context) = 0;
 
+    virtual antlrcpp::Any visitAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext *context) = 0;
+
     virtual antlrcpp::Any visitAlter_option(HqlsqlParser::Alter_optionContext *context) = 0;
 
     virtual antlrcpp::Any visitAlter_table_stmt(HqlsqlParser::Alter_table_stmtContext *context) = 0;
@@ -212,6 +214,8 @@ public:
     virtual antlrcpp::Any visitSet_tblproperties(HqlsqlParser::Set_tblpropertiesContext *context) = 0;
 
     virtual antlrcpp::Any visitAdd_serde_properties(HqlsqlParser::Add_serde_propertiesContext *context) = 0;
+
+    virtual antlrcpp::Any visitSerde_class_name(HqlsqlParser::Serde_class_nameContext *context) = 0;
 
     virtual antlrcpp::Any visitTable_storage_properties(HqlsqlParser::Table_storage_propertiesContext *context) = 0;
 

@@ -319,7 +319,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitCreate_view_option(HqlsqlParser::Create_view_optionContext *ctx) override {
+  virtual antlrcpp::Any visitCreate_materialized_view_option(HqlsqlParser::Create_materialized_view_optionContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -379,6 +379,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitAlter_option(HqlsqlParser::Alter_optionContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -400,6 +404,10 @@ public:
   }
 
   virtual antlrcpp::Any visitAdd_serde_properties(HqlsqlParser::Add_serde_propertiesContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSerde_class_name(HqlsqlParser::Serde_class_nameContext *ctx) override {
     return visitChildren(ctx);
   }
 

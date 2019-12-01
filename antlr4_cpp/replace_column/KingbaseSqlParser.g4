@@ -1489,13 +1489,13 @@ values_clause
 copy_statement
     : COPY (tableview_name paren_column_list? | LEFT_PAREN select_statement RIGHT_PAREN) 
       (TO | FROM) (expression | STDIN_ | STDOUT_) 
-      (WITH? BINARY? OIDS? ((DELIMITER | NULL_) AS? expression)? 
-      (CSV HEADER? ((QUOTED |ESCAPE) AS? expression)? (FORCE (NOT| QUOTED) NULL_ (COMMA? column_name)+)?))?
-      (SKIP_ ERRORS)? (LOGFILE expression)? (MAXLINENUM UNSIGNED_INTEGER)?
+      (WITH? BINARY? OIDS? ((DELIMITER | NULL_) AS? CHAR_STRING)? 
+      (CSV HEADER? ((QUOTED |ESCAPE) AS? CHAR_STRING)? (FORCE (NOT NULL_ | QUOTED) (COMMA? column_name)+)?)?)?
+      (SKIP_ ERRORS)? (LOGFILE CHAR_STRING)? (MAXLINENUM UNSIGNED_INTEGER)?
     ;
 
 merge_statement
-    : MERGE INTO tableview_name table_alias? USING selected_tableview ON LEFT_PAREN condition RIGHT_PAREN
+    : MERGE INTO tableview_name table_alias? USING selected_tableview ON condition 
       (merge_update_clause merge_insert_clause? | merge_insert_clause merge_update_clause?)?
     ;
 

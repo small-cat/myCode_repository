@@ -154,94 +154,94 @@ public:
     RuleTerminated_by_part = 67, RuleTerminated_by = 68, RuleBy_char = 69, 
     RuleCreate_table_options_hive_item = 70, RuleCreate_table_hive_row_format = 71, 
     RuleCreate_table_hive_row_format_fields = 72, RuleCreate_table_options_mssql_item = 73, 
-    RuleCreate_view_stmt = 74, RuleCreate_view_options = 75, RuleCreate_view_option = 76, 
+    RuleCreate_view_stmt = 74, RuleCreate_view_options = 75, RuleCreate_materialized_view_option = 76, 
     RuleCreate_macro_stmt = 77, RuleCreate_role_stmt = 78, RuleGrant_revoke_role_stmt = 79, 
     RuleWith_option_for = 80, RuleRole_name = 81, RuleRole_names = 82, RuleGrant_revoke_privilege_stmt = 83, 
     RulePrivilege_columns = 84, RulePriv_type = 85, RuleObject_specification = 86, 
     RuleAlter_stmt = 87, RuleAlter_option = 88, RuleAlter_table_stmt = 89, 
     RuleAlter_table_item_options = 90, RuleAlter_table_properties = 91, 
-    RuleSet_tblproperties = 92, RuleAdd_serde_properties = 93, RuleTable_storage_properties = 94, 
-    RuleTable_skewed_properties = 95, RuleTable_constraints = 96, RuleAdd_constraint_property = 97, 
-    RuleChange_column_property = 98, RuleDrop_constraint_property = 99, 
-    RuleNew_table_name = 100, RuleAlter_table_partition_properties = 101, 
-    RuleAdd_partition_property = 102, RuleAdd_partition_property_options = 103, 
-    RuleAdd_partition_property_option = 104, RuleRecover_partition_property = 105, 
-    RuleDrop_partition_property = 106, RuleArchive_partition_property = 107, 
-    RuleAlter_table_or_partition_options = 108, RuleAlter_table_column_properties = 109, 
-    RuleShow_stmt = 110, RulePrincipal_specification = 111, RulePrincipal_specifications = 112, 
-    RuleImport_stmt = 113, RuleExport_stmt = 114, RuleExplain_stmt = 115, 
-    RuleDtype = 116, RuleData_type = 117, RulePrimitive_type = 118, RuleArray_type = 119, 
-    RuleMap_type = 120, RuleStruct_type = 121, RuleStruct_type_type = 122, 
-    RuleUnion_type = 123, RuleDtype_len = 124, RuleDtype_attr = 125, RuleDtype_default = 126, 
-    RuleCreate_database_stmt = 127, RuleCreate_database_option = 128, RuleComment_part = 129, 
-    RuleLocation_part = 130, RuleProperty_values = 131, RuleProperty_values_part = 132, 
-    RuleCreate_function_stmt = 133, RuleCreate_function_procedure = 134, 
-    RuleCreate_temporary_function = 135, RuleCreate_permanent_function = 136, 
-    RulePermanent_function_options = 137, RulePermanent_function_option = 138, 
-    RuleReload_function = 139, RuleCreate_function_return = 140, RuleCreate_package_stmt = 141, 
-    RulePackage_spec = 142, RulePackage_spec_item = 143, RuleCreate_package_body_stmt = 144, 
-    RulePackage_body = 145, RulePackage_body_item = 146, RuleCreate_procedure_stmt = 147, 
-    RuleCreate_routine_params = 148, RuleCreate_routine_param_item = 149, 
-    RuleCreate_routine_options = 150, RuleCreate_routine_option = 151, RuleDrop_stmt = 152, 
-    RuleEnd_transaction_stmt = 153, RuleExec_stmt = 154, RuleIf_stmt = 155, 
-    RuleIf_plsql_stmt = 156, RuleIf_tsql_stmt = 157, RuleIf_bteq_stmt = 158, 
-    RuleElseif_block = 159, RuleElse_block = 160, RuleInclude_stmt = 161, 
-    RuleLoad_file_stmt = 162, RuleInsert_stmt = 163, RuleInsert_into_table_from_sql = 164, 
-    RuleInsert_into_tables_from_query = 165, RuleInsert_tables_overwrite_into = 166, 
-    RuleInsert_into_files_from_query = 167, RuleInsert_into_mutiples = 168, 
-    RuleInsert_stmt_cols = 169, RuleInsert_stmt_rows = 170, RuleInsert_stmt_row = 171, 
-    RuleInsert_directory_stmt = 172, RuleExit_stmt = 173, RuleGet_diag_stmt = 174, 
-    RuleGet_diag_stmt_item = 175, RuleGet_diag_stmt_exception_item = 176, 
-    RuleGet_diag_stmt_rowcount_item = 177, RuleLeave_stmt = 178, RuleMap_object_stmt = 179, 
-    RuleOpen_stmt = 180, RuleFetch_stmt = 181, RuleCollect_stats_stmt = 182, 
-    RuleCollect_stats_clause = 183, RuleClose_stmt = 184, RuleCmp_stmt = 185, 
-    RuleCmp_source = 186, RuleCopy_from_local_stmt = 187, RuleCopy_stmt = 188, 
-    RuleCopy_source = 189, RuleCopy_target = 190, RuleCopy_option = 191, 
-    RuleCopy_file_option = 192, RuleCommit_stmt = 193, RuleCreate_index_stmt = 194, 
-    RuleCreate_index_col = 195, RuleIndex_storage_clause = 196, RuleIndex_mssql_storage_clause = 197, 
-    RulePrint_stmt = 198, RuleQuit_stmt = 199, RuleRaise_stmt = 200, RuleResignal_stmt = 201, 
-    RuleReturn_stmt = 202, RuleRollback_stmt = 203, RuleSet_session_option = 204, 
-    RuleSet_current_schema_option = 205, RuleSet_mssql_session_option = 206, 
-    RuleSet_teradata_session_option = 207, RuleSignal_stmt = 208, RuleSummary_stmt = 209, 
-    RuleTruncate_table_stmt = 210, RulePartition_assignment_list = 211, 
-    RulePartition_spec = 212, RuleUse_stmt = 213, RuleValues_into_stmt = 214, 
-    RuleWhile_stmt = 215, RuleFor_cursor_stmt = 216, RuleFor_range_stmt = 217, 
-    RuleLabel = 218, RuleLabel_pattern = 219, RuleUsing_clause = 220, RuleSelect_stmt = 221, 
-    RuleCte_select_stmt = 222, RuleCommon_table_expression = 223, RuleCte_select_cols = 224, 
-    RuleFullselect_stmt = 225, RuleFullselect_stmt_item = 226, RuleFullselect_set_clause = 227, 
-    RuleSubselect_stmt = 228, RuleSelect_list = 229, RuleSelect_list_set = 230, 
-    RuleSelect_list_limit = 231, RuleSelect_list_item = 232, RuleSelect_list_alias = 233, 
-    RuleSelect_list_asterisk = 234, RuleSelect_list_use_option = 235, RuleFrom_clause = 236, 
-    RuleFrom_table_clause = 237, RuleFrom_table_name_clause = 238, RuleFrom_table_clause_option = 239, 
-    RuleLateral_view = 240, RuleTable_sample_clause = 241, RuleTable_sampling = 242, 
-    RuleBlock_sampling = 243, RuleBlock_sampling_option = 244, RuleNumbers = 245, 
-    RuleSize_types = 246, RuleFrom_subselect_clause = 247, RuleFrom_join_clause = 248, 
-    RuleFrom_join_type_clause = 249, RuleFrom_alias_clause = 250, RuleOn_condition = 251, 
-    RuleTable_name = 252, RuleView_name = 253, RuleDb_name = 254, RuleSelect_option = 255, 
-    RuleWindow_clause = 256, RuleWhere_clause = 257, RuleGroup_by_clause = 258, 
-    RuleHaving_clause = 259, RuleLimit_clause = 260, RuleOrder_by_clause = 261, 
-    RuleOrder_by_clause_option = 262, RuleCol_order = 263, RuleCol_null_order = 264, 
-    RuleCluster_by_clause = 265, RuleUpdate_stmt = 266, RuleUpdate_assignment = 267, 
-    RuleUpdate_upsert = 268, RuleMerge_stmt = 269, RuleMerge_table = 270, 
-    RuleMerge_condition = 271, RuleMerge_action = 272, RuleAnalyze_table_stmt = 273, 
-    RuleDelete_stmt = 274, RuleDelete_alias = 275, RuleDescribe_stmt = 276, 
-    RuleBool_expr = 277, RuleBool_expr_atom = 278, RuleBool_expr_unary = 279, 
-    RuleBool_expr_single_in = 280, RuleBool_expr_multi_in = 281, RuleParen_expr_list = 282, 
-    RuleExpr_list = 283, RuleBool_expr_binary = 284, RuleBool_expr_logical_operator = 285, 
-    RuleBool_expr_binary_operator = 286, RuleExpr = 287, RuleExpr_unary = 288, 
-    RuleExpr_atom = 289, RuleExpr_interval = 290, RuleInterval_item = 291, 
-    RuleExpr_concat = 292, RuleExpr_concat_item = 293, RuleExpr_case = 294, 
-    RuleExpr_case_simple = 295, RuleExpr_case_searched = 296, RuleExpr_cursor_attribute = 297, 
-    RuleExpr_agg_window_func = 298, RuleExpr_func_all_distinct = 299, RuleExpr_func_over_clause = 300, 
-    RuleExpr_func_over_clause_options = 301, RuleExpr_func_partition_by_clause = 302, 
-    RuleFunc_partition_clause_option = 303, RuleFunc_partition_clause_part = 304, 
-    RuleExpr_spec_func = 305, RuleExpr_func = 306, RuleExpr_func_params = 307, 
-    RuleFunc_param = 308, RuleExpr_select = 309, RuleExpr_file = 310, RuleHive = 311, 
-    RuleHive_item = 312, RuleHost = 313, RuleHost_cmd = 314, RuleHost_stmt = 315, 
-    RuleFile_name = 316, RuleFile_pattern = 317, RuleDate_literal = 318, 
-    RuleTimestamp_literal = 319, RuleIdent = 320, RuleString = 321, RuleInt_number = 322, 
-    RuleDec_number = 323, RuleBool_literal = 324, RuleNull_const = 325, 
-    RuleNon_reserved_words = 326
+    RuleSet_tblproperties = 92, RuleAdd_serde_properties = 93, RuleSerde_class_name = 94, 
+    RuleTable_storage_properties = 95, RuleTable_skewed_properties = 96, 
+    RuleTable_constraints = 97, RuleAdd_constraint_property = 98, RuleChange_column_property = 99, 
+    RuleDrop_constraint_property = 100, RuleNew_table_name = 101, RuleAlter_table_partition_properties = 102, 
+    RuleAdd_partition_property = 103, RuleAdd_partition_property_options = 104, 
+    RuleAdd_partition_property_option = 105, RuleRecover_partition_property = 106, 
+    RuleDrop_partition_property = 107, RuleArchive_partition_property = 108, 
+    RuleAlter_table_or_partition_options = 109, RuleAlter_table_column_properties = 110, 
+    RuleShow_stmt = 111, RulePrincipal_specification = 112, RulePrincipal_specifications = 113, 
+    RuleImport_stmt = 114, RuleExport_stmt = 115, RuleExplain_stmt = 116, 
+    RuleDtype = 117, RuleData_type = 118, RulePrimitive_type = 119, RuleArray_type = 120, 
+    RuleMap_type = 121, RuleStruct_type = 122, RuleStruct_type_type = 123, 
+    RuleUnion_type = 124, RuleDtype_len = 125, RuleDtype_attr = 126, RuleDtype_default = 127, 
+    RuleCreate_database_stmt = 128, RuleCreate_database_option = 129, RuleComment_part = 130, 
+    RuleLocation_part = 131, RuleProperty_values = 132, RuleProperty_values_part = 133, 
+    RuleCreate_function_stmt = 134, RuleCreate_function_procedure = 135, 
+    RuleCreate_temporary_function = 136, RuleCreate_permanent_function = 137, 
+    RulePermanent_function_options = 138, RulePermanent_function_option = 139, 
+    RuleReload_function = 140, RuleCreate_function_return = 141, RuleCreate_package_stmt = 142, 
+    RulePackage_spec = 143, RulePackage_spec_item = 144, RuleCreate_package_body_stmt = 145, 
+    RulePackage_body = 146, RulePackage_body_item = 147, RuleCreate_procedure_stmt = 148, 
+    RuleCreate_routine_params = 149, RuleCreate_routine_param_item = 150, 
+    RuleCreate_routine_options = 151, RuleCreate_routine_option = 152, RuleDrop_stmt = 153, 
+    RuleEnd_transaction_stmt = 154, RuleExec_stmt = 155, RuleIf_stmt = 156, 
+    RuleIf_plsql_stmt = 157, RuleIf_tsql_stmt = 158, RuleIf_bteq_stmt = 159, 
+    RuleElseif_block = 160, RuleElse_block = 161, RuleInclude_stmt = 162, 
+    RuleLoad_file_stmt = 163, RuleInsert_stmt = 164, RuleInsert_into_table_from_sql = 165, 
+    RuleInsert_into_tables_from_query = 166, RuleInsert_tables_overwrite_into = 167, 
+    RuleInsert_into_files_from_query = 168, RuleInsert_into_mutiples = 169, 
+    RuleInsert_stmt_cols = 170, RuleInsert_stmt_rows = 171, RuleInsert_stmt_row = 172, 
+    RuleInsert_directory_stmt = 173, RuleExit_stmt = 174, RuleGet_diag_stmt = 175, 
+    RuleGet_diag_stmt_item = 176, RuleGet_diag_stmt_exception_item = 177, 
+    RuleGet_diag_stmt_rowcount_item = 178, RuleLeave_stmt = 179, RuleMap_object_stmt = 180, 
+    RuleOpen_stmt = 181, RuleFetch_stmt = 182, RuleCollect_stats_stmt = 183, 
+    RuleCollect_stats_clause = 184, RuleClose_stmt = 185, RuleCmp_stmt = 186, 
+    RuleCmp_source = 187, RuleCopy_from_local_stmt = 188, RuleCopy_stmt = 189, 
+    RuleCopy_source = 190, RuleCopy_target = 191, RuleCopy_option = 192, 
+    RuleCopy_file_option = 193, RuleCommit_stmt = 194, RuleCreate_index_stmt = 195, 
+    RuleCreate_index_col = 196, RuleIndex_storage_clause = 197, RuleIndex_mssql_storage_clause = 198, 
+    RulePrint_stmt = 199, RuleQuit_stmt = 200, RuleRaise_stmt = 201, RuleResignal_stmt = 202, 
+    RuleReturn_stmt = 203, RuleRollback_stmt = 204, RuleSet_session_option = 205, 
+    RuleSet_current_schema_option = 206, RuleSet_mssql_session_option = 207, 
+    RuleSet_teradata_session_option = 208, RuleSignal_stmt = 209, RuleSummary_stmt = 210, 
+    RuleTruncate_table_stmt = 211, RulePartition_assignment_list = 212, 
+    RulePartition_spec = 213, RuleUse_stmt = 214, RuleValues_into_stmt = 215, 
+    RuleWhile_stmt = 216, RuleFor_cursor_stmt = 217, RuleFor_range_stmt = 218, 
+    RuleLabel = 219, RuleLabel_pattern = 220, RuleUsing_clause = 221, RuleSelect_stmt = 222, 
+    RuleCte_select_stmt = 223, RuleCommon_table_expression = 224, RuleCte_select_cols = 225, 
+    RuleFullselect_stmt = 226, RuleFullselect_stmt_item = 227, RuleFullselect_set_clause = 228, 
+    RuleSubselect_stmt = 229, RuleSelect_list = 230, RuleSelect_list_set = 231, 
+    RuleSelect_list_limit = 232, RuleSelect_list_item = 233, RuleSelect_list_alias = 234, 
+    RuleSelect_list_asterisk = 235, RuleSelect_list_use_option = 236, RuleFrom_clause = 237, 
+    RuleFrom_table_clause = 238, RuleFrom_table_name_clause = 239, RuleFrom_table_clause_option = 240, 
+    RuleLateral_view = 241, RuleTable_sample_clause = 242, RuleTable_sampling = 243, 
+    RuleBlock_sampling = 244, RuleBlock_sampling_option = 245, RuleNumbers = 246, 
+    RuleSize_types = 247, RuleFrom_subselect_clause = 248, RuleFrom_join_clause = 249, 
+    RuleFrom_join_type_clause = 250, RuleFrom_alias_clause = 251, RuleOn_condition = 252, 
+    RuleTable_name = 253, RuleView_name = 254, RuleDb_name = 255, RuleSelect_option = 256, 
+    RuleWindow_clause = 257, RuleWhere_clause = 258, RuleGroup_by_clause = 259, 
+    RuleHaving_clause = 260, RuleLimit_clause = 261, RuleOrder_by_clause = 262, 
+    RuleOrder_by_clause_option = 263, RuleCol_order = 264, RuleCol_null_order = 265, 
+    RuleCluster_by_clause = 266, RuleUpdate_stmt = 267, RuleUpdate_assignment = 268, 
+    RuleUpdate_upsert = 269, RuleMerge_stmt = 270, RuleMerge_table = 271, 
+    RuleMerge_condition = 272, RuleMerge_action = 273, RuleAnalyze_table_stmt = 274, 
+    RuleDelete_stmt = 275, RuleDelete_alias = 276, RuleDescribe_stmt = 277, 
+    RuleBool_expr = 278, RuleBool_expr_atom = 279, RuleBool_expr_unary = 280, 
+    RuleBool_expr_single_in = 281, RuleBool_expr_multi_in = 282, RuleParen_expr_list = 283, 
+    RuleExpr_list = 284, RuleBool_expr_binary = 285, RuleBool_expr_logical_operator = 286, 
+    RuleBool_expr_binary_operator = 287, RuleExpr = 288, RuleExpr_unary = 289, 
+    RuleExpr_atom = 290, RuleExpr_interval = 291, RuleInterval_item = 292, 
+    RuleExpr_concat = 293, RuleExpr_concat_item = 294, RuleExpr_case = 295, 
+    RuleExpr_case_simple = 296, RuleExpr_case_searched = 297, RuleExpr_cursor_attribute = 298, 
+    RuleExpr_agg_window_func = 299, RuleExpr_func_all_distinct = 300, RuleExpr_func_over_clause = 301, 
+    RuleExpr_func_over_clause_options = 302, RuleExpr_func_partition_by_clause = 303, 
+    RuleFunc_partition_clause_option = 304, RuleFunc_partition_clause_part = 305, 
+    RuleExpr_spec_func = 306, RuleExpr_func = 307, RuleExpr_func_params = 308, 
+    RuleFunc_param = 309, RuleExpr_select = 310, RuleExpr_file = 311, RuleHive = 312, 
+    RuleHive_item = 313, RuleHost = 314, RuleHost_cmd = 315, RuleHost_stmt = 316, 
+    RuleFile_name = 317, RuleFile_pattern = 318, RuleDate_literal = 319, 
+    RuleTimestamp_literal = 320, RuleIdent = 321, RuleString = 322, RuleInt_number = 323, 
+    RuleDec_number = 324, RuleBool_literal = 325, RuleNull_const = 326, 
+    RuleNon_reserved_words = 327
   };
 
   HqlsqlParser(antlr4::TokenStream *input);
@@ -330,7 +330,7 @@ public:
   class Create_table_options_mssql_itemContext;
   class Create_view_stmtContext;
   class Create_view_optionsContext;
-  class Create_view_optionContext;
+  class Create_materialized_view_optionContext;
   class Create_macro_stmtContext;
   class Create_role_stmtContext;
   class Grant_revoke_role_stmtContext;
@@ -348,6 +348,7 @@ public:
   class Alter_table_propertiesContext;
   class Set_tblpropertiesContext;
   class Add_serde_propertiesContext;
+  class Serde_class_nameContext;
   class Table_storage_propertiesContext;
   class Table_skewed_propertiesContext;
   class Table_constraintsContext;
@@ -831,6 +832,7 @@ public:
 
   class  Assignment_stmtContext : public antlr4::ParserRuleContext {
   public:
+    antlr4::Token *tk = nullptr;;
     Assignment_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *T_SET();
@@ -2147,8 +2149,12 @@ public:
     antlr4::tree::TerminalNode *T_IF();
     antlr4::tree::TerminalNode *T_NOT();
     antlr4::tree::TerminalNode *T_EXISTS();
-    Create_view_optionsContext *create_view_options();
-    Property_values_partContext *property_values_part();
+    Paren_column_listContext *paren_column_list();
+    std::vector<Create_view_optionsContext *> create_view_options();
+    Create_view_optionsContext* create_view_options(size_t i);
+    antlr4::tree::TerminalNode *T_MATERIALIZED();
+    std::vector<Create_materialized_view_optionContext *> create_materialized_view_option();
+    Create_materialized_view_optionContext* create_materialized_view_option(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2163,11 +2169,8 @@ public:
   public:
     Create_view_optionsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    Paren_column_listContext *paren_column_list();
     Comment_partContext *comment_part();
-    Create_view_optionContext *create_view_option();
-    antlr4::tree::TerminalNode *T_DISABLE();
-    antlr4::tree::TerminalNode *T_REWRITE();
+    Property_values_partContext *property_values_part();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2178,10 +2181,13 @@ public:
 
   Create_view_optionsContext* create_view_options();
 
-  class  Create_view_optionContext : public antlr4::ParserRuleContext {
+  class  Create_materialized_view_optionContext : public antlr4::ParserRuleContext {
   public:
-    Create_view_optionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Create_materialized_view_optionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    Create_view_optionsContext *create_view_options();
+    antlr4::tree::TerminalNode *T_DISABLE();
+    antlr4::tree::TerminalNode *T_REWRITE();
     antlr4::tree::TerminalNode *T_PARTITIONED();
     std::vector<antlr4::tree::TerminalNode *> T_ON();
     antlr4::tree::TerminalNode* T_ON(size_t i);
@@ -2200,7 +2206,7 @@ public:
    
   };
 
-  Create_view_optionContext* create_view_option();
+  Create_materialized_view_optionContext* create_materialized_view_option();
 
   class  Create_macro_stmtContext : public antlr4::ParserRuleContext {
   public:
@@ -2478,6 +2484,21 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  Alter_view_as_selectContext : public Alter_stmtContext {
+  public:
+    Alter_view_as_selectContext(Alter_stmtContext *ctx);
+
+    antlr4::tree::TerminalNode *T_ALTER();
+    antlr4::tree::TerminalNode *T_VIEW();
+    View_nameContext *view_name();
+    antlr4::tree::TerminalNode *T_AS();
+    Select_stmtContext *select_stmt();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   Alter_stmtContext* alter_stmt();
 
   class  Alter_optionContext : public antlr4::ParserRuleContext {
@@ -2585,7 +2606,7 @@ public:
     antlr4::tree::TerminalNode *T_SET();
     Property_values_partContext *property_values_part();
     antlr4::tree::TerminalNode *T_SERDE();
-    IdentContext *ident();
+    Serde_class_nameContext *serde_class_name();
     Partition_assignment_listContext *partition_assignment_list();
     Property_valuesContext *property_values();
 
@@ -2597,6 +2618,23 @@ public:
   };
 
   Add_serde_propertiesContext* add_serde_properties();
+
+  class  Serde_class_nameContext : public antlr4::ParserRuleContext {
+  public:
+    Serde_class_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    IdentContext *ident();
+    antlr4::tree::TerminalNode *L_S_STRING();
+    antlr4::tree::TerminalNode *L_D_STRING();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Serde_class_nameContext* serde_class_name();
 
   class  Table_storage_propertiesContext : public antlr4::ParserRuleContext {
   public:
@@ -6163,14 +6201,14 @@ public:
     antlr4::tree::TerminalNode *T_MERGE();
     antlr4::tree::TerminalNode *T_INTO();
     Merge_tableContext *merge_table();
-    std::vector<antlr4::tree::TerminalNode *> T_AS();
-    antlr4::tree::TerminalNode* T_AS(size_t i);
     antlr4::tree::TerminalNode *T_T();
     antlr4::tree::TerminalNode *T_USING();
     ExprContext *expr();
     antlr4::tree::TerminalNode *T_S();
     antlr4::tree::TerminalNode *T_ON();
     Bool_exprContext *bool_expr();
+    std::vector<antlr4::tree::TerminalNode *> T_AS();
+    antlr4::tree::TerminalNode* T_AS(size_t i);
     std::vector<Merge_conditionContext *> merge_condition();
     Merge_conditionContext* merge_condition(size_t i);
 

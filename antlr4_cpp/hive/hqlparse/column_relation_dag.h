@@ -23,6 +23,8 @@
 
 #include "item.h"
 
+namespace sqlparse {
+
 // relationships with table and subquery
 struct Table2Subquery {
     std::string table_name;
@@ -752,4 +754,6 @@ static bool IsMaskColumn(ColumnDAG column_dag,
     return false;
   }
 }
+
+} /* end sqlparse */
 #endif

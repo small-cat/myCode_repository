@@ -15,6 +15,8 @@
 
 #include <strings.h>
 
+namespace sqlparse {
+  
 struct TableItem {
   std::string database;
   std::string schema;
@@ -106,7 +108,7 @@ typedef std::vector<MaskItem> MaskItemList;
 typedef std::vector<ColumnItem> ColumnItemList;
 typedef std::vector<MaskColumnItem> MaskColumnItemList;
 
-static void split(const std::string &s, std::vector<std::string> &sv, const char flag = ' ') {
+static void Split(const std::string &s, std::vector<std::string> &sv, const char flag = ' ') {
   sv.clear();
   std::istringstream iss(s);
   std::string temp;
@@ -116,7 +118,7 @@ static void split(const std::string &s, std::vector<std::string> &sv, const char
   }
 }
 
-static ColumnItem get_column(const std::string &str) {
+static ColumnItem GetColumn(const std::string &str) {
   std::vector<std::string> sv;
   ColumnItem item;
   item.clear();
@@ -144,4 +146,5 @@ static ColumnItem get_column(const std::string &str) {
   return item;
 }
 
+} /* end sqlparse */
 #endif

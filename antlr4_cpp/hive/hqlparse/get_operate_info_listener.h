@@ -43,6 +43,7 @@ public:
   void enterAlter_db_schema_view(HqlsqlParser::Alter_db_schema_viewContext* ctx);
   void enterAlter_materialized_view(HqlsqlParser::Alter_materialized_viewContext* ctx);
   void enterAlter_index(HqlsqlParser::Alter_indexContext* ctx);
+  void enterAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext* ctx);
 
   // allocate_cursor_stmt 
   // associate_locator_stmt
@@ -59,7 +60,7 @@ public:
   // create_function_stmt 
   void enterCreate_temporary_function(HqlsqlParser::Create_temporary_functionContext* ctx);
   void enterCreate_permanent_function(HqlsqlParser::Create_permanent_functionContext* ctx);
-  void enterCreate_function_procedure(HqlsqlParser::Create_function_procedureContext* ctx);
+  //void enterCreate_function_procedure(HqlsqlParser::Create_function_procedureContext* ctx);
 
   // create_index_stmt
   void enterCreate_index_stmt(HqlsqlParser::Create_index_stmtContext* ctx);
@@ -125,6 +126,7 @@ public:
 
   // update_stmt
   void enterUpdate_stmt(HqlsqlParser::Update_stmtContext* ctx);
+  void exitUpdate_stmt(HqlsqlParser::Update_stmtContext* ctx);
 
   // delete_stmt
   void enterDelete_stmt(HqlsqlParser::Delete_stmtContext* ctx);
@@ -153,17 +155,25 @@ public:
    
   // explain_stmt, ignore this sentence
   // assignment_stmt
+  void enterAssignment_stmt(HqlsqlParser::Assignment_stmtContext* ctx);
+  void exitAssignment_stmt(HqlsqlParser::Assignment_stmtContext* ctx);
+  void enterAssignment_stmt_single_item(HqlsqlParser::Assignment_stmt_single_itemContext* ctx);
 
 private:
   std::string StringToUpper(std::string str);
+  std::string StringTrim(std::string src, const std::string delim);
   parser::OperateObject GetOperateObject(std::string objectName);
   void AddOperateObject(parser::OperateObject &obj);
   void SetOperateInfo(parser::OperateInfo &op_info, const std::string &operate, const std::string &objectType);
+
 private:
   HqlsqlParser* parser_;
   parser::OperateObject operate_object_;
   parser::OperateInfo operate_info_;
   std::vector<parser::OperateInfo> operate_info_list_;
+
+  bool in_set_assignment_stmt_;
+  bool in_update_stmt_;
 };
 } // antlr4_hive_parser
 

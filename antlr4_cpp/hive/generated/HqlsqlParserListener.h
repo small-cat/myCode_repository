@@ -242,8 +242,8 @@ public:
   virtual void enterCreate_view_options(HqlsqlParser::Create_view_optionsContext *ctx) = 0;
   virtual void exitCreate_view_options(HqlsqlParser::Create_view_optionsContext *ctx) = 0;
 
-  virtual void enterCreate_view_option(HqlsqlParser::Create_view_optionContext *ctx) = 0;
-  virtual void exitCreate_view_option(HqlsqlParser::Create_view_optionContext *ctx) = 0;
+  virtual void enterCreate_materialized_view_option(HqlsqlParser::Create_materialized_view_optionContext *ctx) = 0;
+  virtual void exitCreate_materialized_view_option(HqlsqlParser::Create_materialized_view_optionContext *ctx) = 0;
 
   virtual void enterCreate_macro_stmt(HqlsqlParser::Create_macro_stmtContext *ctx) = 0;
   virtual void exitCreate_macro_stmt(HqlsqlParser::Create_macro_stmtContext *ctx) = 0;
@@ -287,6 +287,9 @@ public:
   virtual void enterAlter_index(HqlsqlParser::Alter_indexContext *ctx) = 0;
   virtual void exitAlter_index(HqlsqlParser::Alter_indexContext *ctx) = 0;
 
+  virtual void enterAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext *ctx) = 0;
+  virtual void exitAlter_view_as_select(HqlsqlParser::Alter_view_as_selectContext *ctx) = 0;
+
   virtual void enterAlter_option(HqlsqlParser::Alter_optionContext *ctx) = 0;
   virtual void exitAlter_option(HqlsqlParser::Alter_optionContext *ctx) = 0;
 
@@ -304,6 +307,9 @@ public:
 
   virtual void enterAdd_serde_properties(HqlsqlParser::Add_serde_propertiesContext *ctx) = 0;
   virtual void exitAdd_serde_properties(HqlsqlParser::Add_serde_propertiesContext *ctx) = 0;
+
+  virtual void enterSerde_class_name(HqlsqlParser::Serde_class_nameContext *ctx) = 0;
+  virtual void exitSerde_class_name(HqlsqlParser::Serde_class_nameContext *ctx) = 0;
 
   virtual void enterTable_storage_properties(HqlsqlParser::Table_storage_propertiesContext *ctx) = 0;
   virtual void exitTable_storage_properties(HqlsqlParser::Table_storage_propertiesContext *ctx) = 0;
