@@ -23,6 +23,8 @@ public:
 
     virtual antlrcpp::Any visitBlock(HqlsqlParser::BlockContext *context) = 0;
 
+    virtual antlrcpp::Any visitBlock_content(HqlsqlParser::Block_contentContext *context) = 0;
+
     virtual antlrcpp::Any visitBegin_end_block(HqlsqlParser::Begin_end_blockContext *context) = 0;
 
     virtual antlrcpp::Any visitSingle_block_stmt(HqlsqlParser::Single_block_stmtContext *context) = 0;
@@ -483,6 +485,8 @@ public:
 
     virtual antlrcpp::Any visitCte_select_cols(HqlsqlParser::Cte_select_colsContext *context) = 0;
 
+    virtual antlrcpp::Any visitCte_select_col(HqlsqlParser::Cte_select_colContext *context) = 0;
+
     virtual antlrcpp::Any visitFullselect_stmt(HqlsqlParser::Fullselect_stmtContext *context) = 0;
 
     virtual antlrcpp::Any visitFullselect_stmt_item(HqlsqlParser::Fullselect_stmt_itemContext *context) = 0;
@@ -499,9 +503,9 @@ public:
 
     virtual antlrcpp::Any visitSelect_list_item(HqlsqlParser::Select_list_itemContext *context) = 0;
 
-    virtual antlrcpp::Any visitSelect_list_alias(HqlsqlParser::Select_list_aliasContext *context) = 0;
+    virtual antlrcpp::Any visitSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext *context) = 0;
 
-    virtual antlrcpp::Any visitSelect_list_asterisk(HqlsqlParser::Select_list_asteriskContext *context) = 0;
+    virtual antlrcpp::Any visitSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext *context) = 0;
 
     virtual antlrcpp::Any visitSelect_list_use_option(HqlsqlParser::Select_list_use_optionContext *context) = 0;
 

@@ -2352,7 +2352,7 @@ START_CMD
     : '@' {IsNewlineAtPos(-2)}? '@'? ~('\r' | '\n')* NEWLINE_EOF
     ;
 
-REGULAR_ID: SIMPLE_LETTER (SIMPLE_LETTER | '$' | '_' | '#' | [0-9])*;
+REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '$' | '_' | '#' | [0-9])*;
 
 SPACES: [ \t\r\n]+ -> channel(HIDDEN);
 
@@ -2364,3 +2364,4 @@ fragment SIMPLE_LETTER  : [a-zA-Z];
 fragment FLOAT_FRAGMENT : UNSIGNED_INTEGER* '.'? UNSIGNED_INTEGER+;
 fragment NEWLINE        : '\r'? '\n';
 fragment SPACE          : [ \t];
+fragment UNI_CHAR       : '\u2E80-\u2FD5' | '\u3190-\u319F' | '\u3400-\u4DBF' | '\u4E00'..'\u9FEF' | '\uF900'..'\uFAAD';

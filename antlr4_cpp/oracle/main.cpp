@@ -153,8 +153,10 @@ static void _ParseString(PlSqlParser &parser, CommonTokenStream &tokens) {
   MaskItemList mask_item_list_for_dag;
   MaskItem item4 {"student", "name", "MASK_STUNAME"};
   MaskItem item5 {"dept", "name", "MASK_DEPTNAME"};
+  MaskItem item6 = {"学生信息", "'性别'", "MASK_STU_SEX"};
   mask_item_list_for_dag.push_back(item4);
   mask_item_list_for_dag.push_back(item5);
+  mask_item_list_for_dag.push_back(item6);
   std::map<ColumnItem, ColumnItemList> column_relation_map = 
     oracle_dag.GetColumnRelationsByMaskItemList(mask_item_list_for_dag);
 

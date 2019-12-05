@@ -9,6 +9,8 @@
 #include "IParser.h"
 
 namespace antlr4_hive_parser { 
+using namespace sqlparse;
+
 GetOperateInfoListener::GetOperateInfoListener(HqlsqlParser *parser) :
   parser_(parser), 
   in_set_assignment_stmt_(false), 
@@ -37,22 +39,6 @@ void GetOperateInfoListener::enterCreate_database_stmt(HqlsqlParser::Create_data
 
   parser::OperateObject obj = GetOperateObject(ident_ctx->getText());
   AddOperateObject(obj);
-}
-
-/***********************************************************
- * every time, when travel here, show the end of current sql.
- * clear operate_info_ for the next sql if exists.
- * sqls are separated by semicolon, or '@' or '#' or '/'
- * @author Jona
- * @param 
- * @date 19/11/2019 
-***********************************************************/ 
-void GetOperateInfoListener::enterSemicolon_stmt(HqlsqlParser::Semicolon_stmtContext* ctx) {
-  if (nullptr == ctx) {
-    return;
-  }
-  
-  operate_info_.clear();
 }
 
 void GetOperateInfoListener::enterDrop_db_schema_stmt(HqlsqlParser::Drop_db_schema_stmtContext *ctx) {
@@ -395,6 +381,181 @@ void GetOperateInfoListener::enterAlter_view_as_select(HqlsqlParser::Alter_view_
   AddOperateObject(obj);
 }
 
+/******************************************************************************
+ * select stmt operations
+ *****************************************************************************/
+void GetOperateInfoListener::enterCommon_table_expression(HqlsqlParser::Common_table_expressionContext* ctx) {
+  if (nullptr == ctx) {
+    return;
+  }
+
+  auto cte_name_ctx = ctx->ident();
+  std::string table_name = cte_name_ctx->getText();
+
+  // give a name for withclause
+  std::string next_subquery_name = table_name + SUBQUERY_NAMES_PART[SUBQUERY_SUFFIX];
+  subquery_namev_.push_back(next_subquery_name);
+
+  sqlparse::Table2Subquery tb2subquery;
+  tb2subquery.table_name = table_name;
+  tb2subquery.subquery_name = next_subquery_name;
+  column_dag_.table_to_subquery_list.push_back(tb2subquery);
+}
+
+void GetOperateInfoListener::exitSubselect_stmt(HqlsqlParser::Subselect_stmtContext* ctx) {
+  Tables2Columns tb2columns;
+  tb2columns.from = table_list_;
+  tb2columns.to = column_list_;
+
+  if (subquery_namev_.empty()) {
+    tb2columns.subquery_name = "";
+  } else {
+    tb2columns.subquery_name = subquery_namev_.back();
+    subquery_namev_.pop_back();
+  }
+  column_dag_.table_to_column_list.push_back(tb2columns);
+
+  // restore table list
+  table_list_.clear();
+  if (!table_list_restore_.empty()) {
+    table_list_ = table_list_restore_.back();
+    table_list_restore_.pop_back();
+  }
+
+  // restore column list
+  column_list_.clear();
+  if (!column_list_restore_.empty()) {
+    column_list_ = column_list_restore_.back();
+    column_list_restore_.pop_back();
+  }
+}
+
+/***********************************************************
+ * if table_list_ is not empty, it shows that current ctx is
+ * a subquery, and table_list_ stores its parent's table info.
+ * so, restore it first and then clear to prepare for saving 
+ * current ctx's table info
+ * @author Jona
+ * @param 
+ * @date 27/11/2019 
+***********************************************************/ 
+void GetOperateInfoListener::enterFrom_clause(HqlsqlParser::From_clauseContext* ctx) {
+  if (table_list_.size()) {
+    table_list_restore_.push_back(table_list_);
+  }
+
+  table_list_.clear();
+}
+
+void GetOperateInfoListener::enterFrom_table_name_clause(HqlsqlParser::From_table_name_clauseContext* ctx) {
+  auto table_name_ctx = ctx->table_name();
+
+  table_item_.clear();
+
+  // in hive, schema and database are on the same level, here we save database 
+  // or schema both in table_item.schema
+  std::vector<std::string> sv;
+  sqlparse::Split(table_name_ctx->getText(), sv, '.');
+  switch (sv.size()) {
+    case 1:
+      table_item_.table = sv[0];
+      break;
+    case 2:
+      table_item_.schema = sv[0];
+      table_item_.table  = sv[1];
+      break;
+    default:
+      break;
+  }
+}
+
+void GetOperateInfoListener::exitFrom_table_name_clause(HqlsqlParser::From_table_name_clauseContext* ctx) {
+  table_list_.push_back(table_item_);
+}
+
+void GetOperateInfoListener::enterFrom_alias_clause(HqlsqlParser::From_alias_clauseContext* ctx) {
+  auto alias_ctx = ctx->expr();
+
+  table_item_.alias = alias_ctx->getText();
+}
+
+void GetOperateInfoListener::enterFrom_subselect_clause(HqlsqlParser::From_subselect_clauseContext* ctx) {
+  auto alias_ctx = ctx->expr();
+  std::string table_alias;
+
+  table_item_.clear();
+  if (alias_ctx) {
+    table_alias = alias_ctx->getText();
+    table_item_.alias = table_alias;
+  } else {
+    table_alias = SUBQUERY_NAMES_PART[SUBQUERY_TABLE_PREFIX] + std::to_string(count_for_name_);
+    count_for_name_++;
+  }
+
+  Table2Subquery tb2subquery;
+  tb2subquery.table_name = table_alias;
+  tb2subquery.subquery_name = table_alias + SUBQUERY_NAMES_PART[SUBQUERY_SUFFIX];
+  subquery_namev_.push_back(tb2subquery.subquery_name);   // push current subquery_name
+
+  column_dag_.table_to_subquery_list.push_back(tb2subquery);
+
+  table_item_.table = table_alias;
+  table_list_.push_back(table_item_);
+}
+
+void GetOperateInfoListener::enterSelect_list(HqlsqlParser::Select_listContext* ctx) {
+  // if column_list_ is not empty, save it first and then reset for current subquery
+  if (!column_list_.empty()) {
+    column_list_restore_.push_back(column_list_);
+  }
+
+  column_list_.clear();
+}
+
+void GetOperateInfoListener::enterSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext* ctx) {
+  auto expr_ctx = ctx->bool_expr();   // col may be an expression, or just an ident
+  auto alias_ctx = ctx->expr();
+
+  antlr4::TokenStream* tokens = parser_->getTokenStream();
+
+  sqlparse::ColumnItem col_item;
+  col_item.column = tokens->getText(expr_ctx);
+
+  if (alias_ctx) {
+    col_item.alias = tokens->getText(alias_ctx);
+  }
+
+  column_list_.push_back(col_item);
+}
+
+void GetOperateInfoListener::enterSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext* ctx) {
+  sqlparse::ColumnItem col_item = GetColumn(ctx->getText());
+  column_list_.push_back(col_item);
+}
+
+/***********************************************************
+ * subquery connected with union/except/intersect are paralleled, so give them
+ * the same subquery_names. If subquery_name is empty, they are all top level
+ * query.
+ * @author Jona
+ * @param 
+ * @date 01/12/2019 
+***********************************************************/ 
+void GetOperateInfoListener::enterFullselect_set_clause(HqlsqlParser::Fullselect_set_clauseContext* ctx) {
+  std::string cur_subquery_name;
+  if (!column_dag_.table_to_column_list.empty()) {
+    cur_subquery_name = column_dag_.table_to_column_list.back().subquery_name;
+    subquery_namev_.push_back(cur_subquery_name);
+  }
+}
+
+sqlparse::ColumnDAG GetOperateInfoListener::column_dag() {
+  return column_dag_;
+}
+
+/******************************************************************************
+ * operate object operations
+ * ***************************************************************************/
 parser::OperateObject GetOperateInfoListener::GetOperateObject(std::string objectName) {
   parser::OperateObject obj;
   obj.objectName = StringTrim(objectName, "`");

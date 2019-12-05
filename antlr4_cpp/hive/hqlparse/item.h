@@ -123,7 +123,7 @@ static ColumnItem GetColumn(const std::string &str) {
   ColumnItem item;
   item.clear();
 
-  split(str, sv, '.');
+  Split(str, sv, '.');
   switch (sv.size()) {
     case 1:
       item.column = sv[0];

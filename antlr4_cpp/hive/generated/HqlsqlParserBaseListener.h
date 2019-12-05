@@ -22,6 +22,9 @@ public:
   virtual void enterBlock(HqlsqlParser::BlockContext * /*ctx*/) override { }
   virtual void exitBlock(HqlsqlParser::BlockContext * /*ctx*/) override { }
 
+  virtual void enterBlock_content(HqlsqlParser::Block_contentContext * /*ctx*/) override { }
+  virtual void exitBlock_content(HqlsqlParser::Block_contentContext * /*ctx*/) override { }
+
   virtual void enterBegin_end_block(HqlsqlParser::Begin_end_blockContext * /*ctx*/) override { }
   virtual void exitBegin_end_block(HqlsqlParser::Begin_end_blockContext * /*ctx*/) override { }
 
@@ -712,6 +715,9 @@ public:
   virtual void enterCte_select_cols(HqlsqlParser::Cte_select_colsContext * /*ctx*/) override { }
   virtual void exitCte_select_cols(HqlsqlParser::Cte_select_colsContext * /*ctx*/) override { }
 
+  virtual void enterCte_select_col(HqlsqlParser::Cte_select_colContext * /*ctx*/) override { }
+  virtual void exitCte_select_col(HqlsqlParser::Cte_select_colContext * /*ctx*/) override { }
+
   virtual void enterFullselect_stmt(HqlsqlParser::Fullselect_stmtContext * /*ctx*/) override { }
   virtual void exitFullselect_stmt(HqlsqlParser::Fullselect_stmtContext * /*ctx*/) override { }
 
@@ -736,11 +742,11 @@ public:
   virtual void enterSelect_list_item(HqlsqlParser::Select_list_itemContext * /*ctx*/) override { }
   virtual void exitSelect_list_item(HqlsqlParser::Select_list_itemContext * /*ctx*/) override { }
 
-  virtual void enterSelect_list_alias(HqlsqlParser::Select_list_aliasContext * /*ctx*/) override { }
-  virtual void exitSelect_list_alias(HqlsqlParser::Select_list_aliasContext * /*ctx*/) override { }
+  virtual void enterSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext * /*ctx*/) override { }
+  virtual void exitSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext * /*ctx*/) override { }
 
-  virtual void enterSelect_list_asterisk(HqlsqlParser::Select_list_asteriskContext * /*ctx*/) override { }
-  virtual void exitSelect_list_asterisk(HqlsqlParser::Select_list_asteriskContext * /*ctx*/) override { }
+  virtual void enterSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext * /*ctx*/) override { }
+  virtual void exitSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext * /*ctx*/) override { }
 
   virtual void enterSelect_list_use_option(HqlsqlParser::Select_list_use_optionContext * /*ctx*/) override { }
   virtual void exitSelect_list_use_option(HqlsqlParser::Select_list_use_optionContext * /*ctx*/) override { }

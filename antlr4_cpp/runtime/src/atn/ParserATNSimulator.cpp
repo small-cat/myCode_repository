@@ -357,7 +357,9 @@ size_t ParserATNSimulator::execATNWithFullContext(dfa::DFA &dfa, dfa::DFAState *
       if (alt != ATN::INVALID_ALT_NUMBER) {
         return alt;
       }
-      throw e;
+      /*throw e;*/
+      /*throw noViableAlt(input, outerContext, previous, startIndex, false);*/
+      throw NoViableAltException(parser);
     }
     if (previous != s0) // Don't delete the start set.
         delete previous;

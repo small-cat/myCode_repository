@@ -14,6 +14,8 @@
 #include "HqlsqlParserBaseListener.h"
 
 #include "IParser.h"
+#include "item.h"
+#include "get_operate_info_from_dag.h"
 
 namespace antlr4_hive_parser {
 
@@ -23,8 +25,6 @@ public:
   virtual ~GetOperateInfoListener();
 
   std::vector<parser::OperateInfo> operate_info_list();
-
-  void enterSemicolon_stmt(HqlsqlParser::Semicolon_stmtContext* ctx);
 
   // create stmt
   void enterCreate_database_stmt(HqlsqlParser::Create_database_stmtContext* ctx);
@@ -65,38 +65,6 @@ public:
   // create_index_stmt
   void enterCreate_index_stmt(HqlsqlParser::Create_index_stmtContext* ctx);
 
-  // create_local_temp_table_stmt
-  // create_package_stmt
-  // create_package_body_stmt
-  // create_procedure_stmt
-  // declare_stmt
-  // end_transaction_stmt
-  // exec_stmt 
-  // exit_stmt
-  // fetch_stmt
-  // for_cursor_stmt
-  // for_range_stmt
-  // if_stmt     
-  // include_stmt
-  // get_diag_stmt
-  // leave_stmt
-  // map_object_stmt
-  // open_stmt
-  // print_stmt
-  // quit_stmt
-  // raise_stmt
-  // resignal_stmt
-  // return_stmt
-  // rollback_stmt
-  // signal_stmt
-  // summary_stmt
-  // truncate_table_stmt 
-  // values_into_stmt
-  // while_stmt
-  // label    
-  // hive    
-  // host 
-  // 
   // create_view_stmt 
   void enterCreate_view_stmt(HqlsqlParser::Create_view_stmtContext* ctx);
 
@@ -137,9 +105,6 @@ public:
   // analyze_table_stmt
   void enterAnalyze_table_stmt(HqlsqlParser::Analyze_table_stmtContext* ctx);
 
-  // select_stmt
-  // TODO: NOT IMPLEMENTS
-
   // show_stmt
   // TODO: NOT IMPLEMENTS
   
@@ -159,6 +124,23 @@ public:
   void exitAssignment_stmt(HqlsqlParser::Assignment_stmtContext* ctx);
   void enterAssignment_stmt_single_item(HqlsqlParser::Assignment_stmt_single_itemContext* ctx);
 
+  // select_stmt
+  void enterCommon_table_expression(HqlsqlParser::Common_table_expressionContext* ctx);
+  void exitSubselect_stmt(HqlsqlParser::Subselect_stmtContext* ctx);
+
+  void enterFrom_clause(HqlsqlParser::From_clauseContext* ctx);
+  void enterFrom_table_name_clause(HqlsqlParser::From_table_name_clauseContext* ctx);
+  void exitFrom_table_name_clause(HqlsqlParser::From_table_name_clauseContext* ctx);
+  void enterFrom_alias_clause(HqlsqlParser::From_alias_clauseContext* ctx);
+  void enterFrom_subselect_clause(HqlsqlParser::From_subselect_clauseContext* ctx);
+
+  void enterSelect_list(HqlsqlParser::Select_listContext* ctx);
+  void enterSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext* ctx);
+  void enterSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext* ctx);
+  void enterFullselect_set_clause(HqlsqlParser::Fullselect_set_clauseContext* ctx);
+
+  sqlparse::ColumnDAG column_dag();
+
 private:
   std::string StringToUpper(std::string str);
   std::string StringTrim(std::string src, const std::string delim);
@@ -174,6 +156,19 @@ private:
 
   bool in_set_assignment_stmt_;
   bool in_update_stmt_;
+
+  // for column_dag 
+  sqlparse::ColumnDAG column_dag_;
+  std::vector<std::string> subquery_namev_;
+  
+  sqlparse::ColumnItemList column_list_;
+  std::vector<sqlparse::ColumnItemList> column_list_restore_;
+
+  sqlparse::TableItemList table_list_;
+  sqlparse::TableItem table_item_;
+  std::vector<sqlparse::TableItemList> table_list_restore_;
+
+  int count_for_name_;
 };
 } // antlr4_hive_parser
 

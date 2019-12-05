@@ -102,8 +102,53 @@ static void TravelColumnDag(const ColumnDAG &dag) {
   }
 }
 
+static bool IsStringSurroundedByQuotes(const std::string str) {
+  if (str.empty()) {
+    return false;
+  }
+
+  return str.at(0) == '"' && str.at(str.length() - 1) == '"';
+}
+
+static std::string AddStringDoubleQuotes(std::string str) {
+  if (str.empty()) {
+    return {};
+  }
+
+  str.insert(0, 1, '"');
+  str.append("\"");
+  return str;
+}
+
+/***********************************************************
+ * str1 compare with str2
+ * 1. if str2 is "NAME", regard it as NAME
+ * 2. if str2 is surrounded with "" and all the number is not upper, compare with strcmp
+ * 3. if str2 contains chinese character, use str2 and "str2" both to compare with str1
+ * @author Jona
+ * @param 
+ * @date 01/12/2019 
+***********************************************************/ 
 static bool StrCaseCmp(const std::string &str1, const std::string &str2) {
-  return strcasecmp(str1.c_str(), str2.c_str()) == 0;
+  /*return strcasecmp(str1.c_str(), str2.c_str()) == 0;*/
+  if (IsStringSurroundedByQuotes(str2)) {
+    std::string compare_str;
+    for (auto iter = str2.begin()+1; iter != str2.end()-1; iter++) {
+      if ((std::toupper(*iter))
+          || (*iter & 0x80)) {
+        compare_str.append(1, *iter);
+      } else {
+        compare_str = str2;
+        break;
+      }
+    }
+
+    return strcmp(str1.c_str(), compare_str.c_str()) == 0;
+  } else {
+    // not surrounded by "", not case sensitive
+    return (strcasecmp(str1.c_str(), str2.c_str()) == 0) 
+      || (strcasecmp(str1.c_str(), AddStringDoubleQuotes(str2).c_str()) == 0);
+  }
 }
 
 std::string& string_tolower(std::string &str) {

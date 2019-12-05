@@ -51,6 +51,7 @@ set(antlr4-hive_SRC
   ${PROJECT_SOURCE_DIR}/hive/main.cpp
   ${PROJECT_SOURCE_DIR}/hive/hqlparse/IParser.cpp
   ${PROJECT_SOURCE_DIR}/hive/hqlparse/get_operate_info_listener.cpp
+  ${PROJECT_SOURCE_DIR}/hive/hqlparse/get_operate_info_from_dag.cpp
   ${antlr4-hive-GENERATED_SRC}
   )
 

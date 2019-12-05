@@ -23,6 +23,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitBlock_content(HqlsqlParser::Block_contentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitBegin_end_block(HqlsqlParser::Begin_end_blockContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -943,6 +947,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitCte_select_col(HqlsqlParser::Cte_select_colContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitFullselect_stmt(HqlsqlParser::Fullselect_stmtContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -975,11 +983,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitSelect_list_alias(HqlsqlParser::Select_list_aliasContext *ctx) override {
+  virtual antlrcpp::Any visitSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitSelect_list_asterisk(HqlsqlParser::Select_list_asteriskContext *ctx) override {
+  virtual antlrcpp::Any visitSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext *ctx) override {
     return visitChildren(ctx);
   }
 

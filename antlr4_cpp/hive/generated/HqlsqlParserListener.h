@@ -20,6 +20,9 @@ public:
   virtual void enterBlock(HqlsqlParser::BlockContext *ctx) = 0;
   virtual void exitBlock(HqlsqlParser::BlockContext *ctx) = 0;
 
+  virtual void enterBlock_content(HqlsqlParser::Block_contentContext *ctx) = 0;
+  virtual void exitBlock_content(HqlsqlParser::Block_contentContext *ctx) = 0;
+
   virtual void enterBegin_end_block(HqlsqlParser::Begin_end_blockContext *ctx) = 0;
   virtual void exitBegin_end_block(HqlsqlParser::Begin_end_blockContext *ctx) = 0;
 
@@ -710,6 +713,9 @@ public:
   virtual void enterCte_select_cols(HqlsqlParser::Cte_select_colsContext *ctx) = 0;
   virtual void exitCte_select_cols(HqlsqlParser::Cte_select_colsContext *ctx) = 0;
 
+  virtual void enterCte_select_col(HqlsqlParser::Cte_select_colContext *ctx) = 0;
+  virtual void exitCte_select_col(HqlsqlParser::Cte_select_colContext *ctx) = 0;
+
   virtual void enterFullselect_stmt(HqlsqlParser::Fullselect_stmtContext *ctx) = 0;
   virtual void exitFullselect_stmt(HqlsqlParser::Fullselect_stmtContext *ctx) = 0;
 
@@ -734,11 +740,11 @@ public:
   virtual void enterSelect_list_item(HqlsqlParser::Select_list_itemContext *ctx) = 0;
   virtual void exitSelect_list_item(HqlsqlParser::Select_list_itemContext *ctx) = 0;
 
-  virtual void enterSelect_list_alias(HqlsqlParser::Select_list_aliasContext *ctx) = 0;
-  virtual void exitSelect_list_alias(HqlsqlParser::Select_list_aliasContext *ctx) = 0;
+  virtual void enterSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext *ctx) = 0;
+  virtual void exitSelect_list_item_normal(HqlsqlParser::Select_list_item_normalContext *ctx) = 0;
 
-  virtual void enterSelect_list_asterisk(HqlsqlParser::Select_list_asteriskContext *ctx) = 0;
-  virtual void exitSelect_list_asterisk(HqlsqlParser::Select_list_asteriskContext *ctx) = 0;
+  virtual void enterSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext *ctx) = 0;
+  virtual void exitSelect_list_item_asterisk(HqlsqlParser::Select_list_item_asteriskContext *ctx) = 0;
 
   virtual void enterSelect_list_use_option(HqlsqlParser::Select_list_use_optionContext *ctx) = 0;
   virtual void exitSelect_list_use_option(HqlsqlParser::Select_list_use_optionContext *ctx) = 0;

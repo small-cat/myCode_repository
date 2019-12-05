@@ -28,6 +28,8 @@ std::vector<OperateInfo> IParser::Parse(const std::string &operateStr) {
     return {};
   }
 
+  std::vector<OperateInfo> operate_list_result;
+
   // call antlr functions to parse
   ANTLRInputStream input(operateStr);
   HqlsqlLexer lexer(&input);
@@ -43,19 +45,34 @@ std::vector<OperateInfo> IParser::Parse(const std::string &operateStr) {
   parser.removeErrorListeners();
   parser.addErrorListener(&err_listener);
 
-  tree::ParseTree *tree = parser.program();
+  auto prog_context = parser.program();
   tree::ParseTreeWalker walker;
 
-  std::cout << tree->toStringTree(&parser) << std::endl;
+  std::cout << prog_context->toStringTree(&parser) << std::endl;
   if (err_listener.has_error()) {
     std::cout << "Parse failed: " << operateStr << std::endl;
     std::cout << err_listener.err_message() << std::endl;
     return {};
   }
 
-  GetOperateInfoListener operate_info_listener(&parser);
-  walker.walk(&operate_info_listener, tree);
+  auto block_content_ctx = prog_context->block()->block_content();
+  for (auto block_ctx : block_content_ctx) {
+    GetOperateInfoListener operate_info_listener(&parser);
+    walker.walk(&operate_info_listener, block_ctx);
 
-  return operate_info_listener.operate_info_list();
+    for (auto info : operate_info_listener.operate_info_list()) {
+      operate_list_result.push_back(info);
+    }
+
+    // check if column_dag is not empty, if so, get operate info from it
+    auto column_dag = operate_info_listener.column_dag();
+    if (column_dag.Empty()) {
+      continue;
+    }
+
+    column_dag.Travel();
+  }
+
+  return operate_list_result;
 }
 }

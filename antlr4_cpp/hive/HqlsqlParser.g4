@@ -28,7 +28,12 @@ options {
 
 program : block EOF;
 
-block : ((begin_end_block | stmt) T_GO?)+ ;               // Multiple consecutive blocks/statements
+block : (block_content T_GO?)+ ;               // Multiple consecutive blocks/statements
+
+block_content
+    : begin_end_block 
+    | stmt
+    ;
 
 begin_end_block :
        declare_block? T_BEGIN block exception_block? block_end
@@ -152,7 +157,7 @@ exception_block_item :
 // Assignment statement
 assignment_stmt : 
        T_SET set_session_option
-     | tk=(T_SET | T_RESET)? assignment_stmt_item (T_COMMA assignment_stmt_item)*  
+     | tk=(T_SET | T_RESET) assignment_stmt_item (T_COMMA assignment_stmt_item)*  
      ;
 
 assignment_stmt_item : 
@@ -1282,7 +1287,7 @@ select_list_item
     ;
 
 select_list_item_normal
-    : (ident T_EQUAL)? ( ident | bool_expr) (T_AS? expr)? 
+    : (ident T_EQUAL)? bool_expr (T_AS? expr)? 
     ;
      
 select_list_item_asterisk
