@@ -16,14 +16,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <HqlsqlParser.h>
-#include <HqlsqlLexer.h>
-
-#include "antlr4-runtime.h"
-#include "error_verbose_listener.hpp"
 #include "IParser.h"
-
-using namespace antlr4;
 
 void ParseFile(const char* filename);
 void ParseString(std::string &sql);

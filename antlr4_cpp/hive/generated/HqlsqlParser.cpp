@@ -4914,11 +4914,12 @@ HqlsqlParser::Create_table_stmtContext* HqlsqlParser::create_table_stmt() {
 
     || _la == HqlsqlParser::T_EXTERNAL) {
       setState(1081);
+      dynamic_cast<Create_table_stmtContext *>(_localctx)->tk = _input->LT(1);
       _la = _input->LA(1);
       if (!(_la == HqlsqlParser::T_TEMPORARY
 
       || _la == HqlsqlParser::T_EXTERNAL)) {
-      _errHandler->recoverInline(this);
+        dynamic_cast<Create_table_stmtContext *>(_localctx)->tk = _errHandler->recoverInline(this);
       }
       else {
         _errHandler->reportMatch(this);
@@ -18392,9 +18393,10 @@ HqlsqlParser::Reload_functionContext* HqlsqlParser::reload_function() {
     setState(2467);
     match(HqlsqlParser::T_RELOAD);
     setState(2468);
+    dynamic_cast<Reload_functionContext *>(_localctx)->tk = _input->LT(1);
     _la = _input->LA(1);
     if (!(_la == HqlsqlParser::T_FUNCTION || _la == HqlsqlParser::T_FUNCTIONS)) {
-    _errHandler->recoverInline(this);
+      dynamic_cast<Reload_functionContext *>(_localctx)->tk = _errHandler->recoverInline(this);
     }
     else {
       _errHandler->reportMatch(this);

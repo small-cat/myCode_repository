@@ -1344,6 +1344,7 @@ public:
 
   class  Create_table_stmtContext : public antlr4::ParserRuleContext {
   public:
+    antlr4::Token *tk = nullptr;;
     Create_table_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *T_CREATE();
@@ -3654,6 +3655,7 @@ public:
 
   class  Reload_functionContext : public antlr4::ParserRuleContext {
   public:
+    antlr4::Token *tk = nullptr;;
     Reload_functionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *T_RELOAD();

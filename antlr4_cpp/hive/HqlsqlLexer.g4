@@ -514,7 +514,7 @@ L_DEC       : L_DIGIT+ '.' ~'.' L_DIGIT* B? D? F?                      // Decima
             | '.' L_DIGIT+
             | L_DIGIT* '.' L_DIGIT+ (E ('+' | '-')? L_DIGIT+)? B? D? F?
             ;
-L_WS        : L_BLANK+ -> skip ;                                       // Whitespace
+L_WS        : L_BLANK+ -> channel(HIDDEN) ;                                       // Whitespace
 L_M_COMMENT : '/*' .*? '*/' -> channel(HIDDEN) ;                       // Multiline comment
 L_S_COMMENT : ('--' | '//')  .*? '\r'? '\n' -> channel(HIDDEN) ;       // Single line comment
 

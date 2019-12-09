@@ -278,7 +278,7 @@ declare_temporary_table_item :     // DECLARE TEMPORARY TABLE statement
      ;
      
 create_table_stmt :
-       T_CREATE (T_TEMPORARY | T_EXTERNAL)? T_TABLE (T_IF T_NOT T_EXISTS)? table_name create_table_definition 
+       T_CREATE tk=(T_TEMPORARY | T_EXTERNAL)? T_TABLE (T_IF T_NOT T_EXISTS)? table_name create_table_definition 
      ;
      
 create_local_temp_table_stmt :
@@ -862,7 +862,7 @@ permanent_function_option
     ;
 
 reload_function
-    : T_RELOAD (T_FUNCTIONS|T_FUNCTION)
+    : T_RELOAD tk=(T_FUNCTIONS|T_FUNCTION)
     ;
 
 create_function_return :

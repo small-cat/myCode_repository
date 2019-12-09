@@ -62,20 +62,27 @@ class ColumnDAG {
     EquivalentCondList equivalent_cond_list;
 
     void Travel();
-    Tables2Columns GetTopLevelQueryFromDag();
-    parser::OperateInfo GetOperateInfoFromQuery();
+    Tables2ColumnsList GetTopLevelQueryFromDag();
+    parser::OperateInfo GetOperateInfoFromTopLevelQuery();
+    void GetTableInfoByTable2Columns(std::vector<TableInfo>& target_table_infos, 
+        Tables2Columns& tables_to_columns);
     parser::OperateInfo GetOperateInfoByTableInfos(std::vector<TableInfo>& table_infos);
     bool Empty();
     bool ColumnBelongtoTable(const ColumnItem& col, const TableItem& table);
     bool StringCompare(const std::string& str1, const std::string& str2);
-    void GetColumnsByTable(ColumnItemList& column_list, TableItem table_item);
+    std::vector<TableInfo> GetTableInfoByTableItem(const TableItem& table_item);
     bool TableIsSubquery(TableItem table_item);
+    TableInfo ReplaceSubqueryToGetOriginTableInfo(const TableInfo& tableinfo_subquery, 
+        const TableInfo& tableinfo_origin);
 
     void clear() {
       table_to_subquery_list.clear();
       table_to_column_list.clear();
       equivalent_cond_list.clear();
     }
+
+  private:
+    bool IsColumnStringMatched(const std::string& str1, const std::string& str2);
 };
 
 static const int SUBQUERY_SUFFIX = 0;

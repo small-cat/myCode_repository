@@ -13,6 +13,7 @@ using namespace sqlparse;
 
 GetOperateInfoListener::GetOperateInfoListener(HqlsqlParser *parser) :
   parser_(parser), 
+  count_for_name_(0), 
   in_set_assignment_stmt_(false), 
   in_update_stmt_(false) {}
 
@@ -100,9 +101,15 @@ void GetOperateInfoListener::enterCreate_table_stmt(HqlsqlParser::Create_table_s
     return;
   }
 
+  auto token_type = ctx->tk;
   auto tb_name_ctx = ctx->table_name();
+  std::string operate_type;
+  if (token_type) {
+    operate_type = StringToUpper(token_type->getText()) + " TABLE";
+  } else
+    operate_type = "TABLE";
 
-  SetOperateInfo(operate_info_, "CREATE", "TABLE");
+  SetOperateInfo(operate_info_, "CREATE", operate_type);
   parser::OperateObject obj = GetOperateObject(tb_name_ctx->getText());
   AddOperateObject(obj);
 }
@@ -191,7 +198,8 @@ void GetOperateInfoListener::enterCreate_macro_stmt(HqlsqlParser::Create_macro_s
 }
 
 void GetOperateInfoListener::enterReload_function(HqlsqlParser::Reload_functionContext* ctx) {
-  SetOperateInfo(operate_info_, "RELOAD", "FUNCTION");
+  auto token_type = ctx->tk;
+  SetOperateInfo(operate_info_, "RELOAD", StringToUpper(token_type->getText()));
   operate_info_list_.push_back(operate_info_);
 }
 
@@ -458,11 +466,11 @@ void GetOperateInfoListener::enterFrom_table_name_clause(HqlsqlParser::From_tabl
   sqlparse::Split(table_name_ctx->getText(), sv, '.');
   switch (sv.size()) {
     case 1:
-      table_item_.table = sv[0];
+      table_item_.table = StringTrim(sv[0], "`");
       break;
     case 2:
-      table_item_.schema = sv[0];
-      table_item_.table  = sv[1];
+      table_item_.schema = StringTrim(sv[0], "`");
+      table_item_.table  = StringTrim(sv[1], "`");
       break;
     default:
       break;
@@ -519,7 +527,7 @@ void GetOperateInfoListener::enterSelect_list_item_normal(HqlsqlParser::Select_l
   antlr4::TokenStream* tokens = parser_->getTokenStream();
 
   sqlparse::ColumnItem col_item;
-  col_item.column = tokens->getText(expr_ctx);
+  col_item.column = StringTrim(tokens->getText(expr_ctx), "`");
 
   if (alias_ctx) {
     col_item.alias = tokens->getText(alias_ctx);

@@ -71,6 +71,7 @@ std::vector<OperateInfo> IParser::Parse(const std::string &operateStr) {
     }
 
     column_dag.Travel();
+    operate_list_result.push_back(column_dag.GetOperateInfoFromTopLevelQuery());
   }
 
   return operate_list_result;

@@ -57,14 +57,16 @@ void ColumnDAG::Travel() {
   }
 }
 
-Tables2Columns ColumnDAG::GetTopLevelQueryFromDag() {
+Tables2ColumnsList ColumnDAG::GetTopLevelQueryFromDag() {
+  // if query contain union..., several top level query exist.
+  Tables2ColumnsList top_level_query_list;
   for (auto tb2col : table_to_column_list) {
     if (tb2col.subquery_name.empty()) {
-      return tb2col;
+      top_level_query_list.push_back(tb2col);
     }
   }
 
-  return {};
+  return top_level_query_list;
 }
 
 /***********************************************************
@@ -83,22 +85,34 @@ Tables2Columns ColumnDAG::GetTopLevelQueryFromDag() {
  * @param 
  * @date 03/12/2019 
 ***********************************************************/ 
-parser::OperateInfo ColumnDAG::GetOperateInfoFromQuery() {
+parser::OperateInfo ColumnDAG::GetOperateInfoFromTopLevelQuery() {
   // find top level query
-  auto top_level_query = GetTopLevelQueryFromDag();
+  auto top_level_query_list = GetTopLevelQueryFromDag();
   
-  std::vector<TableInfo> target_table_infos;         // for tables
-  std::vector<int> count_for_cols;                  // for columns
-  auto table_list = top_level_query.from;
-  auto column_list = top_level_query.to;
-  int index = 0;
-
-  // initialize
-  count_for_cols.assign(column_list.size(), 0);
+  std::vector<TableInfo> target_table_infos;         
 
   // if count_for_cols.at(i) equal to table_list.size(), shows that we can not
   // decide col's owner, so append it to all the tables.
-  for (auto tb : table_list) {
+  for (auto top_level_query : top_level_query_list) {
+    GetTableInfoByTable2Columns(target_table_infos, top_level_query);
+  }
+
+  return GetOperateInfoByTableInfos(target_table_infos);
+}
+
+void ColumnDAG::GetTableInfoByTable2Columns(std::vector<TableInfo>& target_table_infos,
+    Tables2Columns& tables_to_columns) {
+
+  auto column_list = tables_to_columns.to;
+  int column_list_size = column_list.size();
+  int index = 0;
+
+  std::vector<int> count_for_cols;                  // for columns
+  count_for_cols.assign(column_list_size, 0);
+
+  std::vector<TableInfo> table_infos;
+
+  for (auto tb : tables_to_columns.from) {
     TableInfo tb_info {tb, {}};
 
     for (auto col : column_list) {
@@ -107,32 +121,33 @@ parser::OperateInfo ColumnDAG::GetOperateInfoFromQuery() {
       } else {
         count_for_cols.at(index)++;
       }
-      index = (index + 1) % column_list.size();
+      index = (index + 1) % column_list_size;
     }
 
-    target_table_infos.push_back(tb_info);
+    table_infos.push_back(tb_info);
   }
 
   // index should be 0 here
   for (auto count : count_for_cols) {
-    if (count == column_list.size()) {
+    if (count == tables_to_columns.from.size()) {
       // can not decide table_list.at(k)'s owner
       // append it to all tables
-      for (auto tb_info : target_table_infos) {
+      for (auto& tb_info : table_infos) {
         tb_info.column_list.push_back(column_list.at(index));
       }
     }
-    index++;
+    index = (index + 1) % column_list_size;
   }
 
-  return GetOperateInfoByTableInfos(target_table_infos);
+  for (auto tb_info : table_infos) {
+    target_table_infos.push_back(tb_info);
+  }
 }
 
 /***********************************************************
- * 1. if table_info has a column '*', ignore its other columns
- *    in table_info, and try to get all columns by table from 
- *    dag again
- * 2. if table is a subquery, repeat GetOperateInfoFromQuery
+ * 1. table is not a subquery, get OperateObject directly
+ * 2. table is a subquery, get TableInfos for it first and then
+ *    to scan its TableInfos to get OperateObjects
  * @author Jona
  * @param 
  * @date 04/12/2019 
@@ -142,59 +157,33 @@ parser::OperateInfo ColumnDAG::GetOperateInfoByTableInfos(std::vector<TableInfo>
   operate_info.operate = "SELECT";
   operate_info.objectType = "TABLE";
 
-  for (auto tb_info : table_infos) {
-    parser::OperateObject obj;
-    
-    for (auto col : tb_info.column_list) {
-      if (0 != strcmp(col.column.c_str(), "*")) {
-        // column is not *
+  for (auto table_info : table_infos) {
+    auto current_table_infos = GetTableInfoByTableItem(table_info.table);
+
+    if (current_table_infos.empty()) {
+      // not a subquery
+      parser::OperateObject obj;
+      obj.objectName = (table_info.table.schema.empty()? "" : table_info.table.schema + ".") + table_info.table.table;
+      for (auto col : table_info.column_list) {
         obj.subObjectName.push_back(col.column);
-      } else {
-        obj.subObjectName.clear();
-        break;
       }
-    }
-
-    if (obj.subObjectName.empty()) {
-      // get columns by table from dag 
-      ColumnItemList column_list;
-      GetColumnsByTable(column_list, tb_info.table);
-
-      for (auto col_tmp : column_list) {
-        if (obj.objectName.empty()) {
-          obj.objectName = col_tmp.table;
-          obj.subObjectName.push_back(col_tmp.column);
-        } else {
-          if (strcmp(obj.objectName.c_str(), col_tmp.table.c_str()) == 0) {
-            // add col_tmp to the same table
-            obj.subObjectName.push_back(col_tmp.column);
-          } else {
-            // different table, add to a new obj
-            operate_info.objects.push_back(obj);
-            obj.clear();
-            obj.objectName = col_tmp.table;
-            obj.subObjectName.push_back(col_tmp.column);
-          }
-        }
-      }
+      operate_info.objects.push_back(obj);
     } else {
-      // table maybe a subquery 
-      // 1. subquery, get all columns and tables from subquery, and compare current
-      //    columns saved in obj.subObjectName, get original columns 
-      // 2. not a subquery
-      if (!TableIsSubquery(tb_info.table)) {
-        obj.objectName = (tb_info.table.schema.empty()? "" : tb_info.table.schema + ".")
-          + tb_info.table.table;
+      // subquery
+      for (auto cur_info : current_table_infos) {
+        auto new_info = ReplaceSubqueryToGetOriginTableInfo(table_info, cur_info);
+        parser::OperateObject obj;
+        obj.objectName = (new_info.table.schema.empty()? "" : new_info.table.schema + ".") + new_info.table.table;
+
+        for (auto col : new_info.column_list) {
+          obj.subObjectName.push_back(col.column);
+        }
         operate_info.objects.push_back(obj);
-      } else {
-        // TODO
-        
-        ColumnItemList column_list;
-        GetColumnsByTable(column_list, tb_info.table);
-        
       }
     }
-  }
+  } // end for
+
+  return operate_info;
 }
 
 bool ColumnDAG::TableIsSubquery(TableItem table_item) {
@@ -208,15 +197,15 @@ bool ColumnDAG::TableIsSubquery(TableItem table_item) {
 }
 
 /***********************************************************
- * get all table columns from dag
+ * get table infos by table_item if table_item is a subquery, 
+ * otherwise returns empty
  * @author Jona
  * @param 
  *  @column_list: save column info 
  *  @table_item: table which we want to get its columns
  * @date 15/10/2019 
 ***********************************************************/ 
-void ColumnDAG::GetColumnsByTable(ColumnItemList& column_list, 
-    TableItem table_item) {
+std::vector<TableInfo> ColumnDAG::GetTableInfoByTableItem(const TableItem& table_item) {
 
   // find subquery_name if table_item is a subquery
   std::string subquery_name;
@@ -228,46 +217,141 @@ void ColumnDAG::GetColumnsByTable(ColumnItemList& column_list,
   }
 
   if (subquery_name.empty()) {
-    // table_item is not a subquery, load it from physical table
-    // TODO: Not Implementes
+    // table_item is not a subquery
+    return {};
   } else {
+
     for (auto tb2col : table_to_column_list) {
       if (!StringCompare(tb2col.subquery_name, subquery_name)) {
         continue;
       }
 
-      // all the columns in current subquery are table_item's columns
-      for (auto col_tmp : tb2col.to) {
-        if (strcmp(col_tmp.column.c_str(), "*") != 0) {
-          // if col_tmp has an alias name, its name in table_item should be alias
-          ColumnItem col_item_tmp;
-          col_item_tmp.column = col_tmp.alias.empty()? col_tmp.column : col_tmp.alias;
-          col_item_tmp.table = table_item.table;
-          column_list.push_back(col_item_tmp);
-        } else {
-          // col_tmp also contains '*'
-          // find its table and recursive
-          // its table should be in tb2col.from, also in 2 situation
-          // 1. only '*'
-          if (col_tmp.table.empty()) {
-            for (auto table_tmp : tb2col.from) {
-              GetColumnsByTable(column_list, table_tmp);
-            }
-          } else {
-            // 2. tableA.*
-            for (auto table_tmp : tb2col.from) {
-              if (StringCompare(table_tmp.table, col_tmp.table)
-                  || StringCompare(table_tmp.alias, col_tmp.table)) {
+      // table_item is a subquery, save its TableInfo
+      std::vector<TableInfo> table_info_in_subquery;
+      GetTableInfoByTable2Columns(table_info_in_subquery, tb2col);
 
-                GetColumnsByTable(column_list, table_tmp);
-              }
+      // we replaced subquery_name in tableinfo.table with physical table,
+      // replace column names(maybe just an alias name) with physical column name
+      // for example:
+      // select myname from (select name myname from student) ts;
+      // in top level we get TableInfo {"ts", {{"myname"}}}, 
+      // ts is a subquery, and its TableInfos is {"student", {{"name", "myname"}}}, "myname" is 
+      // an alias name of column "name", here we can get the real TableInfo
+      // {"student", {"name"}}
+      //
+      // finally, the sql shows that the result set is student.name
+      std::vector<TableInfo> table_info_replaced_by_subquery;
+
+      for (auto& info : table_info_in_subquery) {
+        // get structure TableInfo for info.table if info.table is a subquery
+        auto current_table_infos = GetTableInfoByTableItem(info.table);
+        if (current_table_infos.empty()) {
+          table_info_replaced_by_subquery.push_back(info);
+          // info.table is not a subquery 
+          continue;
+        } else {
+          // info.table is also a subquery, we get the subquery's TableInfos from
+          // current_table_infos
+
+          // for example:
+          // select aname from (select bname aname from (select cname bname from student)) t;
+          // TableInfos in top level query is {"t", {{"aname"}}}, 
+          // t -> {"TABLE_REF", {{"bname", "aname"}}}
+          // TABLE_REF -> {"student", {{"cname", "bname"}}}
+          //
+          // when get TableInfos for TABLE_REF, bname is an alias in its subquery, 
+          // get real TableInfo {"student", {{"cname", "aname"}}}, 
+          //
+          // when get TableInfos for t is {"student", {{"cname", "aname"}}}
+          // get real TableInfo for top level query {"student", {{"cname"}}}
+          for (auto cur_info : current_table_infos) {
+            auto info_tmp = ReplaceSubqueryToGetOriginTableInfo(info, cur_info);
+
+            if (!info_tmp.column_list.empty()) {
+              table_info_replaced_by_subquery.push_back(info_tmp);
             }
-          } // end else tableA.*
-        } // end else col_tmp also contains '*'
-      } 
-      break;
+          } // end for
+        }
+      }
+       
+      return table_info_replaced_by_subquery;
     } // end for (auto tb2col : dag.table_to_column_list)
   }
+
+  return {};
+}
+
+/******************************************************************************
+ * find all the columns in tableinfo_subquery.column_list which belong to 
+ * tableinfo_origin.table, and save them into origin
+ * @author Jona
+ * @param 
+ * @date 06/12/2019 
+******************************************************************************/ 
+TableInfo ColumnDAG::ReplaceSubqueryToGetOriginTableInfo(const TableInfo& tableinfo_subquery, 
+    const TableInfo& tableinfo_origin) {
+  TableInfo origin {tableinfo_origin.table, {}};
+
+  for (auto subquery_info_col : tableinfo_subquery.column_list) {
+    if (strcmp(subquery_info_col.column.c_str(), "*") == 0) {
+      // selece name, *, phone from (select stu_name name, phone from student) t;
+      for (auto col_tmp : tableinfo_origin.column_list) {
+        origin.column_list.push_back(col_tmp);
+      }
+
+      continue;
+    }
+
+    // select name from (select n name from stu) t;
+    // {"t", {{"name"}}} -> {"stu", {{"n", "name"}}}
+    for (auto origin_info_col : tableinfo_origin.column_list) {
+      if (strcmp(origin_info_col.column.c_str(), "*") == 0) {
+        origin.column_list.push_back(subquery_info_col);
+        break;
+      }
+
+      if (IsColumnStringMatched(subquery_info_col.column, origin_info_col.column)
+          || IsColumnStringMatched(subquery_info_col.column, origin_info_col.alias)) {
+        if (subquery_info_col.alias.empty()) {
+          subquery_info_col.alias = subquery_info_col.column;
+        }
+        subquery_info_col.column = origin_info_col.column;
+        origin.column_list.push_back(subquery_info_col);
+        break;
+      }
+    }
+  }
+
+  return origin;
+}
+
+/******************************************************************************
+ * select myfunc(name) || "KO" from (select name from student) t;
+ * str1 is {myfunc(name) || "KO"}, and str2 is {name}
+ * @author Jona
+ * @param 
+ * @date 06/12/2019 
+******************************************************************************/ 
+bool ColumnDAG::IsColumnStringMatched(const std::string& str1, const std::string& str2) {
+  if (str1.empty() || str2.empty()) {
+    return false;
+  }
+
+  std::string::size_type n = 0;
+  std::string dest = str1;
+  while ((n = dest.find(str2)) != std::string::npos) {
+    if (n == 0) {
+      return true;
+    }
+
+    if (n > 0 && !std::isalpha(dest.at(n-1))) {
+      return true;
+    }
+
+    dest = dest.substr(n);
+  }
+
+  return false;
 }
 
 /***********************************************************
@@ -288,15 +372,32 @@ bool ColumnDAG::ColumnBelongtoTable(const ColumnItem& col, const TableItem& tabl
     if (col.table.empty()) {
       return true;
     } else {
-      return StringCompare(col.table, table_item.table);
+      return StringCompare(col.table, table_item.table) ||
+        StringCompare(col.table, table_item.alias);
     }
   }
 
   // column is not *
-  // if column contains table, it should be like table.column
-  std::string col_prefix = table_item.table + ".";
-  if (strncmp(col.column.c_str(), col_prefix.c_str(), col_prefix.length()) == 0) {
-    return true;
+  // if column contains table, it should be like table.column, or myfunc(table.column, ...)
+  //
+  // it is not precious
+  // if col.column is st.name, table_item.table is student, and alias is t, also matched
+  // unless the previous char is not alpha
+  std::string col_string1 = table_item.table + ".";
+  std::string col_string2 = table_item.alias + ".";
+  std::string col_str_dest= col.column;
+  std::string::size_type n = 0;
+  while ((n = col_str_dest.find(col_string1)) != std::string::npos
+      || (n = col_str_dest.find(col_string2))!= std::string::npos) {
+    if (n == 0) {
+      return true;
+    }
+
+    if (n > 0 && !std::isalpha(col.column.at(n-1))) {
+      return true;
+    } 
+
+    col_str_dest = col_str_dest.substr(n);
   }
 
   return false;
@@ -309,6 +410,10 @@ bool ColumnDAG::ColumnBelongtoTable(const ColumnItem& col, const TableItem& tabl
  * @date 04/12/2019 
 ***********************************************************/ 
 bool ColumnDAG::StringCompare(const std::string& str1, const std::string& str2) {
+  if (str1.empty() || str2.empty()) {
+    return false;
+  }
+
   if (str1.at(0) != '\'' && str1.at(0) != '"'
       && str2.at(0) != '\'' && str2.at(0) != '"') {
     return strcasecmp(str1.c_str(), str2.c_str()) == 0;
