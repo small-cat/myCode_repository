@@ -27,6 +27,14 @@ options {
 
 @parser::postinclude {
 #include <PlSqlBaseParser.h>
+#include <string.h>
+
+#include <string>
+}
+
+@members {
+bool schema_changed = false;
+std::string current_schema;
 }
 
 sql_script
@@ -552,7 +560,7 @@ alter_session
     ;
 
 alter_session_set_clause 
-    : parameter_name EQUALS_OP parameter_value
+    : parameter_name { if (strcasecmp("current_schema", $parameter_name.text.c_str()) == 0) schema_changed = true;} EQUALS_OP parameter_value { current_schema = $parameter_value.text;}
     ;
 
 create_sequence
@@ -1272,7 +1280,7 @@ compiler_parameters_clause
     ;
 
 parameter_value
-    : regular_id
+    : id_expression
     ;
 
 library_name
@@ -4574,6 +4582,7 @@ identifier
 id_expression
     : regular_id
     | DELIMITED_ID
+    | CHAR_STRING
     ;
 
 outer_join_sign

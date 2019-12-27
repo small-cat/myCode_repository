@@ -71,14 +71,13 @@ void ParseString(std::string &sql) {
   CommonTokenStream tokens(&lexer);
 
   // show all the tokens
-  /*
   tokens.fill();
   for (auto token : tokens.getTokens()) {
     std::cout << token->toString() << std::endl;
   }
-  */
 
   PlSqlParser parser(&tokens);
+  /*parser.setBuildParseTree(false);*/
 
   // PredictionMode: LL, SLL
   // try with simpler and faster SLL first
@@ -120,6 +119,11 @@ static void _ParseString(PlSqlParser &parser, CommonTokenStream &tokens) {
   tree::ParseTree *tree = parser.sql_script();
   std::cout << "sql: " << tokens.getText() << std::endl;
   std::cout << tree->toStringTree(&parser) << std::endl;
+
+  // schema changed
+  if (parser.schema_changed) {
+    std::cout << "current schema has beeb changed to: " << parser.current_schema  << std::endl;
+  }
 
   tree::ParseTreeWalker walker;
   FromClauseMatcherListener oracle_fml(&parser, std::string("employee"));

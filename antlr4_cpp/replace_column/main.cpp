@@ -186,12 +186,18 @@ static void _ParseString(KingbaseSqlParser &parser, CommonTokenStream &tokens) {
     std::cout << " ]\n";
   }
 
+  std::cout << "\n==========Rewrite In Dag==========\n" << std::endl;
+  std::string newsql = RewriteColumnWithMaskFunction(kingbase_dag.column_dag(), column_relation_map, 
+      mask_item_list_for_dag, &tokens);
+  std::cout << "newsql: " << newsql << std::endl;
+
+  /*
   std::cout << "\n========Mask Listener========\n";
   KingbaseMaskListener kingbase_mask_listener(&parser, &tokens, 
       kingbase_dag.column_dag(), column_relation_map, mask_item_list_for_dag);
   walker.walk(&kingbase_mask_listener, tree);
   std::cout << kingbase_mask_listener.GetResult() << std::endl;
-
+  */
 }
 
 std::string& string_toupper(std::string &str) {

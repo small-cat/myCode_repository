@@ -8,6 +8,9 @@
 
 
 #include <PlSqlBaseParser.h>
+#include <string.h>
+
+#include <string>
 
 
 namespace oracle {
@@ -838,6 +841,10 @@ public:
   virtual const std::vector<std::string>& getTokenNames() const override { return _tokenNames; }; // deprecated: use vocabulary instead.
   virtual const std::vector<std::string>& getRuleNames() const override;
   virtual antlr4::dfa::Vocabulary& getVocabulary() const override;
+
+
+  bool schema_changed = false;
+  std::string current_schema;
 
 
   class Sql_scriptContext;
@@ -3585,6 +3592,8 @@ public:
 
   class  Alter_session_set_clauseContext : public antlr4::ParserRuleContext {
   public:
+    PlSqlParser::Parameter_nameContext *parameter_nameContext = nullptr;;
+    PlSqlParser::Parameter_valueContext *parameter_valueContext = nullptr;;
     Alter_session_set_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Parameter_nameContext *parameter_name();
@@ -5980,7 +5989,7 @@ public:
   public:
     Parameter_valueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    Regular_idContext *regular_id();
+    Id_expressionContext *id_expression();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -18034,6 +18043,7 @@ public:
     virtual size_t getRuleIndex() const override;
     Regular_idContext *regular_id();
     antlr4::tree::TerminalNode *DELIMITED_ID();
+    antlr4::tree::TerminalNode *CHAR_STRING();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

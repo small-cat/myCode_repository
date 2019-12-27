@@ -46,7 +46,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-./dict/tags
-./antlr4_cpp/runtime/
-./antlr4_cpp/dist/
-./antlr4_cpp/build/
+dict/tags
+antlr4_cpp/runtime/
+antlr4_cpp/dist/
+antlr4_cpp/build/

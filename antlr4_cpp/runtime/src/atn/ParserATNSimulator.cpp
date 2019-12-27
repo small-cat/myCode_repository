@@ -351,15 +351,16 @@ size_t ParserATNSimulator::execATNWithFullContext(dfa::DFA &dfa, dfa::DFAState *
       // ATN states in SLL implies LL will also get nowhere.
       // If conflict in states that dip out, choose min since we
       // will get error no matter what.
-      NoViableAltException e = noViableAlt(input, outerContext, previous, startIndex, previous != s0);
+      /*NoViableAltException e = noViableAlt(input, outerContext, previous, startIndex, previous != s0);*/
+      NoViableAltException e = noViableAlt(input, outerContext, previous, startIndex, false);
       input->seek(startIndex);
       size_t alt = getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule(previous, outerContext);
       if (alt != ATN::INVALID_ALT_NUMBER) {
         return alt;
       }
-      /*throw e;*/
+      throw e;
       /*throw noViableAlt(input, outerContext, previous, startIndex, false);*/
-      throw NoViableAltException(parser);
+      /*throw NoViableAltException(parser);*/
     }
     if (previous != s0) // Don't delete the start set.
         delete previous;

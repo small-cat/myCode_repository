@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 #include "antlr4-runtime.h"
 #include "KingbaseSqlLexer.h"
@@ -57,8 +58,9 @@ void ParseFile(const char* filename) {
 }
 
 void ParseString(std::string &sql) {
-  ANTLRInputStream input(string_toupper(sql));
-  KingbaseSqlLexer lexer(&input);
+  std::shared_ptr<ANTLRInputStream> input(new ANTLRInputStream(sql));
+  /*ANTLRInputStream input(string_toupper(sql));*/
+  KingbaseSqlLexer lexer(input.get());
   CommonTokenStream tokens(&lexer);
   KingbaseSqlParser parser(&tokens);
 
@@ -135,7 +137,6 @@ void ParseString(std::string &sql) {
   std::cout << "\n========Test Listener========\n";
   KingbaseTestListener test;
   walker.walk(&test, tree);
-
 }
 
 std::string& string_toupper(std::string &str) {

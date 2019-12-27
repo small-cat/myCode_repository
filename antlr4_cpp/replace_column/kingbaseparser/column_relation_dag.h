@@ -21,6 +21,9 @@
 #include <string>
 #include <vector>
 
+#include <TokenStream.h>
+#include <TokenStreamRewriter.h>
+
 #include "item.h"
 
 // relationships with table and subquery
@@ -595,12 +598,24 @@ static ColumnItemList GetAllColumnsInsteadOfStar(ColumnDAG &dag, ColumnItem col)
   return GetColumnsByTableListForStar(col, table_list, dag);
 }
 
-static TableItemList GetTableListFromTopLevelQueryInDag(ColumnDAG column_dag) {
+static TableItemList GetTableListFromTopLevelQueryInDag(const ColumnDAG& column_dag) {
   auto tb2column_list = column_dag.table_to_column_list;
 
-  for (auto tb2col : tb2column_list) {
+  for (auto& tb2col : tb2column_list) {
     if (tb2col.subquery_name.empty()) {
       return tb2col.from;
+    }
+  }
+
+  return {};
+}
+
+static ColumnItemList GetColumnListFromTopLevelQueryInDag(const ColumnDAG& dag) {
+  auto tb2column_list = dag.table_to_column_list;
+
+  for (auto& tb2col : tb2column_list) {
+    if (tb2col.subquery_name.empty()) {
+      return tb2col.to;
     }
   }
 
@@ -692,7 +707,7 @@ static std::set<TableItem> GetPhysicalTables(ColumnDAG column_dag) {
  * @param 
  * @date 23/09/2019 
 ***********************************************************/ 
-static bool _IsMaskColumn(ColumnDAG column_dag, 
+static bool _IsMaskColumn(const ColumnDAG& column_dag, 
     std::map<ColumnItem, ColumnItemList> &column_relations_map, 
     MaskItem &mask_item, ColumnItem &col_item) {
   ColumnItem citem;
@@ -720,9 +735,11 @@ static bool _IsMaskColumn(ColumnDAG column_dag,
   }
 
   for (auto mitem : column_list) {
+    /*
     if (!mitem.effect) {
       continue;
     }
+    */
 
     if (!StrCaseCmp(col_item.column, mitem.column))
       continue;
@@ -761,9 +778,9 @@ static bool _IsMaskColumn(ColumnDAG column_dag,
   return false;
 }
 
-static bool IsMaskColumn(ColumnDAG column_dag, 
+static bool IsMaskColumn(const ColumnDAG& column_dag, 
     std::map<ColumnItem, ColumnItemList> &column_relations_map, 
-    MaskItem &mask_item, ColumnItem &col_item) {
+    MaskItem& mask_item, ColumnItem &col_item) {
   
   bool in_physical_table = false;
   auto physical_table_map = GetPhysicalTables(column_dag);
@@ -785,5 +802,45 @@ static bool IsMaskColumn(ColumnDAG column_dag,
   if (!_IsMaskColumn(column_dag, column_relations_map, mask_item, col_item)) {
     return false;
   }
+}
+
+/******************************************************************************
+ * 只能处理 sql 中不带 * 的情形, just used for testing
+ * @author Jona
+ * @param 
+ * @date 27/12/2019 
+******************************************************************************/ 
+static std::string RewriteColumnWithMaskFunction(const ColumnDAG& dag, 
+    std::map<ColumnItem, ColumnItemList>& column_relations_map, 
+    MaskItemList& mask_item_list, antlr4::CommonTokenStream* tokens) {
+  antlr4::TokenStreamRewriter rewriter(tokens);
+  auto column_list_in_top_level = GetColumnListFromTopLevelQueryInDag(dag);
+
+  if (column_list_in_top_level.empty()) {
+    return rewriter.getText();
+  }
+
+  bool matched = false;
+  for (auto& col : column_list_in_top_level) {
+    MaskItem mask_item_save;
+    for (auto& mask_item : mask_item_list) {
+      if ((matched = IsMaskColumn(dag, column_relations_map, mask_item, col))) {
+        mask_item_save = mask_item;
+        break;
+      }
+    }
+
+    if (matched) {
+      std::string replace_string {""};
+      replace_string = mask_item_save.mask_function + "(" + 
+        (col.table.empty()? "" : col.table + ".") + col.column + ")" +
+        (col.hasAs? " AS " : " ") + 
+        (col.alias.empty()? col.column : col.alias);
+
+      rewriter.replace(col.token_start, col.token_stop, replace_string);
+    }
+  }
+
+  return rewriter.getText();
 }
 #endif

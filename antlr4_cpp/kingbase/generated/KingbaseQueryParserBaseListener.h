@@ -1,0 +1,536 @@
+
+// Generated from KingbaseQueryParser.g4 by ANTLR 4.7.1
+
+#pragma once
+
+
+#include "antlr4-runtime.h"
+#include "KingbaseQueryParserListener.h"
+
+
+/**
+ * This class provides an empty implementation of KingbaseQueryParserListener,
+ * which can be extended to create a listener which only needs to handle a subset
+ * of the available methods.
+ */
+class  KingbaseQueryParserBaseListener : public KingbaseQueryParserListener {
+public:
+
+  virtual void enterData_manipulation_language_statements(KingbaseQueryParser::Data_manipulation_language_statementsContext * /*ctx*/) override { }
+  virtual void exitData_manipulation_language_statements(KingbaseQueryParser::Data_manipulation_language_statementsContext * /*ctx*/) override { }
+
+  virtual void enterMerge_statement(KingbaseQueryParser::Merge_statementContext * /*ctx*/) override { }
+  virtual void exitMerge_statement(KingbaseQueryParser::Merge_statementContext * /*ctx*/) override { }
+
+  virtual void enterMerge_update_clause(KingbaseQueryParser::Merge_update_clauseContext * /*ctx*/) override { }
+  virtual void exitMerge_update_clause(KingbaseQueryParser::Merge_update_clauseContext * /*ctx*/) override { }
+
+  virtual void enterMerge_element(KingbaseQueryParser::Merge_elementContext * /*ctx*/) override { }
+  virtual void exitMerge_element(KingbaseQueryParser::Merge_elementContext * /*ctx*/) override { }
+
+  virtual void enterMerge_update_delete_part(KingbaseQueryParser::Merge_update_delete_partContext * /*ctx*/) override { }
+  virtual void exitMerge_update_delete_part(KingbaseQueryParser::Merge_update_delete_partContext * /*ctx*/) override { }
+
+  virtual void enterMerge_insert_clause(KingbaseQueryParser::Merge_insert_clauseContext * /*ctx*/) override { }
+  virtual void exitMerge_insert_clause(KingbaseQueryParser::Merge_insert_clauseContext * /*ctx*/) override { }
+
+  virtual void enterSelected_tableview(KingbaseQueryParser::Selected_tableviewContext * /*ctx*/) override { }
+  virtual void exitSelected_tableview(KingbaseQueryParser::Selected_tableviewContext * /*ctx*/) override { }
+
+  virtual void enterTruncate_statement(KingbaseQueryParser::Truncate_statementContext * /*ctx*/) override { }
+  virtual void exitTruncate_statement(KingbaseQueryParser::Truncate_statementContext * /*ctx*/) override { }
+
+  virtual void enterSelect_statement(KingbaseQueryParser::Select_statementContext * /*ctx*/) override { }
+  virtual void exitSelect_statement(KingbaseQueryParser::Select_statementContext * /*ctx*/) override { }
+
+  virtual void enterWith_clause(KingbaseQueryParser::With_clauseContext * /*ctx*/) override { }
+  virtual void exitWith_clause(KingbaseQueryParser::With_clauseContext * /*ctx*/) override { }
+
+  virtual void enterWith_query(KingbaseQueryParser::With_queryContext * /*ctx*/) override { }
+  virtual void exitWith_query(KingbaseQueryParser::With_queryContext * /*ctx*/) override { }
+
+  virtual void enterSubquery(KingbaseQueryParser::SubqueryContext * /*ctx*/) override { }
+  virtual void exitSubquery(KingbaseQueryParser::SubqueryContext * /*ctx*/) override { }
+
+  virtual void enterSubquery_basic_elements(KingbaseQueryParser::Subquery_basic_elementsContext * /*ctx*/) override { }
+  virtual void exitSubquery_basic_elements(KingbaseQueryParser::Subquery_basic_elementsContext * /*ctx*/) override { }
+
+  virtual void enterSubquery_operation_part(KingbaseQueryParser::Subquery_operation_partContext * /*ctx*/) override { }
+  virtual void exitSubquery_operation_part(KingbaseQueryParser::Subquery_operation_partContext * /*ctx*/) override { }
+
+  virtual void enterDml_table_expression_clause(KingbaseQueryParser::Dml_table_expression_clauseContext * /*ctx*/) override { }
+  virtual void exitDml_table_expression_clause(KingbaseQueryParser::Dml_table_expression_clauseContext * /*ctx*/) override { }
+
+  virtual void enterTable_collection_expression(KingbaseQueryParser::Table_collection_expressionContext * /*ctx*/) override { }
+  virtual void exitTable_collection_expression(KingbaseQueryParser::Table_collection_expressionContext * /*ctx*/) override { }
+
+  virtual void enterSubquery_restriction_clause(KingbaseQueryParser::Subquery_restriction_clauseContext * /*ctx*/) override { }
+  virtual void exitSubquery_restriction_clause(KingbaseQueryParser::Subquery_restriction_clauseContext * /*ctx*/) override { }
+
+  virtual void enterSample_clause(KingbaseQueryParser::Sample_clauseContext * /*ctx*/) override { }
+  virtual void exitSample_clause(KingbaseQueryParser::Sample_clauseContext * /*ctx*/) override { }
+
+  virtual void enterSeed_part(KingbaseQueryParser::Seed_partContext * /*ctx*/) override { }
+  virtual void exitSeed_part(KingbaseQueryParser::Seed_partContext * /*ctx*/) override { }
+
+  virtual void enterQuery_block(KingbaseQueryParser::Query_blockContext * /*ctx*/) override { }
+  virtual void exitQuery_block(KingbaseQueryParser::Query_blockContext * /*ctx*/) override { }
+
+  virtual void enterTop_clause(KingbaseQueryParser::Top_clauseContext * /*ctx*/) override { }
+  virtual void exitTop_clause(KingbaseQueryParser::Top_clauseContext * /*ctx*/) override { }
+
+  virtual void enterStart_value(KingbaseQueryParser::Start_valueContext * /*ctx*/) override { }
+  virtual void exitStart_value(KingbaseQueryParser::Start_valueContext * /*ctx*/) override { }
+
+  virtual void enterLine_count(KingbaseQueryParser::Line_countContext * /*ctx*/) override { }
+  virtual void exitLine_count(KingbaseQueryParser::Line_countContext * /*ctx*/) override { }
+
+  virtual void enterSelected_list(KingbaseQueryParser::Selected_listContext * /*ctx*/) override { }
+  virtual void exitSelected_list(KingbaseQueryParser::Selected_listContext * /*ctx*/) override { }
+
+  virtual void enterSelected_list_element(KingbaseQueryParser::Selected_list_elementContext * /*ctx*/) override { }
+  virtual void exitSelected_list_element(KingbaseQueryParser::Selected_list_elementContext * /*ctx*/) override { }
+
+  virtual void enterFrom_clause(KingbaseQueryParser::From_clauseContext * /*ctx*/) override { }
+  virtual void exitFrom_clause(KingbaseQueryParser::From_clauseContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_list(KingbaseQueryParser::Table_ref_listContext * /*ctx*/) override { }
+  virtual void exitTable_ref_list(KingbaseQueryParser::Table_ref_listContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref(KingbaseQueryParser::Table_refContext * /*ctx*/) override { }
+  virtual void exitTable_ref(KingbaseQueryParser::Table_refContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_aux(KingbaseQueryParser::Table_ref_auxContext * /*ctx*/) override { }
+  virtual void exitTable_ref_aux(KingbaseQueryParser::Table_ref_auxContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_aux_internal_one(KingbaseQueryParser::Table_ref_aux_internal_oneContext * /*ctx*/) override { }
+  virtual void exitTable_ref_aux_internal_one(KingbaseQueryParser::Table_ref_aux_internal_oneContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_aux_internal_two(KingbaseQueryParser::Table_ref_aux_internal_twoContext * /*ctx*/) override { }
+  virtual void exitTable_ref_aux_internal_two(KingbaseQueryParser::Table_ref_aux_internal_twoContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_aux_internal_three(KingbaseQueryParser::Table_ref_aux_internal_threeContext * /*ctx*/) override { }
+  virtual void exitTable_ref_aux_internal_three(KingbaseQueryParser::Table_ref_aux_internal_threeContext * /*ctx*/) override { }
+
+  virtual void enterWhere_clause(KingbaseQueryParser::Where_clauseContext * /*ctx*/) override { }
+  virtual void exitWhere_clause(KingbaseQueryParser::Where_clauseContext * /*ctx*/) override { }
+
+  virtual void enterJoin_clause(KingbaseQueryParser::Join_clauseContext * /*ctx*/) override { }
+  virtual void exitJoin_clause(KingbaseQueryParser::Join_clauseContext * /*ctx*/) override { }
+
+  virtual void enterJoin_on_part(KingbaseQueryParser::Join_on_partContext * /*ctx*/) override { }
+  virtual void exitJoin_on_part(KingbaseQueryParser::Join_on_partContext * /*ctx*/) override { }
+
+  virtual void enterJoin_using_part(KingbaseQueryParser::Join_using_partContext * /*ctx*/) override { }
+  virtual void exitJoin_using_part(KingbaseQueryParser::Join_using_partContext * /*ctx*/) override { }
+
+  virtual void enterOuter_join_type(KingbaseQueryParser::Outer_join_typeContext * /*ctx*/) override { }
+  virtual void exitOuter_join_type(KingbaseQueryParser::Outer_join_typeContext * /*ctx*/) override { }
+
+  virtual void enterQuery_partition_clause(KingbaseQueryParser::Query_partition_clauseContext * /*ctx*/) override { }
+  virtual void exitQuery_partition_clause(KingbaseQueryParser::Query_partition_clauseContext * /*ctx*/) override { }
+
+  virtual void enterPivot_clause(KingbaseQueryParser::Pivot_clauseContext * /*ctx*/) override { }
+  virtual void exitPivot_clause(KingbaseQueryParser::Pivot_clauseContext * /*ctx*/) override { }
+
+  virtual void enterPivot_element(KingbaseQueryParser::Pivot_elementContext * /*ctx*/) override { }
+  virtual void exitPivot_element(KingbaseQueryParser::Pivot_elementContext * /*ctx*/) override { }
+
+  virtual void enterAggregate_function_name(KingbaseQueryParser::Aggregate_function_nameContext * /*ctx*/) override { }
+  virtual void exitAggregate_function_name(KingbaseQueryParser::Aggregate_function_nameContext * /*ctx*/) override { }
+
+  virtual void enterPivot_for_clause(KingbaseQueryParser::Pivot_for_clauseContext * /*ctx*/) override { }
+  virtual void exitPivot_for_clause(KingbaseQueryParser::Pivot_for_clauseContext * /*ctx*/) override { }
+
+  virtual void enterPivot_in_clause(KingbaseQueryParser::Pivot_in_clauseContext * /*ctx*/) override { }
+  virtual void exitPivot_in_clause(KingbaseQueryParser::Pivot_in_clauseContext * /*ctx*/) override { }
+
+  virtual void enterPivot_in_clause_element(KingbaseQueryParser::Pivot_in_clause_elementContext * /*ctx*/) override { }
+  virtual void exitPivot_in_clause_element(KingbaseQueryParser::Pivot_in_clause_elementContext * /*ctx*/) override { }
+
+  virtual void enterPivot_in_clause_elements(KingbaseQueryParser::Pivot_in_clause_elementsContext * /*ctx*/) override { }
+  virtual void exitPivot_in_clause_elements(KingbaseQueryParser::Pivot_in_clause_elementsContext * /*ctx*/) override { }
+
+  virtual void enterUnpivot_clause(KingbaseQueryParser::Unpivot_clauseContext * /*ctx*/) override { }
+  virtual void exitUnpivot_clause(KingbaseQueryParser::Unpivot_clauseContext * /*ctx*/) override { }
+
+  virtual void enterUnpivot_in_clause(KingbaseQueryParser::Unpivot_in_clauseContext * /*ctx*/) override { }
+  virtual void exitUnpivot_in_clause(KingbaseQueryParser::Unpivot_in_clauseContext * /*ctx*/) override { }
+
+  virtual void enterUnpivot_in_elements(KingbaseQueryParser::Unpivot_in_elementsContext * /*ctx*/) override { }
+  virtual void exitUnpivot_in_elements(KingbaseQueryParser::Unpivot_in_elementsContext * /*ctx*/) override { }
+
+  virtual void enterHierarchical_query_clause(KingbaseQueryParser::Hierarchical_query_clauseContext * /*ctx*/) override { }
+  virtual void exitHierarchical_query_clause(KingbaseQueryParser::Hierarchical_query_clauseContext * /*ctx*/) override { }
+
+  virtual void enterStart_part(KingbaseQueryParser::Start_partContext * /*ctx*/) override { }
+  virtual void exitStart_part(KingbaseQueryParser::Start_partContext * /*ctx*/) override { }
+
+  virtual void enterGroup_by_clause(KingbaseQueryParser::Group_by_clauseContext * /*ctx*/) override { }
+  virtual void exitGroup_by_clause(KingbaseQueryParser::Group_by_clauseContext * /*ctx*/) override { }
+
+  virtual void enterGroup_by_elements(KingbaseQueryParser::Group_by_elementsContext * /*ctx*/) override { }
+  virtual void exitGroup_by_elements(KingbaseQueryParser::Group_by_elementsContext * /*ctx*/) override { }
+
+  virtual void enterRollup_cube_expression(KingbaseQueryParser::Rollup_cube_expressionContext * /*ctx*/) override { }
+  virtual void exitRollup_cube_expression(KingbaseQueryParser::Rollup_cube_expressionContext * /*ctx*/) override { }
+
+  virtual void enterEmpty_expression(KingbaseQueryParser::Empty_expressionContext * /*ctx*/) override { }
+  virtual void exitEmpty_expression(KingbaseQueryParser::Empty_expressionContext * /*ctx*/) override { }
+
+  virtual void enterGrouping_sets_expression(KingbaseQueryParser::Grouping_sets_expressionContext * /*ctx*/) override { }
+  virtual void exitGrouping_sets_expression(KingbaseQueryParser::Grouping_sets_expressionContext * /*ctx*/) override { }
+
+  virtual void enterHaving_clause(KingbaseQueryParser::Having_clauseContext * /*ctx*/) override { }
+  virtual void exitHaving_clause(KingbaseQueryParser::Having_clauseContext * /*ctx*/) override { }
+
+  virtual void enterCell_assignment(KingbaseQueryParser::Cell_assignmentContext * /*ctx*/) override { }
+  virtual void exitCell_assignment(KingbaseQueryParser::Cell_assignmentContext * /*ctx*/) override { }
+
+  virtual void enterUntil_part(KingbaseQueryParser::Until_partContext * /*ctx*/) override { }
+  virtual void exitUntil_part(KingbaseQueryParser::Until_partContext * /*ctx*/) override { }
+
+  virtual void enterOrder_by_clause(KingbaseQueryParser::Order_by_clauseContext * /*ctx*/) override { }
+  virtual void exitOrder_by_clause(KingbaseQueryParser::Order_by_clauseContext * /*ctx*/) override { }
+
+  virtual void enterOrder_by_elements(KingbaseQueryParser::Order_by_elementsContext * /*ctx*/) override { }
+  virtual void exitOrder_by_elements(KingbaseQueryParser::Order_by_elementsContext * /*ctx*/) override { }
+
+  virtual void enterLimit_clause(KingbaseQueryParser::Limit_clauseContext * /*ctx*/) override { }
+  virtual void exitLimit_clause(KingbaseQueryParser::Limit_clauseContext * /*ctx*/) override { }
+
+  virtual void enterOffset_clause(KingbaseQueryParser::Offset_clauseContext * /*ctx*/) override { }
+  virtual void exitOffset_clause(KingbaseQueryParser::Offset_clauseContext * /*ctx*/) override { }
+
+  virtual void enterFetch_clause(KingbaseQueryParser::Fetch_clauseContext * /*ctx*/) override { }
+  virtual void exitFetch_clause(KingbaseQueryParser::Fetch_clauseContext * /*ctx*/) override { }
+
+  virtual void enterFor_update_clause(KingbaseQueryParser::For_update_clauseContext * /*ctx*/) override { }
+  virtual void exitFor_update_clause(KingbaseQueryParser::For_update_clauseContext * /*ctx*/) override { }
+
+  virtual void enterFor_update_of_part(KingbaseQueryParser::For_update_of_partContext * /*ctx*/) override { }
+  virtual void exitFor_update_of_part(KingbaseQueryParser::For_update_of_partContext * /*ctx*/) override { }
+
+  virtual void enterFor_update_options(KingbaseQueryParser::For_update_optionsContext * /*ctx*/) override { }
+  virtual void exitFor_update_options(KingbaseQueryParser::For_update_optionsContext * /*ctx*/) override { }
+
+  virtual void enterKeep_clause(KingbaseQueryParser::Keep_clauseContext * /*ctx*/) override { }
+  virtual void exitKeep_clause(KingbaseQueryParser::Keep_clauseContext * /*ctx*/) override { }
+
+  virtual void enterFunction_argument(KingbaseQueryParser::Function_argumentContext * /*ctx*/) override { }
+  virtual void exitFunction_argument(KingbaseQueryParser::Function_argumentContext * /*ctx*/) override { }
+
+  virtual void enterFunction_argument_analytic(KingbaseQueryParser::Function_argument_analyticContext * /*ctx*/) override { }
+  virtual void exitFunction_argument_analytic(KingbaseQueryParser::Function_argument_analyticContext * /*ctx*/) override { }
+
+  virtual void enterFunction_argument_modeling(KingbaseQueryParser::Function_argument_modelingContext * /*ctx*/) override { }
+  virtual void exitFunction_argument_modeling(KingbaseQueryParser::Function_argument_modelingContext * /*ctx*/) override { }
+
+  virtual void enterRespect_or_ignore_nulls(KingbaseQueryParser::Respect_or_ignore_nullsContext * /*ctx*/) override { }
+  virtual void exitRespect_or_ignore_nulls(KingbaseQueryParser::Respect_or_ignore_nullsContext * /*ctx*/) override { }
+
+  virtual void enterArgument(KingbaseQueryParser::ArgumentContext * /*ctx*/) override { }
+  virtual void exitArgument(KingbaseQueryParser::ArgumentContext * /*ctx*/) override { }
+
+  virtual void enterDatatype(KingbaseQueryParser::DatatypeContext * /*ctx*/) override { }
+  virtual void exitDatatype(KingbaseQueryParser::DatatypeContext * /*ctx*/) override { }
+
+  virtual void enterPrecision_part(KingbaseQueryParser::Precision_partContext * /*ctx*/) override { }
+  virtual void exitPrecision_part(KingbaseQueryParser::Precision_partContext * /*ctx*/) override { }
+
+  virtual void enterNative_datatype_element(KingbaseQueryParser::Native_datatype_elementContext * /*ctx*/) override { }
+  virtual void exitNative_datatype_element(KingbaseQueryParser::Native_datatype_elementContext * /*ctx*/) override { }
+
+  virtual void enterUpdate_statement(KingbaseQueryParser::Update_statementContext * /*ctx*/) override { }
+  virtual void exitUpdate_statement(KingbaseQueryParser::Update_statementContext * /*ctx*/) override { }
+
+  virtual void enterUpdate_set_clause(KingbaseQueryParser::Update_set_clauseContext * /*ctx*/) override { }
+  virtual void exitUpdate_set_clause(KingbaseQueryParser::Update_set_clauseContext * /*ctx*/) override { }
+
+  virtual void enterColumn_based_update_set_clause(KingbaseQueryParser::Column_based_update_set_clauseContext * /*ctx*/) override { }
+  virtual void exitColumn_based_update_set_clause(KingbaseQueryParser::Column_based_update_set_clauseContext * /*ctx*/) override { }
+
+  virtual void enterDelete_statement(KingbaseQueryParser::Delete_statementContext * /*ctx*/) override { }
+  virtual void exitDelete_statement(KingbaseQueryParser::Delete_statementContext * /*ctx*/) override { }
+
+  virtual void enterGeneral_table_ref(KingbaseQueryParser::General_table_refContext * /*ctx*/) override { }
+  virtual void exitGeneral_table_ref(KingbaseQueryParser::General_table_refContext * /*ctx*/) override { }
+
+  virtual void enterStatic_returning_clause(KingbaseQueryParser::Static_returning_clauseContext * /*ctx*/) override { }
+  virtual void exitStatic_returning_clause(KingbaseQueryParser::Static_returning_clauseContext * /*ctx*/) override { }
+
+  virtual void enterInsert_statement(KingbaseQueryParser::Insert_statementContext * /*ctx*/) override { }
+  virtual void exitInsert_statement(KingbaseQueryParser::Insert_statementContext * /*ctx*/) override { }
+
+  virtual void enterSingle_table_insert(KingbaseQueryParser::Single_table_insertContext * /*ctx*/) override { }
+  virtual void exitSingle_table_insert(KingbaseQueryParser::Single_table_insertContext * /*ctx*/) override { }
+
+  virtual void enterMulti_table_insert(KingbaseQueryParser::Multi_table_insertContext * /*ctx*/) override { }
+  virtual void exitMulti_table_insert(KingbaseQueryParser::Multi_table_insertContext * /*ctx*/) override { }
+
+  virtual void enterMulti_table_element(KingbaseQueryParser::Multi_table_elementContext * /*ctx*/) override { }
+  virtual void exitMulti_table_element(KingbaseQueryParser::Multi_table_elementContext * /*ctx*/) override { }
+
+  virtual void enterConditional_insert_clause(KingbaseQueryParser::Conditional_insert_clauseContext * /*ctx*/) override { }
+  virtual void exitConditional_insert_clause(KingbaseQueryParser::Conditional_insert_clauseContext * /*ctx*/) override { }
+
+  virtual void enterConditional_insert_when_part(KingbaseQueryParser::Conditional_insert_when_partContext * /*ctx*/) override { }
+  virtual void exitConditional_insert_when_part(KingbaseQueryParser::Conditional_insert_when_partContext * /*ctx*/) override { }
+
+  virtual void enterConditional_insert_else_part(KingbaseQueryParser::Conditional_insert_else_partContext * /*ctx*/) override { }
+  virtual void exitConditional_insert_else_part(KingbaseQueryParser::Conditional_insert_else_partContext * /*ctx*/) override { }
+
+  virtual void enterInsert_into_clause(KingbaseQueryParser::Insert_into_clauseContext * /*ctx*/) override { }
+  virtual void exitInsert_into_clause(KingbaseQueryParser::Insert_into_clauseContext * /*ctx*/) override { }
+
+  virtual void enterValues_clause(KingbaseQueryParser::Values_clauseContext * /*ctx*/) override { }
+  virtual void exitValues_clause(KingbaseQueryParser::Values_clauseContext * /*ctx*/) override { }
+
+  virtual void enterCopy_statement(KingbaseQueryParser::Copy_statementContext * /*ctx*/) override { }
+  virtual void exitCopy_statement(KingbaseQueryParser::Copy_statementContext * /*ctx*/) override { }
+
+  virtual void enterCondition(KingbaseQueryParser::ConditionContext * /*ctx*/) override { }
+  virtual void exitCondition(KingbaseQueryParser::ConditionContext * /*ctx*/) override { }
+
+  virtual void enterExpressions(KingbaseQueryParser::ExpressionsContext * /*ctx*/) override { }
+  virtual void exitExpressions(KingbaseQueryParser::ExpressionsContext * /*ctx*/) override { }
+
+  virtual void enterExpression(KingbaseQueryParser::ExpressionContext * /*ctx*/) override { }
+  virtual void exitExpression(KingbaseQueryParser::ExpressionContext * /*ctx*/) override { }
+
+  virtual void enterCursor_expression(KingbaseQueryParser::Cursor_expressionContext * /*ctx*/) override { }
+  virtual void exitCursor_expression(KingbaseQueryParser::Cursor_expressionContext * /*ctx*/) override { }
+
+  virtual void enterLogical_expression(KingbaseQueryParser::Logical_expressionContext * /*ctx*/) override { }
+  virtual void exitLogical_expression(KingbaseQueryParser::Logical_expressionContext * /*ctx*/) override { }
+
+  virtual void enterMultiset_expression(KingbaseQueryParser::Multiset_expressionContext * /*ctx*/) override { }
+  virtual void exitMultiset_expression(KingbaseQueryParser::Multiset_expressionContext * /*ctx*/) override { }
+
+  virtual void enterRelational_expression(KingbaseQueryParser::Relational_expressionContext * /*ctx*/) override { }
+  virtual void exitRelational_expression(KingbaseQueryParser::Relational_expressionContext * /*ctx*/) override { }
+
+  virtual void enterCompound_expression(KingbaseQueryParser::Compound_expressionContext * /*ctx*/) override { }
+  virtual void exitCompound_expression(KingbaseQueryParser::Compound_expressionContext * /*ctx*/) override { }
+
+  virtual void enterRelational_operator(KingbaseQueryParser::Relational_operatorContext * /*ctx*/) override { }
+  virtual void exitRelational_operator(KingbaseQueryParser::Relational_operatorContext * /*ctx*/) override { }
+
+  virtual void enterIn_elements(KingbaseQueryParser::In_elementsContext * /*ctx*/) override { }
+  virtual void exitIn_elements(KingbaseQueryParser::In_elementsContext * /*ctx*/) override { }
+
+  virtual void enterBetween_elements(KingbaseQueryParser::Between_elementsContext * /*ctx*/) override { }
+  virtual void exitBetween_elements(KingbaseQueryParser::Between_elementsContext * /*ctx*/) override { }
+
+  virtual void enterConcatenation(KingbaseQueryParser::ConcatenationContext * /*ctx*/) override { }
+  virtual void exitConcatenation(KingbaseQueryParser::ConcatenationContext * /*ctx*/) override { }
+
+  virtual void enterInterval_expression(KingbaseQueryParser::Interval_expressionContext * /*ctx*/) override { }
+  virtual void exitInterval_expression(KingbaseQueryParser::Interval_expressionContext * /*ctx*/) override { }
+
+  virtual void enterModel_expression(KingbaseQueryParser::Model_expressionContext * /*ctx*/) override { }
+  virtual void exitModel_expression(KingbaseQueryParser::Model_expressionContext * /*ctx*/) override { }
+
+  virtual void enterModel_expression_element(KingbaseQueryParser::Model_expression_elementContext * /*ctx*/) override { }
+  virtual void exitModel_expression_element(KingbaseQueryParser::Model_expression_elementContext * /*ctx*/) override { }
+
+  virtual void enterSingle_column_for_loop(KingbaseQueryParser::Single_column_for_loopContext * /*ctx*/) override { }
+  virtual void exitSingle_column_for_loop(KingbaseQueryParser::Single_column_for_loopContext * /*ctx*/) override { }
+
+  virtual void enterMulti_column_for_loop(KingbaseQueryParser::Multi_column_for_loopContext * /*ctx*/) override { }
+  virtual void exitMulti_column_for_loop(KingbaseQueryParser::Multi_column_for_loopContext * /*ctx*/) override { }
+
+  virtual void enterUnary_expression(KingbaseQueryParser::Unary_expressionContext * /*ctx*/) override { }
+  virtual void exitUnary_expression(KingbaseQueryParser::Unary_expressionContext * /*ctx*/) override { }
+
+  virtual void enterCase_statement(KingbaseQueryParser::Case_statementContext * /*ctx*/) override { }
+  virtual void exitCase_statement(KingbaseQueryParser::Case_statementContext * /*ctx*/) override { }
+
+  virtual void enterSimple_case_statement(KingbaseQueryParser::Simple_case_statementContext * /*ctx*/) override { }
+  virtual void exitSimple_case_statement(KingbaseQueryParser::Simple_case_statementContext * /*ctx*/) override { }
+
+  virtual void enterSimple_case_when_part(KingbaseQueryParser::Simple_case_when_partContext * /*ctx*/) override { }
+  virtual void exitSimple_case_when_part(KingbaseQueryParser::Simple_case_when_partContext * /*ctx*/) override { }
+
+  virtual void enterSearched_case_statement(KingbaseQueryParser::Searched_case_statementContext * /*ctx*/) override { }
+  virtual void exitSearched_case_statement(KingbaseQueryParser::Searched_case_statementContext * /*ctx*/) override { }
+
+  virtual void enterSearched_case_when_part(KingbaseQueryParser::Searched_case_when_partContext * /*ctx*/) override { }
+  virtual void exitSearched_case_when_part(KingbaseQueryParser::Searched_case_when_partContext * /*ctx*/) override { }
+
+  virtual void enterCase_else_part(KingbaseQueryParser::Case_else_partContext * /*ctx*/) override { }
+  virtual void exitCase_else_part(KingbaseQueryParser::Case_else_partContext * /*ctx*/) override { }
+
+  virtual void enterAtom(KingbaseQueryParser::AtomContext * /*ctx*/) override { }
+  virtual void exitAtom(KingbaseQueryParser::AtomContext * /*ctx*/) override { }
+
+  virtual void enterQuantified_expression(KingbaseQueryParser::Quantified_expressionContext * /*ctx*/) override { }
+  virtual void exitQuantified_expression(KingbaseQueryParser::Quantified_expressionContext * /*ctx*/) override { }
+
+  virtual void enterString_function(KingbaseQueryParser::String_functionContext * /*ctx*/) override { }
+  virtual void exitString_function(KingbaseQueryParser::String_functionContext * /*ctx*/) override { }
+
+  virtual void enterStandard_function(KingbaseQueryParser::Standard_functionContext * /*ctx*/) override { }
+  virtual void exitStandard_function(KingbaseQueryParser::Standard_functionContext * /*ctx*/) override { }
+
+  virtual void enterNumeric_function_wrapper(KingbaseQueryParser::Numeric_function_wrapperContext * /*ctx*/) override { }
+  virtual void exitNumeric_function_wrapper(KingbaseQueryParser::Numeric_function_wrapperContext * /*ctx*/) override { }
+
+  virtual void enterNumeric_function(KingbaseQueryParser::Numeric_functionContext * /*ctx*/) override { }
+  virtual void exitNumeric_function(KingbaseQueryParser::Numeric_functionContext * /*ctx*/) override { }
+
+  virtual void enterOther_function(KingbaseQueryParser::Other_functionContext * /*ctx*/) override { }
+  virtual void exitOther_function(KingbaseQueryParser::Other_functionContext * /*ctx*/) override { }
+
+  virtual void enterOver_clause_keyword(KingbaseQueryParser::Over_clause_keywordContext * /*ctx*/) override { }
+  virtual void exitOver_clause_keyword(KingbaseQueryParser::Over_clause_keywordContext * /*ctx*/) override { }
+
+  virtual void enterWithin_or_over_clause_keyword(KingbaseQueryParser::Within_or_over_clause_keywordContext * /*ctx*/) override { }
+  virtual void exitWithin_or_over_clause_keyword(KingbaseQueryParser::Within_or_over_clause_keywordContext * /*ctx*/) override { }
+
+  virtual void enterStandard_prediction_function_keyword(KingbaseQueryParser::Standard_prediction_function_keywordContext * /*ctx*/) override { }
+  virtual void exitStandard_prediction_function_keyword(KingbaseQueryParser::Standard_prediction_function_keywordContext * /*ctx*/) override { }
+
+  virtual void enterOver_clause(KingbaseQueryParser::Over_clauseContext * /*ctx*/) override { }
+  virtual void exitOver_clause(KingbaseQueryParser::Over_clauseContext * /*ctx*/) override { }
+
+  virtual void enterWindowing_clause(KingbaseQueryParser::Windowing_clauseContext * /*ctx*/) override { }
+  virtual void exitWindowing_clause(KingbaseQueryParser::Windowing_clauseContext * /*ctx*/) override { }
+
+  virtual void enterWindowing_type(KingbaseQueryParser::Windowing_typeContext * /*ctx*/) override { }
+  virtual void exitWindowing_type(KingbaseQueryParser::Windowing_typeContext * /*ctx*/) override { }
+
+  virtual void enterWindowing_elements(KingbaseQueryParser::Windowing_elementsContext * /*ctx*/) override { }
+  virtual void exitWindowing_elements(KingbaseQueryParser::Windowing_elementsContext * /*ctx*/) override { }
+
+  virtual void enterCollect_order_by_part(KingbaseQueryParser::Collect_order_by_partContext * /*ctx*/) override { }
+  virtual void exitCollect_order_by_part(KingbaseQueryParser::Collect_order_by_partContext * /*ctx*/) override { }
+
+  virtual void enterWithin_or_over_part(KingbaseQueryParser::Within_or_over_partContext * /*ctx*/) override { }
+  virtual void exitWithin_or_over_part(KingbaseQueryParser::Within_or_over_partContext * /*ctx*/) override { }
+
+  virtual void enterXml_passing_clause(KingbaseQueryParser::Xml_passing_clauseContext * /*ctx*/) override { }
+  virtual void exitXml_passing_clause(KingbaseQueryParser::Xml_passing_clauseContext * /*ctx*/) override { }
+
+  virtual void enterXml_attributes_clause(KingbaseQueryParser::Xml_attributes_clauseContext * /*ctx*/) override { }
+  virtual void exitXml_attributes_clause(KingbaseQueryParser::Xml_attributes_clauseContext * /*ctx*/) override { }
+
+  virtual void enterXml_namespaces_clause(KingbaseQueryParser::Xml_namespaces_clauseContext * /*ctx*/) override { }
+  virtual void exitXml_namespaces_clause(KingbaseQueryParser::Xml_namespaces_clauseContext * /*ctx*/) override { }
+
+  virtual void enterXml_table_column(KingbaseQueryParser::Xml_table_columnContext * /*ctx*/) override { }
+  virtual void exitXml_table_column(KingbaseQueryParser::Xml_table_columnContext * /*ctx*/) override { }
+
+  virtual void enterXml_general_default_part(KingbaseQueryParser::Xml_general_default_partContext * /*ctx*/) override { }
+  virtual void exitXml_general_default_part(KingbaseQueryParser::Xml_general_default_partContext * /*ctx*/) override { }
+
+  virtual void enterXml_multiuse_expression_element(KingbaseQueryParser::Xml_multiuse_expression_elementContext * /*ctx*/) override { }
+  virtual void exitXml_multiuse_expression_element(KingbaseQueryParser::Xml_multiuse_expression_elementContext * /*ctx*/) override { }
+
+  virtual void enterXmlroot_param_version_part(KingbaseQueryParser::Xmlroot_param_version_partContext * /*ctx*/) override { }
+  virtual void exitXmlroot_param_version_part(KingbaseQueryParser::Xmlroot_param_version_partContext * /*ctx*/) override { }
+
+  virtual void enterXmlroot_param_standalone_part(KingbaseQueryParser::Xmlroot_param_standalone_partContext * /*ctx*/) override { }
+  virtual void exitXmlroot_param_standalone_part(KingbaseQueryParser::Xmlroot_param_standalone_partContext * /*ctx*/) override { }
+
+  virtual void enterXmlserialize_param_enconding_part(KingbaseQueryParser::Xmlserialize_param_enconding_partContext * /*ctx*/) override { }
+  virtual void exitXmlserialize_param_enconding_part(KingbaseQueryParser::Xmlserialize_param_enconding_partContext * /*ctx*/) override { }
+
+  virtual void enterXmlserialize_param_version_part(KingbaseQueryParser::Xmlserialize_param_version_partContext * /*ctx*/) override { }
+  virtual void exitXmlserialize_param_version_part(KingbaseQueryParser::Xmlserialize_param_version_partContext * /*ctx*/) override { }
+
+  virtual void enterXmlserialize_param_ident_part(KingbaseQueryParser::Xmlserialize_param_ident_partContext * /*ctx*/) override { }
+  virtual void exitXmlserialize_param_ident_part(KingbaseQueryParser::Xmlserialize_param_ident_partContext * /*ctx*/) override { }
+
+  virtual void enterBind_variable(KingbaseQueryParser::Bind_variableContext * /*ctx*/) override { }
+  virtual void exitBind_variable(KingbaseQueryParser::Bind_variableContext * /*ctx*/) override { }
+
+  virtual void enterGeneral_element(KingbaseQueryParser::General_elementContext * /*ctx*/) override { }
+  virtual void exitGeneral_element(KingbaseQueryParser::General_elementContext * /*ctx*/) override { }
+
+  virtual void enterGeneral_element_part(KingbaseQueryParser::General_element_partContext * /*ctx*/) override { }
+  virtual void exitGeneral_element_part(KingbaseQueryParser::General_element_partContext * /*ctx*/) override { }
+
+  virtual void enterTable_element(KingbaseQueryParser::Table_elementContext * /*ctx*/) override { }
+  virtual void exitTable_element(KingbaseQueryParser::Table_elementContext * /*ctx*/) override { }
+
+  virtual void enterTableview_name(KingbaseQueryParser::Tableview_nameContext * /*ctx*/) override { }
+  virtual void exitTableview_name(KingbaseQueryParser::Tableview_nameContext * /*ctx*/) override { }
+
+  virtual void enterColumn_name(KingbaseQueryParser::Column_nameContext * /*ctx*/) override { }
+  virtual void exitColumn_name(KingbaseQueryParser::Column_nameContext * /*ctx*/) override { }
+
+  virtual void enterTable_name(KingbaseQueryParser::Table_nameContext * /*ctx*/) override { }
+  virtual void exitTable_name(KingbaseQueryParser::Table_nameContext * /*ctx*/) override { }
+
+  virtual void enterLink_name(KingbaseQueryParser::Link_nameContext * /*ctx*/) override { }
+  virtual void exitLink_name(KingbaseQueryParser::Link_nameContext * /*ctx*/) override { }
+
+  virtual void enterChar_set_name(KingbaseQueryParser::Char_set_nameContext * /*ctx*/) override { }
+  virtual void exitChar_set_name(KingbaseQueryParser::Char_set_nameContext * /*ctx*/) override { }
+
+  virtual void enterColumn_alias(KingbaseQueryParser::Column_aliasContext * /*ctx*/) override { }
+  virtual void exitColumn_alias(KingbaseQueryParser::Column_aliasContext * /*ctx*/) override { }
+
+  virtual void enterTable_alias(KingbaseQueryParser::Table_aliasContext * /*ctx*/) override { }
+  virtual void exitTable_alias(KingbaseQueryParser::Table_aliasContext * /*ctx*/) override { }
+
+  virtual void enterXml_column_name(KingbaseQueryParser::Xml_column_nameContext * /*ctx*/) override { }
+  virtual void exitXml_column_name(KingbaseQueryParser::Xml_column_nameContext * /*ctx*/) override { }
+
+  virtual void enterParen_column_list(KingbaseQueryParser::Paren_column_listContext * /*ctx*/) override { }
+  virtual void exitParen_column_list(KingbaseQueryParser::Paren_column_listContext * /*ctx*/) override { }
+
+  virtual void enterColumn_list(KingbaseQueryParser::Column_listContext * /*ctx*/) override { }
+  virtual void exitColumn_list(KingbaseQueryParser::Column_listContext * /*ctx*/) override { }
+
+  virtual void enterWith_query_name(KingbaseQueryParser::With_query_nameContext * /*ctx*/) override { }
+  virtual void exitWith_query_name(KingbaseQueryParser::With_query_nameContext * /*ctx*/) override { }
+
+  virtual void enterConstraint_name(KingbaseQueryParser::Constraint_nameContext * /*ctx*/) override { }
+  virtual void exitConstraint_name(KingbaseQueryParser::Constraint_nameContext * /*ctx*/) override { }
+
+  virtual void enterLabel_name(KingbaseQueryParser::Label_nameContext * /*ctx*/) override { }
+  virtual void exitLabel_name(KingbaseQueryParser::Label_nameContext * /*ctx*/) override { }
+
+  virtual void enterPartition_extension_clause(KingbaseQueryParser::Partition_extension_clauseContext * /*ctx*/) override { }
+  virtual void exitPartition_extension_clause(KingbaseQueryParser::Partition_extension_clauseContext * /*ctx*/) override { }
+
+  virtual void enterConstant(KingbaseQueryParser::ConstantContext * /*ctx*/) override { }
+  virtual void exitConstant(KingbaseQueryParser::ConstantContext * /*ctx*/) override { }
+
+  virtual void enterNumeric(KingbaseQueryParser::NumericContext * /*ctx*/) override { }
+  virtual void exitNumeric(KingbaseQueryParser::NumericContext * /*ctx*/) override { }
+
+  virtual void enterNumeric_negative(KingbaseQueryParser::Numeric_negativeContext * /*ctx*/) override { }
+  virtual void exitNumeric_negative(KingbaseQueryParser::Numeric_negativeContext * /*ctx*/) override { }
+
+  virtual void enterQuoted_string(KingbaseQueryParser::Quoted_stringContext * /*ctx*/) override { }
+  virtual void exitQuoted_string(KingbaseQueryParser::Quoted_stringContext * /*ctx*/) override { }
+
+  virtual void enterIdentifier(KingbaseQueryParser::IdentifierContext * /*ctx*/) override { }
+  virtual void exitIdentifier(KingbaseQueryParser::IdentifierContext * /*ctx*/) override { }
+
+  virtual void enterId_expression(KingbaseQueryParser::Id_expressionContext * /*ctx*/) override { }
+  virtual void exitId_expression(KingbaseQueryParser::Id_expressionContext * /*ctx*/) override { }
+
+  virtual void enterOuter_join_sign(KingbaseQueryParser::Outer_join_signContext * /*ctx*/) override { }
+  virtual void exitOuter_join_sign(KingbaseQueryParser::Outer_join_signContext * /*ctx*/) override { }
+
+  virtual void enterRegular_id(KingbaseQueryParser::Regular_idContext * /*ctx*/) override { }
+  virtual void exitRegular_id(KingbaseQueryParser::Regular_idContext * /*ctx*/) override { }
+
+  virtual void enterNon_reserved_keywords_in_12c(KingbaseQueryParser::Non_reserved_keywords_in_12cContext * /*ctx*/) override { }
+  virtual void exitNon_reserved_keywords_in_12c(KingbaseQueryParser::Non_reserved_keywords_in_12cContext * /*ctx*/) override { }
+
+  virtual void enterNon_reserved_keywords_pre12c(KingbaseQueryParser::Non_reserved_keywords_pre12cContext * /*ctx*/) override { }
+  virtual void exitNon_reserved_keywords_pre12c(KingbaseQueryParser::Non_reserved_keywords_pre12cContext * /*ctx*/) override { }
+
+
+  virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }
+  virtual void exitEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }
+  virtual void visitTerminal(antlr4::tree::TerminalNode * /*node*/) override { }
+  virtual void visitErrorNode(antlr4::tree::ErrorNode * /*node*/) override { }
+
+};
+

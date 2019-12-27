@@ -115,9 +115,6 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
     void enterParen_column_list(KingbaseSqlParser::Paren_column_listContext *ctx) {
       column_list_.clear();
     }
-    void exitParen_column_list(KingbaseSqlParser::Paren_column_listContext *ctx) {
-      // get all the columns from Column_listContext
-    }
 
     void enterColumn_name(KingbaseSqlParser::Column_nameContext *ctx) {
       if (nullptr == ctx)
@@ -135,10 +132,11 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
       }
 
       ColumnItem column_item;
-      column_item.clear();
 
       // push_back column into column_list_
       column_item = get_column(ctx->getText());
+      column_item.token_start = ctx->start;
+      column_item.token_stop  = ctx->stop;
       column_list_.push_back(column_item);
     }
 
@@ -151,8 +149,6 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
      * @param 
      * @date 10/09/2019 
      ***********************************************************/ 
-    void enterQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {
-    }
     void exitQuery_block(KingbaseSqlParser::Query_blockContext *ctx) {
       // get selected_list - column_list_
       // get table list - table_list_
@@ -235,24 +231,22 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
         return;
 
       antlr4::TokenStream *tokens = parser_->getTokenStream();
-
-      std::string select_list_ele_string {""};
+      auto expr_ctx   = ctx->expression();
+      // ignore expression so far
+      if (expr_ctx) {
+        return;
+      }
 
       auto column_ctx = ctx->column_name();
-      auto expr_ctx   = ctx->expression();
       auto as_ctx     = ctx->AS();
       auto alias_ctx  = ctx->column_alias();
 
-      if (column_ctx)
-        select_list_ele_string = tokens->getText(column_ctx);
-      else if (expr_ctx)
-        select_list_ele_string = tokens->getText(expr_ctx);
+      std::string select_list_ele_string = tokens->getText(column_ctx);
 
       ColumnItem column_item;
-      column_item.clear();
-
-      // push_back column into column_list_
       column_item = get_column(select_list_ele_string);
+      column_item.token_start = column_ctx->start;
+      column_item.token_stop = column_ctx->stop;
 
       if (alias_ctx) 
         column_item.alias = tokens->getText(alias_ctx);
@@ -272,9 +266,9 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
       if (nullptr == ctx)
         return;
 
-      antlr4::TokenStream *tokens = parser_->getTokenStream();
-
-      ColumnItem col_item = get_column(tokens->getText(ctx));
+      ColumnItem col_item = get_column(ctx->getText());
+      col_item.token_start = ctx->start;
+      col_item.token_stop = ctx->stop;
       column_list_.push_back(col_item);
     }
 

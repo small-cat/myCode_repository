@@ -13,6 +13,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <TokenStreamRewriter.h>
+
 #include <strings.h>
 
 struct TableItem {
@@ -50,14 +52,10 @@ struct ColumnItem {
   std::string alias;
   bool hasAs;
   bool effect;
+  antlr4::Token* token_start;
+  antlr4::Token* token_stop;
 
-  ColumnItem() {
-    schema.clear();
-    table.clear();
-    column.clear();
-    alias.clear();
-    hasAs = false;
-    effect = true;
+  ColumnItem() : hasAs(false), effect(false), token_start(nullptr), token_stop(nullptr) {
   }
 
   void clear() {
@@ -66,6 +64,9 @@ struct ColumnItem {
     column.clear();
     alias.clear();
     hasAs = false;
+    effect = false;
+    token_start = nullptr;
+    token_stop = nullptr;
   }
 
   friend bool operator<(const ColumnItem& col1, const ColumnItem& col2) {
