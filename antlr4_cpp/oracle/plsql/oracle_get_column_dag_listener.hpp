@@ -290,9 +290,6 @@ class OracleGetColumnDAG : public PlSqlParserBaseListener {
       if (alias_ctx) {
         tb_alias = tokens->getText(ctx->table_alias());
         table_item_.alias = tb_alias;
-      } else {
-        tb_alias = SUBQUERY_NAMES_PART[SUBQUERY_TABLE_PREFIX] + std::to_string(count_for_name_);
-        count_for_name_++;
       }
 
       auto table_ref_aux_internal_ctx = ctx->table_ref_aux_internal();
@@ -303,6 +300,11 @@ class OracleGetColumnDAG : public PlSqlParserBaseListener {
       // check whether table_ref_aux_internal is subquery or not
       Table2Subquery tb2subquery;
       if (table_ref_aux_internal_string.find("SELECT") != std::string::npos) {
+        if (!alias_ctx) {
+          tb_alias = SUBQUERY_NAMES_PART[SUBQUERY_TABLE_PREFIX] + std::to_string(count_for_name_);
+          count_for_name_++;
+        }
+
         // subquery
         tb2subquery.subquery_name = tb_alias + SUBQUERY_NAMES_PART[SUBQUERY_SUFFIX];
         tb2subquery.table_name = tb_alias;
@@ -405,6 +407,7 @@ class OracleGetColumnDAG : public PlSqlParserBaseListener {
     void exitRelational_expression(PlSqlParser::Relational_expressionContext *ctx) {
     }
 
+    /*
     void enterIn_elements(PlSqlParser::In_elementsContext *ctx) {
       if (nullptr == ctx)
         return;
@@ -425,6 +428,7 @@ class OracleGetColumnDAG : public PlSqlParserBaseListener {
         subquery_namev_.push_back(next_subquery_name);
       }
     }
+    */
 
     ColumnDAG column_dag() {
       return column_dag_;

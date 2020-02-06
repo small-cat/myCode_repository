@@ -47,6 +47,7 @@ include_directories(
 set(antlr4-oracle_SRC 
   ${PROJECT_SOURCE_DIR}/oracle/main.cpp
   ${PROJECT_SOURCE_DIR}/oracle/plsql/from_clause_matcher_listener.cpp
+  ${PROJECT_SOURCE_DIR}/oracle/plsql/oracle_parse_tree_walker.cpp
   ${antlr4-oracle-GENERATED_SRC}
   )
 

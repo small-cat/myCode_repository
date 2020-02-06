@@ -25,6 +25,7 @@
 #include "oracle_get_column_dag_listener.hpp"
 #include "error_verbose_listener.hpp"
 #include "oracle_replace_star_listener.hpp"
+#include "oracle_parse_tree_walker.hpp"
 #include "item.h"
 
 using namespace antlr4;
@@ -116,23 +117,16 @@ void ParseString(std::string &sql) {
 }
 
 static void _ParseString(PlSqlParser &parser, CommonTokenStream &tokens) {
-  tree::ParseTree *tree = parser.sql_script();
+  auto sql_script_ctx = parser.sql_script();
   std::cout << "sql: " << tokens.getText() << std::endl;
-  std::cout << tree->toStringTree(&parser) << std::endl;
+  std::cout << ((tree::ParseTree*)(sql_script_ctx))->toStringTree(&parser) << std::endl;
 
-  // schema changed
-  if (parser.schema_changed) {
-    std::cout << "current schema has beeb changed to: " << parser.current_schema  << std::endl;
+  std::cout << "total sqls in current cst: " << parser.sql_sentences << std::endl;
+
+  auto unit_statements = sql_script_ctx->unit_statement();
+  if (unit_statements.empty()) {
+    return;
   }
-
-  tree::ParseTreeWalker walker;
-  FromClauseMatcherListener oracle_fml(&parser, std::string("employee"));
-  walker.walk(&oracle_fml, tree);
-
-  if (oracle_fml.matcher())
-    std::cout << "matched table " << oracle_fml.table_name() << std::endl;
-  else
-    std::cout << "unmatched\n";
 
   MaskItemList mask_item_list;
   MaskItem item1 = {"student", "name", "MASK_NAME"};
@@ -142,47 +136,58 @@ static void _ParseString(PlSqlParser &parser, CommonTokenStream &tokens) {
   mask_item_list.push_back(item2);
   mask_item_list.push_back(item3);
 
-  GetTableListener oracle_gl(&parser);
-  walker.walk(&oracle_gl, tree);
-  MaskColumnItemList mask_col_item_list = 
-    oracle_gl.get_table_item_list(mask_item_list);
+  for (auto unit_stmt : unit_statements) {
+    auto data_manipulate_ctx = unit_stmt->data_manipulation_language_statements();
+    if (data_manipulate_ctx) {
+      if (data_manipulate_ctx->select_statement()) {
+        // build column dag
+        std::cout << "========GetColumnDag========\n\n";
+        OracleParseTreeWalker walker;
+        OracleGetColumnDAG oracle_dag(&parser);
+        walker.walk(&oracle_dag, unit_stmt);
+        TravelColumnDag(oracle_dag.column_dag());
 
-  // build column dag
-  std::cout << "\n======================\n";
-  std::cout << "========GetColumnDag========\n\n";
-  OracleGetColumnDAG oracle_dag(&parser);
-  walker.walk(&oracle_dag, tree);
-  TravelColumnDag(oracle_dag.column_dag());
+        MaskItemList mask_item_list_for_dag;
+        MaskItem item4 {"student", "name", "MASK_STUNAME"};
+        MaskItem item5 {"dept", "name", "MASK_DEPTNAME"};
+        MaskItem item6 = {"学生信息", "'性别'", "MASK_STU_SEX"};
+        mask_item_list_for_dag.push_back(item4);
+        mask_item_list_for_dag.push_back(item5);
+        mask_item_list_for_dag.push_back(item6);
+        std::map<ColumnItem, ColumnItemList> column_relation_map = 
+          oracle_dag.GetColumnRelationsByMaskItemList(mask_item_list_for_dag);
 
-  MaskItemList mask_item_list_for_dag;
-  MaskItem item4 {"student", "name", "MASK_STUNAME"};
-  MaskItem item5 {"dept", "name", "MASK_DEPTNAME"};
-  MaskItem item6 = {"学生信息", "'性别'", "MASK_STU_SEX"};
-  mask_item_list_for_dag.push_back(item4);
-  mask_item_list_for_dag.push_back(item5);
-  mask_item_list_for_dag.push_back(item6);
-  std::map<ColumnItem, ColumnItemList> column_relation_map = 
-    oracle_dag.GetColumnRelationsByMaskItemList(mask_item_list_for_dag);
+        std::cout << "\n========show Column Relation Map========\n";
+        for (auto iter=column_relation_map.begin(); iter!=column_relation_map.end(); ++iter) {
+          std::cout << "[" << iter->first.table << ", " << iter->first.column << ", "
+            << iter->first.alias << "]\n";
 
-  std::cout << "\n========show Column Relation Map========\n";
-  for (auto iter=column_relation_map.begin(); iter!=column_relation_map.end(); ++iter) {
-    std::cout << "[" << iter->first.table << ", " << iter->first.column << ", "
-      << iter->first.alias << "]\n";
+          std::cout << "[ ";
+          for (auto col_item : iter->second) {
+            std::cout << "(" << col_item.table << ", " << col_item.column << ", "
+              << col_item.alias << "), ";
+          }
+          std::cout << " ]\n";
+        }
 
-    std::cout << "[ ";
-    for (auto col_item : iter->second) {
-      std::cout << "(" << col_item.table << ", " << col_item.column << ", "
-        << col_item.alias << "), ";
+        std::cout << "\n========Mask Listener========\n";
+        OracleMaskListener oracle_mask_listener(&parser, &tokens, 
+            oracle_dag.column_dag(), column_relation_map, mask_item_list_for_dag);
+        walker.walk(&oracle_mask_listener, unit_stmt);
+        std::cout << oracle_mask_listener.GetResult() << std::endl;
+      }
+    } // end if
+
+    auto alter_session_ctx = unit_stmt->alter_session();
+    if (alter_session_ctx) {
+      auto alter_session_set_clause_ctx = alter_session_ctx->alter_session_set_clause();
+      if (alter_session_set_clause_ctx) {
+        if (!alter_session_set_clause_ctx->current_schema.empty()) {
+          std::cout << "change current schema to: " << alter_session_set_clause_ctx->current_schema << std::endl;
+        }
+      }
     }
-    std::cout << " ]\n";
   }
-
-  std::cout << "\n========Mask Listener========\n";
-  OracleMaskListener oracle_mask_listener(&parser, &tokens, 
-      oracle_dag.column_dag(), column_relation_map, mask_item_list_for_dag);
-  walker.walk(&oracle_mask_listener, tree);
-  std::cout << oracle_mask_listener.GetResult() << std::endl;
-
 }
 
 std::string string_toupper(std::string str) {

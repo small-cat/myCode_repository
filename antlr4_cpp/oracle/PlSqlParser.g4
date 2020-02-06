@@ -33,12 +33,11 @@ options {
 }
 
 @members {
-bool schema_changed = false;
-std::string current_schema;
+int sql_sentences = 0;
 }
 
 sql_script
-    : ((unit_statement | sql_plus_command) SEMICOLON?)* EOF
+    : ((unit_statement { sql_sentences++; } | sql_plus_command) SEMICOLON?)* EOF
     ;
 
 unit_statement
@@ -133,7 +132,6 @@ create_function_body
     ;
 
 // Creation Function - Specific Clauses
-
 parallel_enable_clause
     : PARALLEL_ENABLE partition_by_clause?
     ;
@@ -559,8 +557,11 @@ alter_session
     )
     ;
 
-alter_session_set_clause 
-    : parameter_name { if (strcasecmp("current_schema", $parameter_name.text.c_str()) == 0) schema_changed = true;} EQUALS_OP parameter_value { current_schema = $parameter_value.text;}
+alter_session_set_clause
+    locals [
+    std::string current_schema
+    ]
+    : parameter_name EQUALS_OP parameter_value { if (strcasecmp("current_schema", $parameter_name.text.c_str()) == 0) $current_schema = $parameter_value.text; }
     ;
 
 create_sequence

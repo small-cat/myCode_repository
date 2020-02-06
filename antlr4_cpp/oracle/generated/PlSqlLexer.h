@@ -1,5 +1,5 @@
 
-// Generated from /home/jona/myGit/myCode_repository/antlr4_cpp/oracle/PlSqlLexer.g4 by ANTLR 4.7.1
+// Generated from PlSqlLexer.g4 by ANTLR 4.7.1
 
 #pragma once
 

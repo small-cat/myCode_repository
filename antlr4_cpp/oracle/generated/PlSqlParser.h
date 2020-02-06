@@ -1,5 +1,5 @@
 
-// Generated from /home/jona/myGit/myCode_repository/antlr4_cpp/oracle/PlSqlParser.g4 by ANTLR 4.7.1
+// Generated from PlSqlParser.g4 by ANTLR 4.7.1
 
 #pragma once
 
@@ -843,8 +843,7 @@ public:
   virtual antlr4::dfa::Vocabulary& getVocabulary() const override;
 
 
-  bool schema_changed = false;
-  std::string current_schema;
+  int sql_sentences = 0;
 
 
   class Sql_scriptContext;
@@ -2251,8 +2250,8 @@ public:
 
   class  Alter_triggerContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Trigger_nameContext *alter_trigger_name = nullptr;;
-    PlSqlParser::Trigger_nameContext *rename_trigger_name = nullptr;;
+    PlSqlParser::Trigger_nameContext *alter_trigger_name = nullptr;
+    PlSqlParser::Trigger_nameContext *rename_trigger_name = nullptr;
     Alter_triggerContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ALTER();
@@ -2483,8 +2482,8 @@ public:
 
   class  Timing_point_sectionContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *bk = nullptr;;
-    antlr4::Token *ak = nullptr;;
+    antlr4::Token *bk = nullptr;
+    antlr4::Token *ak = nullptr;
     Timing_point_sectionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<antlr4::tree::TerminalNode *> STATEMENT();
@@ -3592,8 +3591,9 @@ public:
 
   class  Alter_session_set_clauseContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Parameter_nameContext *parameter_nameContext = nullptr;;
-    PlSqlParser::Parameter_valueContext *parameter_valueContext = nullptr;;
+    std::string current_schema;
+    PlSqlParser::Parameter_nameContext *parameter_nameContext = nullptr;
+    PlSqlParser::Parameter_valueContext *parameter_valueContext = nullptr;
     Alter_session_set_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Parameter_nameContext *parameter_name();
@@ -6224,7 +6224,7 @@ public:
 
   class  Out_of_line_ref_constraintContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Regular_idContext *ref_col_or_attr = nullptr;;
+    PlSqlParser::Regular_idContext *ref_col_or_attr = nullptr;
     Out_of_line_ref_constraintContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *SCOPE();
@@ -6571,7 +6571,7 @@ public:
 
   class  Tablespace_encryption_specContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *encrypt_algorithm = nullptr;;
+    antlr4::Token *encrypt_algorithm = nullptr;
     Tablespace_encryption_specContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *USING();
@@ -6645,7 +6645,7 @@ public:
 
   class  Temporary_tablespace_clauseContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;;
+    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;
     Temporary_tablespace_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *TEMPORARY();
@@ -6666,7 +6666,7 @@ public:
 
   class  Undo_tablespace_clauseContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;;
+    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;
     Undo_tablespace_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *UNDO();
@@ -6837,7 +6837,7 @@ public:
 
   class  Parallel_clauseContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *parallel_count = nullptr;;
+    antlr4::Token *parallel_count = nullptr;
     Parallel_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *NOPARALLEL();
@@ -7165,7 +7165,7 @@ public:
 
   class  Create_materialized_view_logContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;;
+    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;
     Create_materialized_view_logContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CREATE();
@@ -7265,7 +7265,7 @@ public:
 
   class  Create_materialized_viewContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Id_expressionContext *mv_tablespace = nullptr;;
+    PlSqlParser::Id_expressionContext *mv_tablespace = nullptr;
     Create_materialized_viewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CREATE();
@@ -7317,7 +7317,7 @@ public:
 
   class  Create_mv_refreshContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *rb_segment = nullptr;;
+    antlr4::Token *rb_segment = nullptr;
     Create_mv_refreshContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *NEVER();
@@ -8678,9 +8678,9 @@ public:
 
   class  Physical_attributes_clauseContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *pctfree = nullptr;;
-    antlr4::Token *pctused = nullptr;;
-    antlr4::Token *inittrans = nullptr;;
+    antlr4::Token *pctfree = nullptr;
+    antlr4::Token *pctused = nullptr;
+    antlr4::Token *inittrans = nullptr;
     Physical_attributes_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<antlr4::tree::TerminalNode *> PCTFREE();
@@ -8705,12 +8705,12 @@ public:
 
   class  Storage_clauseContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Size_clauseContext *initial_size = nullptr;;
-    PlSqlParser::Size_clauseContext *next_size = nullptr;;
-    antlr4::Token *minextents = nullptr;;
-    antlr4::Token *pctincrease = nullptr;;
-    antlr4::Token *freelists = nullptr;;
-    antlr4::Token *freelist_groups = nullptr;;
+    PlSqlParser::Size_clauseContext *initial_size = nullptr;
+    PlSqlParser::Size_clauseContext *next_size = nullptr;
+    antlr4::Token *minextents = nullptr;
+    antlr4::Token *pctincrease = nullptr;
+    antlr4::Token *freelists = nullptr;
+    antlr4::Token *freelist_groups = nullptr;
     Storage_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *STORAGE();
@@ -8786,7 +8786,7 @@ public:
 
   class  Segment_attributes_clauseContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;;
+    PlSqlParser::Id_expressionContext *tablespace_name = nullptr;
     Segment_attributes_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<Physical_attributes_clauseContext *> physical_attributes_clause();
@@ -8844,7 +8844,7 @@ public:
 
   class  Flashback_archive_clauseContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *flashback_archive = nullptr;;
+    antlr4::Token *flashback_archive = nullptr;
     Flashback_archive_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *FLASHBACK();
@@ -8965,8 +8965,8 @@ public:
 
   class  Allocate_extent_clauseContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *datafile = nullptr;;
-    antlr4::Token *inst_num = nullptr;;
+    antlr4::Token *datafile = nullptr;
+    antlr4::Token *inst_num = nullptr;
     Allocate_extent_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ALLOCATE();
@@ -10031,7 +10031,7 @@ public:
 
   class  Start_standby_clauseContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *scn_value = nullptr;;
+    antlr4::Token *scn_value = nullptr;
     Start_standby_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *START();
@@ -11580,7 +11580,7 @@ public:
 
   class  Object_type_col_propertiesContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::Regular_idContext *column = nullptr;;
+    PlSqlParser::Regular_idContext *column = nullptr;
     Object_type_col_propertiesContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *COLUMN();
@@ -12225,7 +12225,7 @@ public:
 
   class  Pragma_declarationContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::IdentifierContext *id1 = nullptr;;
+    PlSqlParser::IdentifierContext *id1 = nullptr;
     Pragma_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *PRAGMA();
@@ -12357,8 +12357,8 @@ public:
 
   class  Table_indexed_by_partContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *idx1 = nullptr;;
-    antlr4::Token *idx2 = nullptr;;
+    antlr4::Token *idx1 = nullptr;
+    antlr4::Token *idx2 = nullptr;
     Table_indexed_by_partContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *BY();
@@ -12423,7 +12423,7 @@ public:
 
   class  Label_declarationContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *ltp1 = nullptr;;
+    antlr4::Token *ltp1 = nullptr;
     Label_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<antlr4::tree::TerminalNode *> LESS_THAN_OP();
@@ -12641,7 +12641,7 @@ public:
 
   class  Cursor_loop_paramContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *range_separator = nullptr;;
+    antlr4::Token *range_separator = nullptr;
     Cursor_loop_paramContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Index_nameContext *index_name();
@@ -13066,7 +13066,7 @@ public:
 
   class  Fetch_statementContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *it1 = nullptr;;
+    antlr4::Token *it1 = nullptr;
     Fetch_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *FETCH();
@@ -15331,7 +15331,7 @@ public:
   Logical_expressionContext* logical_expression(int precedence);
   class  Multiset_expressionContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *multiset_type = nullptr;;
+    antlr4::Token *multiset_type = nullptr;
     Multiset_expressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Relational_expressionContext *relational_expression();
@@ -15369,7 +15369,7 @@ public:
   Relational_expressionContext* relational_expression(int precedence);
   class  Compound_expressionContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *like_type = nullptr;;
+    antlr4::Token *like_type = nullptr;
     Compound_expressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<ConcatenationContext *> concatenation();
@@ -15457,7 +15457,7 @@ public:
 
   class  ConcatenationContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *op = nullptr;;
+    antlr4::Token *op = nullptr;
     ConcatenationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Model_expressionContext *model_expression();
@@ -15552,10 +15552,10 @@ public:
 
   class  Single_column_for_loopContext : public antlr4::ParserRuleContext {
   public:
-    PlSqlParser::ExpressionContext *fromExpr = nullptr;;
-    PlSqlParser::ExpressionContext *toExpr = nullptr;;
-    antlr4::Token *action_type = nullptr;;
-    PlSqlParser::ExpressionContext *action_expr = nullptr;;
+    PlSqlParser::ExpressionContext *fromExpr = nullptr;
+    PlSqlParser::ExpressionContext *toExpr = nullptr;
+    antlr4::Token *action_type = nullptr;
+    PlSqlParser::ExpressionContext *action_expr = nullptr;
     Single_column_for_loopContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *FOR();
@@ -15648,7 +15648,7 @@ public:
 
   class  Simple_case_statementContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *ck1 = nullptr;;
+    antlr4::Token *ck1 = nullptr;
     Simple_case_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     ExpressionContext *expression();
@@ -15691,7 +15691,7 @@ public:
 
   class  Searched_case_statementContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *ck1 = nullptr;;
+    antlr4::Token *ck1 = nullptr;
     Searched_case_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *END();
