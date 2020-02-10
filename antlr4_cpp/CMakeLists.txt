@@ -117,6 +117,7 @@ if(WITH_DEMO)
  add_subdirectory(replace_column)
  add_subdirectory(hive)
  add_subdirectory(dynamic_scope)
+ add_subdirectory(greenplum)
 endif(WITH_DEMO)
 
 # Generate CMake Package Files only if install is active
