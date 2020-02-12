@@ -255,7 +255,6 @@ NATIONAL:                N A T I O N A L ;
 NATURAL:                 N A T U R A L ;
 NCHAR:                   N C H A R ;
 NEW:                     N E W ;
-NEWLINE:                 N E W L I N E ;
 NEXT:                    N E X T ;
 NO:                      N O ;
 NOCREATEDB:              N O C R E A T E D B ;
@@ -272,7 +271,6 @@ NOTHING:                 N O T H I N G ;
 NOTIFY:                  N O T I F Y ;
 NOTNULL:                 N O T N U L L ;
 NOWAIT:                  N O W A I T ;
-NULL:                    N U L L ;
 NULLIF:                  N U L L I F ;
 NULL_P:                  N U L L ;
 NULLS_FIRST:             N U L L S '_' F I R S T ;
@@ -302,7 +300,6 @@ OVERLAPS:                O V E R L A P S ;
 OVERLAY:                 O V E R L A Y ;
 OWNED:                   O W N E D ;
 OWNER:                   O W N E R ;
-PARAM:                   P A R A M ;
 PARSER:                  P A R S E R ;
 PARTIAL:                 P A R T I A L ;
 PARTITION:               P A R T I T I O N ;
@@ -520,23 +517,23 @@ SINGLE_LINE_COMMENT: '--' ~('\r' | '\n')* NEWLINE_EOF        -> channel(HIDDEN);
 MULTI_LINE_COMMENT:  '/*' .*? '*/'                           -> channel(HIDDEN);
 SPACES: [ \t\r\n]+ -> channel(HIDDEN);
 
-DIGIT: [0-9];
+CHAR_STRING: '\''  (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\'';
+REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '$' | '_' | [0-9])*;
 
 // xdstop xuistop1 xuistop2 xufailed identifier --- IDENT
 // xq,xe quotestop|quotefail xus xusstop1 xusstop2 xdolq xdolqdelim -- SCONST
-CHAR_STRING: '\''  (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\'';
-DOUBLE_QUOTE_STR: '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' ;
-REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '$' | '_' | '#' | [0-9])*;
-IDENT: REGULAR_ID | CHAR_STRING | DOUBLE_QUOTE_STR;
+DELIMITED_STR: '$' [A-Za-z_-]+ '$';
+SCONST: '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' ;
 // integer -- ICONST
 ICONST: DIGIT+;
 // integer decimal real realfail1 realfail2 -- FCONST
-FLOAT_NUMBER: ICONST* '.'? ICONST+;
 FCONST: FLOAT_NUMBER ('E' ('+'|'-')? (FLOAT_NUMBER | [0-9]+))? ('D' | 'F')?;
 // xb quotefail -- BCONST
 BCONST: 'b' ('\'' [01]* '\'')+;
 // xh quotefail -- XCONST
 XCONST: 'x' ('\'' [A-Fa-f0-9]* '\'')+;
+
+PARAM: '$' DIGIT+;
 
 
 // \~\!\@\#\^\&\|\`\?\+\-\*\/\%\<\>\=
@@ -560,9 +557,10 @@ OP_CHARS
     | EQUALS_OP
     ;
 
-OP: OP_CHARS+;
-
 fragment NEWLINE_EOF    : NEWLINE | EOF;
+fragment NEWLINE        : '\r'? '\n';
+fragment DIGIT          : [0-9];
+fragment FLOAT_NUMBER   : ICONST* '.'? ICONST+;
 
 fragment A		: 'A' | 'a';
 fragment B		: 'B' | 'b';

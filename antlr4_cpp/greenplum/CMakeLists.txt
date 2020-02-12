@@ -4,12 +4,12 @@ if(NOT UNIX)
 endif()
 
 set(antlr4-greenplum-GENERATED_SRC
-   ${PROJECT_SOURCE_DIR}/greenplum/generated/KingbaseSqlLexer.cpp 
-   ${PROJECT_SOURCE_DIR}/greenplum/generated/KingbaseSqlParser.cpp
-   ${PROJECT_SOURCE_DIR}/greenplum/generated/KingbaseSqlParserBaseListener.cpp
-   ${PROJECT_SOURCE_DIR}/greenplum/generated/KingbaseSqlParserBaseVisitor.cpp
-   ${PROJECT_SOURCE_DIR}/greenplum/generated/KingbaseSqlParserListener.cpp
-   ${PROJECT_SOURCE_DIR}/greenplum/generated/KingbaseSqlParserVisitor.cpp
+   ${PROJECT_SOURCE_DIR}/greenplum/generated/GreenPlumLexer.cpp 
+   ${PROJECT_SOURCE_DIR}/greenplum/generated/GreenPlumParser.cpp
+   ${PROJECT_SOURCE_DIR}/greenplum/generated/GreenPlumParserBaseListener.cpp
+   ${PROJECT_SOURCE_DIR}/greenplum/generated/GreenPlumParserBaseVisitor.cpp
+   ${PROJECT_SOURCE_DIR}/greenplum/generated/GreenPlumParserListener.cpp
+   ${PROJECT_SOURCE_DIR}/greenplum/generated/GreenPlumParserVisitor.cpp
  )
 
 set(antlr4-greenplum-deparate_debuginfo
@@ -30,9 +30,9 @@ add_custom_command(OUTPUT ${antlr4-greenplum-GENERATED_SRC}
    COMMAND 
    ${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/greenplum/generated/
    COMMAND
-   "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/greenplum/generated/ ${PROJECT_SOURCE_DIR}/greenplum/KingbaseSqlLexer.g4 ${PROJECT_SOURCE_DIR}/greenplum/KingbaseSqlParser.g4
+   "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/greenplum/generated/ ${PROJECT_SOURCE_DIR}/greenplum/GreenPlumLexer.g4 ${PROJECT_SOURCE_DIR}/greenplum/GreenPlumParser.g4
    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-   DEPENDS ${PROJECT_SOURCE_DIR}/greenplum/KingbaseSqlLexer.g4 ${PROJECT_SOURCE_DIR}/greenplum/KingbaseSqlParser.g4
+   DEPENDS ${PROJECT_SOURCE_DIR}/greenplum/GreenPlumLexer.g4 ${PROJECT_SOURCE_DIR}/greenplum/GreenPlumParser.g4
    )
 
 include_directories(
@@ -43,7 +43,7 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/runtime/src/tree
   ${PROJECT_SOURCE_DIR}/runtime/src/support
   ${PROJECT_SOURCE_DIR}/greenplum/generated
-  ${PROJECT_SOURCE_DIR}/greenplum/kingbaseparser
+  ${PROJECT_SOURCE_DIR}/greenplum/gp_parser
   ${PROJECT_SOURCE_DIR}/greenplum
   )
 
