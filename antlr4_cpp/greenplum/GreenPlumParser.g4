@@ -9,7 +9,7 @@ options {
  *  psql already handles such cases, but other interfaces don't.
  */
 stmtblock
-    :  stmtmulti SEMICOLON* EOF
+    :  stmtmulti SEMICOLON? EOF
     ;
 
 /* the thrashing around here is to discard "empty" statements... */
@@ -121,6 +121,7 @@ stmt
     | variable_set_stmt
     | variable_show_stmt
     | view_stmt
+    | SEMICOLON
     ;
 
 /*****************************************************************************
@@ -396,8 +397,7 @@ add_drop
  * XXX see above notes about cascading DROP USER; groups have same problem.
  *****************************************************************************/
 drop_group_stmt
-    : DROP GROUP_P name_list
-    | DROP GROUP_P IF_P EXISTS name_list
+    : DROP GROUP_P (IF_P EXISTS)? name_list
     ;
 
 
@@ -466,7 +466,7 @@ var_list
     ;
 
 var_value
-    :  opt_boolean
+    : opt_boolean
     | colid_or_sconst
     | numberic_only
     ;
@@ -1214,7 +1214,7 @@ tab_partition_by_type
     ;
 
 opt_tab_partition_by
-    : PARTITION BY tab_partition_by_type? paren_column
+    : PARTITION BY tab_partition_by_type? paren_column_list opt_partitions_number?
       tab_sub_partition_by_list? opt_tab_partition_spec?
     ;
 
@@ -1227,8 +1227,12 @@ tab_sub_partition_template
     ;
 
 tab_sub_partition_by
-    : SUBPARTITION BY tab_partition_by_type paren_column
+    : SUBPARTITION BY tab_partition_by_type paren_column_list opt_partitions_number?
     | tab_sub_partition_template
+    ;
+
+opt_partitions_number
+    : (PARTITIONS | SUBPARTITIONS) integer_only
     ;
 /* END PARTITION RULES */
 
@@ -1270,7 +1274,7 @@ opt_with_data
  *****************************************************************************/
 create_external_stmt
     : CREATE opt_writable? EXTERNAL WEB? opt_temp? TABLE qualified_name LEFT_PAREN ext_table_element_list? RIGHT_PAREN 
-      ext_type_desc FORMAT sconst format_opt? ext_options_opt? ext_opt_encoding_list 
+      ext_type_desc FORMAT sconst format_opt? ext_options_opt? ext_opt_encoding_list? 
       opt_single_row_error_handling? opt_distributed_by?
     ;
 
@@ -1951,7 +1955,7 @@ comment_text
  *****************************************************************************/
 
 fetch_stmt 
-    : FETCH (fetch_direction? (FROM | IN))? name
+    : FETCH (fetch_direction? (FROM | IN_P))? name
     ;
 
 fetch_direction
@@ -2011,7 +2015,7 @@ privilege
     : SELECT
     | INSERT
     | UPDATE
-    | DELETE
+    | DELETE_P
     | REFERENCES
     | TRIGGER
     | TRUNCATE
@@ -2215,9 +2219,17 @@ func_return
  * is next best choice.
  */
 func_type
-    : typename_pg
-    | type_function_name attrs PERCENT_SIGN TYPE_P
-    | SETOF type_function_name attrs PERCENT_SIGN TYPE_P
+    : SETOF? typename_pg
+    | TABLE LEFT_PAREN func_type_table_option_list? RIGHT_PAREN
+    ;
+
+func_type_table_option_list
+    : func_type_table_option (COMMA func_type_table_option)*
+    ;
+
+func_type_table_option
+    : type_function_name typename_pg
+    | LIKE name
     ;
 
 /* Must be at least one to prevent conflict */
@@ -2235,10 +2247,7 @@ common_func_opt_item
     | IMMUTABLE
     | STABLE
     | VOLATILE
-    | EXTERNAL SECURITY DEFINER
-    | EXTERNAL SECURITY INVOKER
-    | SECURITY DEFINER
-    | SECURITY INVOKER
+    | EXTERNAL? SECURITY (DEFINER | INVOKER)
     | COST numberic_only
     | ROWS numberic_only
     | set_reset_clause
@@ -2531,7 +2540,7 @@ transaction_stmt
     | START TRANSACTION transaction_mode_list?
     | SAVEPOINT colid
     | RELEASE SAVEPOINT? colid
-    | ROLLBACK opt_transaction TO SAVEPOINT? colid
+    | ROLLBACK opt_transaction? TO SAVEPOINT? colid
     | PREPARE TRANSACTION sconst
     | (COMMIT | ROLLBACK) PREPARED sconst
     ;
@@ -3005,7 +3014,7 @@ subquery_operation_part
  */
 
 select_with_parens
-    : LEFT_PAREN select_no_parens RIGHT_PAREN
+    : LEFT_PAREN select_stmt RIGHT_PAREN
     ;
 
 select_no_parens
@@ -3037,8 +3046,7 @@ select_no_parens
  */
 simple_select
     : SELECT opt_distinct? target_list
-      into_clause? from_clause? where_clause?
-      group_clause? having_clause? window_clause?
+      into_clause? from_clause? where_clause? group_clause? having_clause? window_clause?
     | values_clause
     ;
 
@@ -3214,7 +3222,8 @@ table_ref
     | func_table alias_clause?
     | func_table AS? colid? LEFT_PAREN table_func_element_list RIGHT_PAREN
     | select_with_parens alias_clause?
-    | LEFT_PAREN joined_table RIGHT_PAREN alias_clause?
+    | LEFT_PAREN table_ref RIGHT_PAREN alias_clause?
+    | table_ref NATURAL? join_type? JOIN table_ref join_qual?
     ;
 
 
@@ -3235,13 +3244,6 @@ table_ref
  * in common. We'll collect columns during the later transformations.
  */
 
-joined_table
-    : LEFT_PAREN joined_table RIGHT_PAREN
-    | table_ref CROSS JOIN table_ref
-    | table_ref join_type? JOIN table_ref join_qual
-    | table_ref NATURAL join_type? JOIN table_ref
-    ;
-
 alias_clause
     : AS? colid paren_name_list?
     ;
@@ -3249,6 +3251,7 @@ alias_clause
 join_type
     : (FULL | LEFT | RIGHT) OUTER_P?
     | INNER_P
+    | CROSS
     ;
 
 /* JOIN qualification clauses
@@ -3500,71 +3503,80 @@ opt_interval
  * it's factored out just to eliminate redundant coding.
  */
 a_expr
-    : c_expr
-    | a_expr TYPECAST typename_pg
-    | PLUS_SIGN a_expr
-    | MINUS_SIGN a_expr
-    | a_expr AT TIME ZONE a_expr
-      
-    // ^
-    | a_expr CARRET_OPERATOR_PART a_expr
-      
-    // * / %
-    | a_expr ASTERISK a_expr
-    | a_expr SOLIDUS a_expr
-    | a_expr PERCENT_SIGN a_expr
-    
-    // + -
-    | a_expr PLUS_SIGN a_expr
-    | a_expr MINUS_SIGN a_expr
-    | a_expr BAR BAR a_expr
-      
-    // IS NULL TRUE FALSE UNKNOWN
-    | a_expr IS NOT? NULL_P
-    | a_expr IS NOT? DISTINCT FROM a_expr
-    | a_expr IS NOT? OF '(' type_list ')'
-    | a_expr IS NOT? DOCUMENT_P
-    | a_expr IS NOT? (TRUE_P | FALSE_P | UNKNOWN)
-    | a_expr (ISNULL | NOTNULL) 
+    : logical_expr
+    ;
+ 
+logical_expr
+    : multiset_expr (IS NOT? 
+                     (NULL_P 
+                     | DISTINCT FROM logical_expr 
+                     | OF LEFT_PAREN type_list RIGHT_PAREN 
+                     | DOCUMENT_P 
+                     | TRUE_P 
+                     | FALSE_P 
+                     | UNKNOWN))?
+    | multiset_expr (ISNULL | NOTNULL)
+    | NOT logical_expr
+    | logical_expr AND logical_expr
+    | logical_expr OR logical_expr
+    ;
 
-    // Op
-    | a_expr qual_Op a_expr
-    | qual_Op a_expr
-    | a_expr subquery_Op sub_type select_with_parens
-    | a_expr subquery_Op sub_type LEFT_PAREN a_expr RIGHT_PAREN
-    
-    | a_expr qual_Op
-      
-    | a_expr NOT? IN_P in_expr
-    | a_expr NOT? BETWEEN (ASYMMETRIC? | SYMMETRIC) a_expr AND a_expr
-    
-    | row OVERLAPS row
-    
-    | a_expr NOT? (LIKE | ILIKE) a_expr (ESCAPE a_expr)?
-    | a_expr NOT? SIMILAR TO a_expr (ESCAPE a_expr)?
-    
-    | a_expr relational_op a_expr
-    
-    | NOT a_expr
-    | a_expr AND a_expr
-    | a_expr OR a_expr
-    
-    | UNIQUE select_with_parens 
+multiset_expr
+    : relational_expr
+    ;
+
+relational_expr
+    : relational_expr relational_op relational_expr
+    | compound_expr
     ;
 
 relational_op
-    : ('<' | '>') EQUALS_OP?
+    : (LESS_THAN_OP | GREATER_THAN_OP) EQUALS_OP?
     | EQUALS_OP
     | NOT_EQUAL_OP
     ;
 
+compound_expr
+    : concatenation 
+      (NOT? (IN_P in_expr 
+            | BETWEEN (ASYMMETRIC? | SYMMETRIC) between_elements 
+            | (LIKE | ILIKE | SIMILAR TO) concatenation (ESCAPE a_expr)?))?
+    | concatenation_list OVERLAPS concatenation_list
+    ;
+    
+between_elements
+    : concatenation AND concatenation
+    ;
+
+concatenation_list
+    : LEFT_PAREN concatenation (COMMA concatenation)* RIGHT_PAREN
+    ;
+
+concatenation
+    : model_expr (AT TIME ZONE concatenation)?
+    | concatenation CARRET_OPERATOR_PART concatenation
+    | concatenation op=(ASTERISK | SOLIDUS | PERCENT_SIGN) concatenation
+    | concatenation op=(PLUS_SIGN | MINUS_SIGN) concatenation
+    | concatenation BAR BAR concatenation
+    ;
+
+model_expr
+    : unary_expr
+    ;
+
+unary_expr
+    : c_expr
+    | unary_expr TYPECAST typename_pg
+    | (MINUS_SIGN | PLUS_SIGN) unary_expr
+    ;
+
 c_expr
     : LEFT_PAREN a_expr RIGHT_PAREN indirection?
-    | select_with_parens indirection?
-    | (EXISTS | ARRAY) select_with_parens
+    | UNIQUE? select_with_parens indirection?
+    | (EXISTS | ARRAY) select_stmt
     | columnref
     | func_expr (OVER window_specification)?
-    
+
     | a_expr_const
     | PARAM indirection?
     | case_expr
@@ -3769,12 +3781,6 @@ window_frame_exclusion
  */
 row
     : LEFT_PAREN expr_list? RIGHT_PAREN
-    ;
-
-sub_type
-    : ANY 
-    | SOME
-    | ALL   
     ;
 
 op_signs
@@ -4145,8 +4151,9 @@ signed_iconst
 /* Column identifier --- names that can be column, table, etc names.
  */
 colid
-    : identifier
+    : COLON? identifier
     | unreserved_keyword
+    | SCONST
 //    | col_name_keyword 
     ;
 
@@ -4167,6 +4174,7 @@ col_label
     | col_name_keyword
     | type_func_name_keyword
     | reserved_keyword   
+    | SCONST
     ;
 
 identifier
@@ -4484,6 +4492,7 @@ unreserved_keyword
       | YEAR_P
       | YES_P
       | ZONE
+      | PUBLIC
     ;
 
 keywords_ok_in_alias_no_as
