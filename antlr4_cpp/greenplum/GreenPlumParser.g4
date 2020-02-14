@@ -5,14 +5,17 @@ options {
 }
 
 /*
- *  Handle comment-only lines, and ;; SELECT * FROM pg_class ;;;
  *  psql already handles such cases, but other interfaces don't.
+ *  here, the rules can only support such cases:
+ *  1. select 1;
+ *  2. select 1;;
+ *  3. select 1;;;;
+ *  but can not support select 1;;; <--- here three semicolons at the end
  */
 stmtblock
     :  stmtmulti SEMICOLON? EOF
     ;
 
-/* the thrashing around here is to discard "empty" statements... */
 stmtmulti
     : stmt (SEMICOLON stmt)* 
     ;
@@ -3067,7 +3070,7 @@ cte_list
     ;
 
 common_table_expr
-    : name paren_name_list? AS select_with_parens
+    : cte_name paren_name_list? AS select_with_parens
     ;
 
 into_clause
@@ -3210,42 +3213,13 @@ from_list
     : table_ref (COMMA table_ref)*
     ;
 
-/*
- * table_ref is where an alias clause can be attached.  Note we cannot make
- * alias_clause have an empty production because that causes parse conflicts
- * between table_ref := LEFT_PAREN joined_table RIGHT_PAREN alias_clause
- * and joined_table := LEFT_PAREN joined_table RIGHT_PAREN.  So, we must have the
- * redundant-looking productions here instead.
- */
 table_ref
-    : relation_expr alias_clause?
-    | func_table alias_clause?
-    | func_table AS? colid? LEFT_PAREN table_func_element_list RIGHT_PAREN
-    | select_with_parens alias_clause?
-    | LEFT_PAREN table_ref RIGHT_PAREN alias_clause?
-    | table_ref NATURAL? join_type? JOIN table_ref join_qual?
-    ;
-
-
-/*
- * It may seem silly to separate joined_table from table_ref, but there is
- * method in SQL92's madness: if you don't do it this way you get reduce-
- * reduce conflicts, because it's not clear to the parser generator whether
- * to expect alias_clause after RIGHT_PAREN or not.  For the same reason we must
- * treat 'JOIN' and 'join_type JOIN' separately, rather than allowing
- * join_type to expand to empty; if we try it, the parser generator can't
- * figure out when to reduce an empty join_type right after table_ref.
- *
- * Note that a CROSS JOIN is the same as an unqualified
- * INNER JOIN, and an INNER JOIN/ON has the same shape
- * but a qualification expression to limit membership.
- * A NATURAL JOIN implicitly matches column names between
- * tables and the shape is determined by which columns are
- * in common. We'll collect columns during the later transformations.
- */
-
-alias_clause
-    : AS? colid paren_name_list?
+    : relation_expr (AS? colid paren_name_list?)? # table_ref_normal
+    | func_table (AS? colid paren_name_list?)?    # table_ref_func1
+    | func_table AS? colid? LEFT_PAREN table_func_element_list RIGHT_PAREN # table_ref_func2
+    | select_with_parens (AS? colid paren_name_list?)?  # table_ref_subquery
+    | LEFT_PAREN table_ref RIGHT_PAREN (AS? colid paren_name_list?)?    # table_ref_parens
+    | table_ref NATURAL? join_type? JOIN table_ref join_qual?   # table_ref_joinable
     ;
 
 join_type
@@ -3964,7 +3938,7 @@ decode_default
  * dotted names, the first name is not actually a relation name...
  */
 columnref
-    :  relation_name indirection?
+    : relation_name indirection?
     ;
 
 indirection_el
@@ -4015,8 +3989,7 @@ target_list
     ;
 
 target_el
-    : a_expr
-    | a_expr AS? col_label
+    : (columnref | a_expr) (AS? col_label)? # target_el_normal
       /*
        * Postgres supports omitting AS only for column labels that aren't
        * any known keyword.  There is an ambiguity against postfix
@@ -4031,7 +4004,7 @@ target_el
        * modifier suffixes (DAY, MONTH, YEAR, etc) and a few other
        * obscure cases.
        */
-    | ASTERISK
+    | ASTERISK  # target_el_asterisk
     ;
 
 
@@ -4065,8 +4038,11 @@ name_list
     : name (COMMA name)*
     ;
 
-
 name
+    : colid
+    ;
+
+cte_name 
     : colid
     ;
 

@@ -21,6 +21,7 @@
 #include "GreenPlumParser.h"
 
 #include "error_verbose_listener.hpp"
+#include "greenplum_get_dag_listener.hpp"
 
 using namespace antlr4;
 
@@ -78,6 +79,13 @@ void ParseString(std::string &sql) {
   // the following here is not apt
   if (err_verbose.has_error())
     std::cout << "Parse failed: " << err_verbose.err_message() << std::endl;
+
+  tree::ParseTreeWalker walker;
+
+  std::cout << "========== DAG ============" << std::endl;
+  GreenPlumGetColumnDAG gp_dag(&parser);
+  walker.walk(&gp_dag, tree);
+  TravelColumnDag(gp_dag.column_dag());
 }
 
 std::string& string_toupper(std::string &str) {
