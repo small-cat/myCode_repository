@@ -3547,7 +3547,7 @@ unary_expr
 c_expr
     : LEFT_PAREN a_expr RIGHT_PAREN indirection?
     | UNIQUE? select_with_parens indirection?
-    | (EXISTS | ARRAY) select_stmt
+    | EXISTS select_stmt
     | columnref
     | func_expr (OVER window_specification)?
 

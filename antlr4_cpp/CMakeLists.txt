@@ -118,6 +118,8 @@ if(WITH_DEMO)
  add_subdirectory(hive)
  add_subdirectory(dynamic_scope)
  add_subdirectory(greenplum)
+ add_subdirectory(gauss200)
+ # add_compile_options(plpgsql)
 endif(WITH_DEMO)
 
 # Generate CMake Package Files only if install is active
