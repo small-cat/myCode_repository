@@ -585,6 +585,43 @@ PLAIN_GS:                 P L A I N;
 EXTENDED_GS:              E X T E N D E D;
 MAIN_GS:                  M A I N;
 CSN_GS:                   C S N;
+ERRORS_GS:                E R R O R S;
+FORMAT_GS:                F O R M A T;
+NOESCAPING_GS:            N O E S C A P I N G;
+FORCE_QUOTE_GS:           F O R C E '_' Q U O T E;
+FORCE_NOT_NULL_GS:        F O R C E '_' N O T '_' N U L L;
+IGNORE_EXTRA_DATA_GS:     I G N O R E '_' E X T R A '_' D A T A;
+FILL_MISSING_FIELDS_GS:   F I L L '_' M I S S I N G '_' F I E L D S;
+COMPATIBLE_ILLEGAL_CHARS_GS:C O M P A T I B L E '_' I L L E G A L '_' C H A R S;
+DATE_FORMAT_GS:           D A T E '_' F O R M A T;
+TIME_FORMAT_GS:           T I M E '_' F O R M A T;
+TIMESTAMP_FORMAT_GS:      T I M E S T A M P '_' F O R M A T;
+SMALLDATETIME_FORMAT_GS:  S M A L L D A T E T I M E '_' F O R M A T;
+
+ROUNDROBIN_GS:            R O U N D R O B I N;
+PERMISSIVE_GS:            P E R M I S S I V E;
+RESTRICTIVE_GS:           R E S T R I C T I V E;
+HASH_GS:                  H A S H;
+COSTS_GS:                 C O S T S;
+CPU_GS:                   C P U;
+DETAIL_GS:                D E T A I L;
+NODES_GS:                 N O D E S;
+NUM_NODES_GS:             N U M '_' N O D E S;
+BUFFERS_GS:               B U F F E R S;
+TIMING_GS:                T I M I N G;
+PLAN_GS:                  P L A N;
+JSON_GS:                  J S O N;
+YAML_GS:                  Y A M L;
+CONNECT_GS:               C O N N E C T;
+COMPUTE_GS:               C O M P U T E;
+TABLESAMPLE_GS:           T A B L E S A M P L E;
+ROLLUP_GS:                R O L L U P;
+CUBE_GS:                  C U B E;
+GROUPING_GS:              G R O U P I N G; 
+SETS_GS:                  S E T S;
+COMPACT_GS:               C O M P A C T;
+DELTAMERGE_GS:            D E L T A M E R G E;
+HDFSDIRECTORY_GS:         H D F S D I R E C T O R Y;
 
 PERCENT_SIGN:              '%';
 AMPERSAND:                 '&';
@@ -628,10 +665,11 @@ MULTI_LINE_COMMENT:  '/*' .*? '*/'                           -> channel(HIDDEN);
 SPACES: [ \t\r\n]+ -> channel(HIDDEN);
 
 CHAR_STRING: '\''  (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\'';
-REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '$' | '_' | [0-9])*;
+REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '#' | '$' | '_' | [0-9])*;
 
 DELIMITED_STR: '$' [A-Za-z_-]+ '$';
-SCONST: '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' ;
+SCONST: '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' 
+      | '$' '$' (~('$' | '\r' | '\n'))+ '$' '$';    // $$ 之间的作为字符串
 // integer -- ICONST
 ICONST: DIGIT+;
 // integer decimal real realfail1 realfail2 -- FCONST
