@@ -251,7 +251,7 @@ configuration_param
 
 // alter data source
 alter_data_source_stmt
-    : ALTER_GS DATA_GS SOURCE_GS src_name alter_data_src_option?
+    : ALTER_GS DATA_GS SOURCE_GS src_name alter_data_src_option
     ;
 
 src_name
@@ -654,7 +654,7 @@ pool_name
 
 // alter role
 alter_role_stmt
-    : ALTER_GS ROLE_GS role_name alter_role_option?
+    : ALTER_GS ROLE_GS role_name alter_role_option
     ;
 
 alter_role_option
@@ -1156,7 +1156,7 @@ alter_type_alter_attr
 
 // alter user stmt
 alter_user_stmt
-    : ALTER_GS USER_GS user_name alter_user_clause?
+    : ALTER_GS USER_GS user_name alter_user_clause
     ;
 
 alter_user_clause
@@ -1205,7 +1205,7 @@ barrier_name
 
 // create database stmt
 create_database_stmt
-    : CREATE_GS DATABASE_GS database_name (WITH_GS? assignment_stmt*)?
+    : CREATE_GS DATABASE_GS database_name (WITH_GS? assignment_stmt+)?
     ;
 
 // create data source stmt
@@ -1263,12 +1263,12 @@ foreign_table_on_hadoop_column_type_list
 
 foreign_table_on_hadoop_column_type
     : column_with_type ((CONSTRAINT_GS constraint_name)? NOT_GS? NULL_GS 
-                               | create_foreign_table_column_constraint*)?
+                               | create_foreign_table_column_constraint+)?
     | create_foreign_table_column_constraint (COMMA create_foreign_table_column_constraint)*
     ;
 
 create_foreign_table_column_constraint
-    : (CONSTRAINT_GS constraint_name)? (column_constraint_primary_unique) add_info_constraint_option?
+    : (CONSTRAINT_GS constraint_name)? column_constraint_primary_unique add_info_constraint_option?
     ;
 
 // create function stmt
@@ -1302,7 +1302,7 @@ create_func_procedure_as_option
 
 // create group stmt
 create_group_stmt
-    : CREATE_GS GROUP_GS group_name (WITH_GS? alter_role_with_option*)?
+    : CREATE_GS GROUP_GS group_name (WITH_GS? alter_role_with_option+)?
       (ENCRYPTED_GS | UNENCRYPTED_GS)? alter_role_encrypt_option
     ;
 
@@ -1373,7 +1373,7 @@ create_source_pool_stmt
 
 // create role stmt
 create_role_stmt
-    : CREATE_GS ROLE_GS role_name (WITH_GS? alter_role_with_option*)?
+    : CREATE_GS ROLE_GS role_name (WITH_GS? alter_role_with_option+)?
       (ENCRYPTED_GS | UNENCRYPTED_GS)? alter_role_encrypt_option
     ;
 
@@ -1548,7 +1548,7 @@ create_type_option
 
 // create user stmt
 create_user_stmt
-    : CREATE_GS USER_GS user_name (WITH_GS? alter_role_with_option*)?
+    : CREATE_GS USER_GS user_name (WITH_GS? alter_role_with_option+)?
       (ENCRYPTED_GS | UNENCRYPTED_GS)? alter_role_encrypt_option
     ;
 
@@ -1587,7 +1587,7 @@ subquery_operation_part
 
 subquery
     : with_clause? simple_select window_clause? order_by_clause? 
-      limit_clause? offset_clause? fetch_clause? for_update_share_clause?
+      limit_clause? offset_clause? fetch_clause? for_update_share_clause*
     ;
 
 simple_select
@@ -1757,10 +1757,6 @@ fetch_clause
     ;
 
 for_update_share_clause
-    : for_update_share_clause_option*
-    ;
-
-for_update_share_clause_option
     : FOR_GS (UPDATE_GS | SHARE_GS) (OF_GS table_name (COMMA table_name)*)? NOWAIT_GS?
     ;
 
@@ -2059,17 +2055,22 @@ commit_prepared_stmt
 // copy stmt
 copy_stmt
     : COPY_GS identifier paren_column_list? (FROM_GS | TO_GS) 
-      (CHAR_STRING | STDOUT_GS | STDIN_GS) copy_stmt_option*
+      (CHAR_STRING | STDOUT_GS | STDIN_GS) 
+      copy_stmt_clause* copy_stmt_option*
     ;
 
-copy_stmt_option
+copy_stmt_clause
     : USING_GS DELIMITERS_GS CHAR_STRING
     | WITHOUT_GS ESCAPE_GS
     | LOG_GS ERRORS_GS
     | REJECT_GS LIMIT_GS CHAR_STRING
-    | WITH_GS? paren_copy_clause_option_list
+    ;
+
+copy_stmt_option
+    : WITH_GS? paren_copy_clause_option_list
     | copy_option
-    | FIXED_GS FORMATTER_GS (LEFT_PAREN column_offset_list RIGHT_PAREN | (paren_copy_clause_option_list | copy_option*))*
+    | FIXED_GS FORMATTER_GS LEFT_PAREN column_offset_list RIGHT_PAREN (paren_copy_clause_option_list | copy_option*)
+    | (paren_copy_clause_option_list | copy_option*) FIXED_GS FORMATTER_GS LEFT_PAREN column_offset_list RIGHT_PAREN
     ;
 
 paren_copy_clause_option_list
@@ -2086,6 +2087,10 @@ copy_clause_option
     ;
 
 column_offset_list
+    : column_offset_ele (COMMA column_offset_ele)*
+    ;
+
+column_offset_ele
     : column_name LEFT_PAREN numeric COMMA numeric RIGHT_PAREN
     ;
 
@@ -2543,7 +2548,7 @@ concatenation
     | concatenation op=(ASTERISK | SOLIDUS | PERCENT_SIGN) concatenation
     | concatenation op=(PLUS_SIGN | MINUS_SIGN) concatenation
     | concatenation op=(AMPERSAND | BAR | POUND_SIGN) concatenation
-    | concatenation op=(GREATER_THAN_OP GREATER_THAN_OP | LESS_THAN_OP LESS_THAN_OP) concatenation
+    | concatenation (GREATER_THAN_OP GREATER_THAN_OP | LESS_THAN_OP LESS_THAN_OP) concatenation
     | concatenation geometry_op1 concatenation
     | concatenation BAR BAR concatenation
     ;
@@ -2580,7 +2585,7 @@ unary_expr
     | unary_expr EXCLAMATION_OPERATOR_PART
     | TILDE_OPERATOR_PART unary_expr
     | geometry_op2 unary_expr
-    | unary_expr (TYPECAST typename_gs (typecast_arg)?)*   // 44::bit(4)::integer, array[1, 2, 3]::int[]
+    | unary_expr (TYPECAST typename_gs typecast_arg?)+   // 44::bit(4)::integer, array[1, 2, 3]::int[]
     | case_expr
     | function_expr
     | quantified_expression
@@ -2780,7 +2785,7 @@ function_expr
     | XMLPARSE_GS LEFT_PAREN document_or_content expression xml_whitespace_option? RIGHT_PAREN
     | XMLPI_GS LEFT_PAREN NAME_GS col_label (COMMA expression)? RIGHT_PAREN
     | XMLROOT_GS LEFT_PAREN expression COMMA xml_root_version opt_xml_root_standalone? RIGHT_PAREN
-    | XMLSERIALIZE_GS LEFT_PAREN document_or_content expression AS typename_gs RIGHT_PAREN
+    | XMLSERIALIZE_GS LEFT_PAREN document_or_content expression AS_GS typename_gs RIGHT_PAREN
     ;
 
 col_label
@@ -2897,7 +2902,7 @@ substr_for
     ;
 
 trim_list
-    : (expression? FROM)? expression_list 
+    : (expression? FROM_GS)? expression_list 
     ;
 
 simple_function
