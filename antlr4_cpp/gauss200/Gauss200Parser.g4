@@ -7,18 +7,19 @@ options {
 // ;
 // select 1;;;
 stmtblock
-    :  stmtmulti EOF
+    :  stmtmulti SEMICOLON? EOF
     ;
 
 stmtmulti
-    : stmt (SEMICOLON stmt)* 
+    : sql_stmt (SEMICOLON sql_stmt)* 
+    ;
+
+sql_stmt
+    : stmt
+    | other_stmt
     ;
 
 stmt
-    : gs_stmt? SEMICOLON
-    ;
-
-gs_stmt
     : abort_stmt
       
     // alter stmts
@@ -65,13 +66,12 @@ gs_stmt
     | create_node_stmt
     | create_node_group_stmt
     | create_row_level_security_policy_stmt
-    | create_source_pool_stmt
+    | create_resource_pool_stmt
     | create_role_stmt
     | create_schema_stmt
     | create_sequence_stmt
     | create_server_stmt
     | create_table_stmt
-    | create_table_partition_stmt
     | create_tablespace_stmt
     | create_txt_search_stmt
     | create_trigger_stmt
@@ -119,8 +119,7 @@ gs_stmt
     | close_stmt
     | cluster_stmt
     | comment_stmt
-    | commit_end_stmt
-    | commit_prepared_stmt
+
     | copy_stmt
     | cursor_stmt
     | deallocate_stmt
@@ -129,8 +128,6 @@ gs_stmt
       
     | execute_stmt
     | execute_direct_stmt
-    | explain_stmt
-    | explain_plan_stmt
       
     | fetch_move_stmt
       
@@ -150,18 +147,32 @@ gs_stmt
       
     | savepoint_stmt
     | set_reset_stmt
-    | show_stmt
+
     | start_transaction_stmt
     | truncate_stmt
     | update_stmt
-      
-    // recollect space time and update statistic infos
-    | vacuum_stmt
+
+    | SEMICOLON
+    ;
+
+ // recollect space time and update statistic infos
+other_stmt
+    : vacuum_stmt
     | values_stmt
+    | show_stmt
+    | explain_stmt
+    | explain_plan_stmt
+    | commit_end_stmt
+    | commit_prepared_stmt
+    | begin_stmt
+    ;
+
+begin_stmt
+    : (DECLARE_GS variable_declarations?)? BEGIN_GS execute_stmts END_GS
     ;
 
 abort_stmt
-    : ABORT_GS work_transaction
+    : ABORT_GS work_transaction?
     ;
 
 work_transaction
@@ -186,7 +197,7 @@ assignment_stmt_list
     ;
 
 assignment_stmt
-    : identifier (EQUALS_OP? assignment_value)?
+    : expression (COLON? EQUALS_OP? assignment_value)?
     ;
 
 assignment_value
@@ -212,7 +223,7 @@ alter_database_option
     ;
 
 connection_limit
-    : CONNECTION_GS LIMIT_GS integer
+    : CONNECTION_GS LIMIT_GS expression
     ;
 
 integer
@@ -237,8 +248,13 @@ new_name
     ;
 
 set_configuration_param
-    : SET_GS session_local? configuration_param ((TO_GS | EQUALS_OP) expr_default
-                                         | FROM_GS CURRENT_GS)
+    : SET_GS session_local? configuration_param configuration_param_value (COMMA configuration_param_value)*
+    ;
+
+configuration_param_value
+    : (TO_GS | EQUALS_OP)? expr_default
+    | FROM_GS CURRENT_GS
+    | PUBLIC_GS
     ;
 
 reset_configuration_param
@@ -401,7 +417,7 @@ directory_name
 
 // alter foreign table stmt
 alter_foreign_table_stmt
-    : ALTER_GS FOREIGN_GS TABLES_GS if_exists_or_not? table_name alter_foreign_table_option
+    : ALTER_GS FOREIGN_GS TABLE_GS if_exists_or_not? table_name alter_foreign_table_option cascade_restrict?
     ;
 
 if_exists_or_not
@@ -409,7 +425,11 @@ if_exists_or_not
     ;
 
 table_name
-    : identifier
+    : identifier attr*
+    ;
+
+attr
+    : PERIOD identifier
     ;
 
 alter_foreign_table_option
@@ -429,7 +449,7 @@ alter_foreign_table_action
     ;
 
 column_name
-    : identifier
+    : identifier attr*
     ;
 
 alter_foreign_table_action_option
@@ -489,6 +509,7 @@ argmode
     : IN_GS
     | OUT_GS
     | INOUT_GS
+    | VARIADIC_GS
     ;
 
 param_name
@@ -512,6 +533,7 @@ alter_function_action
     | (COST_GS | ROWS_GS) numeric
     | set_configuration_param
     | reset_configuration_param
+    | PACKAGE_GS
     ;
 
 alter_set_schema
@@ -546,7 +568,7 @@ alter_index_stmt
     ;
 
 index_name
-    : identifier
+    : identifier attr*
     ;
 
 alter_index_option
@@ -663,26 +685,30 @@ alter_role_option
     | (IN_GS DATABASE_GS database_name)? (set_configuration_param | reset_configuration_param)
     ;
 
-alter_role_with_option
-    : (CREATEDB_GS | NOCREATEDB_GS) 
+role_option_common
+    : (SYSADMIN_GS | NOSYSADMIN_GS)
+    | (AUDITADMIN_GS | NOAUDITADMIN_GS)
+    | (CREATEDB_GS | NOCREATEDB_GS)
+    | (USEFT_GS | NOUSEFT_GS)
     | (CREATEROLE_GS | NOCREATEROLE_GS)
     | (INHERIT_GS | NOINHERIT_GS)
-    | (AUDITADMIN_GS | NOAUDITADMIN_GS)
-    | (SYSADMIN_GS | NOSYSADMIN_GS)
-    | (USEFT_GS | NOUSEFT_GS)
     | (LOGIN_GS | NOLOGIN_GS)
     | (REPLICATION_GS | NOREPLICATION_GS)
     | (INDEPENDENT_GS | NOINDEPENDENT_GS)
     | (VCADMIN_GS | NOVCADMIN_GS)
     | connection_limit
-    | (ENCRYPTED_GS | UNENCRYPTED_GS)? alter_role_encrypt_option
     | VALID_GS (BEGIN_GS | UNTIL_GS) CHAR_STRING
     | RESOURCE_GS POOL_GS CHAR_STRING
     | USER_GS GROUP_GS CHAR_STRING
     | PERM_GS SPACE_GS CHAR_STRING
     | NODE_GS GROUP_GS logic_cluster_name
-    | ACCOUNT_GS (LOCK_GS | UNLOCK_GS)
     | PGUSER_GS
+    ;
+
+alter_role_with_option
+    : role_option_common
+    | (ENCRYPTED_GS | UNENCRYPTED_GS)? alter_role_encrypt_option
+    | ACCOUNT_GS (LOCK_GS | UNLOCK_GS)
     ;
 
 alter_role_encrypt_option
@@ -823,6 +849,10 @@ alter_table_option
     ;
 
 alter_table_action_list
+    : alter_table_action (COMMA alter_table_action)*
+    ;
+
+alter_table_action
     : column_clause
     | ADD_GS alter_table_constraint (NOT_GS VALID_GS)?
     | ADD_GS table_constraint_using_index
@@ -976,7 +1006,7 @@ row_clause
     ;
 
 merge_clause
-    : MERGE_GS PARTITION_GS partition_name (COMMA partition_name)* INTO_GS 
+    : MERGE_GS PARTITIONS_GS partition_name (COMMA partition_name)* INTO_GS 
       PARTITION_GS partition_name (tablespace_name_option)?
     ;
 
@@ -1054,12 +1084,12 @@ alter_txt_search_conf_stmt
     ;
 
 configuration_name
-    : identifier
+    : identifier attr*
     ;
 
 alter_txt_search_conf_option
     : (ADD_GS | ALTER_GS) MAPPING_GS FOR_GS token_type_list WITH_GS dictionary_name_list
-    | ALTER_GS MAPPING_GS (FOR_GS token_type_list)? REPLACE_GS DICTIONARY_GS WITH_GS new_name
+    | ALTER_GS MAPPING_GS (FOR_GS token_type_list)? REPLACE_GS dictionary_name WITH_GS new_name
     | DROP_GS MAPPING_GS if_exists_or_not? FOR_GS token_type_list
     | rename_owner_to_option
     | alter_set_schema
@@ -1106,7 +1136,7 @@ alter_type_stmt
     ;
 
 type_name
-    : identifier
+    : identifier attr*
     ;
 
 alter_type_option
@@ -1172,7 +1202,7 @@ alter_view_stmt
     ;
 
 view_name
-    : identifier
+    : identifier attr*
     ;
 
 alter_view_option
@@ -1191,7 +1221,7 @@ workload_group_stmt
 
 // create group mapping 
 create_group_mapping_stmt
-    : CREATE_GS APP_GS WORKLOAD_GS GROUP_GS MAPPING_GS app_name WITH_GS LEFT_PAREN assignment_stmt RIGHT_PAREN
+    : CREATE_GS APP_GS WORKLOAD_GS GROUP_GS MAPPING_GS app_name (WITH_GS LEFT_PAREN assignment_stmt RIGHT_PAREN)?
     ;
 
 // create barrier stmt
@@ -1274,8 +1304,14 @@ create_foreign_table_column_constraint
 // create function stmt
 // only support PostgreSql style, **not support Oracle style so far**
 create_function_procedure_stmt
-    : CREATE_GS or_replace? (FUNCTION_GS | PROCEDURE_GS) func_name create_func_arg_list (RETURNS_GS func_return_type)?
-      LANGUAGE_GS lang_name alter_function_action* create_func_procedure_as_option /* plsqlbody */
+    : CREATE_GS or_replace? (FUNCTION_GS | PROCEDURE_GS) func_name (LEFT_PAREN create_func_arg_list? RIGHT_PAREN)? 
+      ((RETURNS_GS | RETURN_GS) func_return_type)? create_function_procedure_clause*
+    ;
+
+create_function_procedure_clause
+    : LANGUAGE_GS lang_name
+    | alter_function_action+
+    | create_func_procedure_as_option plsqlbody?
     ;
 
 create_func_arg_list
@@ -1283,7 +1319,7 @@ create_func_arg_list
     ;
 
 create_func_arg
-    : param_name argmode? typename_gs ((DEFAULT_GS | (COLON? EQUALS_OP)) expression)?
+    : param_name? argmode? typename_gs ((DEFAULT_GS | (COLON? EQUALS_OP)) expression)?
     ;
 
 func_return_type
@@ -1296,8 +1332,41 @@ lang_name
     ;
 
 create_func_procedure_as_option
-    : AS_GS CHAR_STRING*
+    : AS_GS (COMMA? (CHAR_STRING | SCONST))*
     | IS_GS
+    ;
+
+plsqlbody
+    : (DECLARE_GS variable_declarations? cursor_declaration?)? BEGIN_GS sequence_of_statements END_GS
+    ;
+
+variable_declarations
+    : variable_declaration (SEMICOLON variable_declaration)* SEMICOLON
+    ;
+
+variable_declaration
+    : identifier CONSTANT_GS? typename_gs (NOT_GS NULL_GS)? default_value_part?
+    ;
+
+default_value_part
+    : (COLON EQUALS_OP | DEFAULT_GS) expression
+    ;
+
+cursor_declaration
+    : CURSOR_GS cursor_name (LEFT_PAREN (COMMA? parameter_spec)+ RIGHT_PAREN )? FOR_GS select_stmt SEMICOLON
+    ;
+
+parameter_spec
+    : parameter_name typename_gs
+    ;
+
+sequence_of_statements
+    : sequence_of_statement (SEMICOLON sequence_of_statement)* SEMICOLON?
+    ;
+
+sequence_of_statement
+    : stmt
+    | assignment_stmt
     ;
 
 // create group stmt
@@ -1366,15 +1435,27 @@ row_level_security_policy_obj
     | SESSION_USER_GS
     ;
 
-// create source stmt
-create_source_pool_stmt
-    : CREATE_GS SOURCE_GS POOL_GS pool_name (WITH_GS paren_assignment_stmt_list)?
+// create resource stmt
+create_resource_pool_stmt
+    : CREATE_GS RESOURCE_GS POOL_GS pool_name (WITH_GS paren_assignment_stmt_list)?
     ;
 
 // create role stmt
 create_role_stmt
-    : CREATE_GS ROLE_GS role_name (WITH_GS? alter_role_with_option+)?
+    : CREATE_GS ROLE_GS role_name (WITH_GS? create_role_with_option+)?
       (ENCRYPTED_GS | UNENCRYPTED_GS)? alter_role_encrypt_option
+    ;
+
+create_role_with_option
+    : role_option_common
+    | (IN_GS? ROLE_GS | IN_GS GROUP_GS | ADMIN_GS | USER_GS) role_name (COMMA role_name)*
+    | SYSID_GS identifier
+    | DEFAULT_GS TABLESPACE_GS tablespace_name
+    | PROFILE_GS (DEFAULT_GS | profile_name)
+    ;
+
+profile_name
+    : identifier
     ;
 
 // create schema stmt
@@ -1390,14 +1471,13 @@ schema_element
     : create_table_stmt
     | create_view_stmt
     | create_index_stmt
-    | create_table_partition_stmt
     | grant_stmt
     ;
 
 // create sequence stmt
 create_sequence_stmt
     : CREATE_GS SEQUENCE_GS sequence_name (INCREMENT_GS BY_GS? unary_expr)?
-      minvalue_option? maxvalue_option? (START_GS WITH_GS unary_expr)?
+      minvalue_option? maxvalue_option? (START_GS WITH_GS? unary_expr)?
       (CACHE_GS numeric)? (NO_GS? CYCLE_GS | NOCYCLE_GS)?
       (OWNED_GS BY_GS (table_name PERIOD column_name | NONE_GS))?
     ;
@@ -1423,8 +1503,8 @@ create_server_stmt
 // create table stmt
 create_table_stmt
     : CREATE_GS ((GLOBAL_GS | LOCAL_GS)? temporary_temp | UNLOGGED_GS)? 
-      TABLE_GS (IF_GS NOT_GS EXISTS_GS)? table_name LEFT_PAREN create_table_column_type_option_list
-      RIGHT_PAREN create_table_stmt_option* create_table_as_option?
+      TABLE_GS (IF_GS NOT_GS EXISTS_GS)? table_name (LEFT_PAREN create_table_column_type_option_list?
+      RIGHT_PAREN)? create_table_stmt_option* (create_table_as_option? | PARTITION_GS BY_GS partition_by_option row_clause?)
     ;
 
 temporary_temp
@@ -1468,14 +1548,7 @@ create_table_stmt_option
     ;
 
 create_table_as_option
-    : AS_GS select_stmt (WITH_GS NO_GS? DATA_GS)?
-    ;
-
-// create table partition
-create_table_partition_stmt
-    : CREATE_GS TABLE_GS (IF_GS NOT_GS EXISTS_GS)? partition_name LEFT_PAREN
-      create_table_column_type_option_list? RIGHT_PAREN create_table_stmt_option*
-      PARTITION_GS BY_GS partition_by_option row_clause?
+    : AS_GS (select_stmt| TABLE_GS table_name) (WITH_GS NO_GS? DATA_GS)?
     ;
 
 partition_by_option
@@ -1509,8 +1582,9 @@ create_txt_search_stmt
 // 简单的名称和数字常量也可以写在这里，但它们都将被转换为字符串
 create_trigger_stmt
     : CREATE_GS CONSTRAINT_GS? TRIGGER_GS trigger_name trigger_type trigger_event_list
-      ON_GS table_name create_trigger_option EXECUTE_GS PROCEDURE_GS 
-      LEFT_PAREN func_name param_expr_list RIGHT_PAREN
+      ON_GS table_name (FROM_GS table_name)? table_constraint_deferrable? (FOR_GS EACH_GS? (ROW_GS | STATEMENT_GS))?
+      (WHEN_GS LEFT_PAREN expression RIGHT_PAREN)? EXECUTE_GS PROCEDURE_GS 
+      func_name LEFT_PAREN param_expr_list? RIGHT_PAREN
     ;
 
 trigger_type
@@ -1530,14 +1604,9 @@ trigger_event
     | TRUNCATE_GS
     ;
 
-create_trigger_option
-    : (FROM_GS table_name)? table_constraint_deferrable (FOR_GS EACH_GS? (ROW_GS | STATEMENT_GS))?
-      (WHEN_GS LEFT_PAREN expression RIGHT_PAREN)?
-    ;
-
 // create type
 create_type_stmt
-    : CREATE_GS TYPE_GS type_name (LEFT_PAREN create_type_option RIGHT_PAREN)?
+    : CREATE_GS TYPE_GS type_name AS_GS? ENUM_GS? (LEFT_PAREN create_type_option RIGHT_PAREN)?
     ;
 
 create_type_option
@@ -2039,7 +2108,7 @@ agg_name
     ;
 
 object_name
-    : identifier
+    : identifier attr*
     ;
 
 // commit end
@@ -2054,9 +2123,14 @@ commit_prepared_stmt
 
 // copy stmt
 copy_stmt
-    : COPY_GS identifier paren_column_list? (FROM_GS | TO_GS) 
+    : COPY_GS copy_obj paren_column_list? (FROM_GS | TO_GS) 
       (CHAR_STRING | STDOUT_GS | STDIN_GS) 
       copy_stmt_clause* copy_stmt_option*
+    ;
+
+copy_obj
+    : table_name
+    | LEFT_PAREN (select_stmt | values_stmt) RIGHT_PAREN
     ;
 
 copy_stmt_clause
@@ -2118,12 +2192,14 @@ copy_clause_common_option
 boolean_value
     : TRUE_GS
     | FALSE_GS
+    | ON_GS
+    | OFF_GS
     ;
 
 // cursor stmt
 cursor_stmt
     : CURSOR_GS cursor_name BINARY_GS? (NO_GS SCROLL_GS)? ((WITH_GS | WITHOUT_GS) HOLD_GS)?
-      FOR_GS select_stmt
+      FOR_GS (select_stmt | values_stmt)
     ;
 
 // deallocate stmt
@@ -2141,20 +2217,24 @@ do_stmt_code
     : SCONST
     ;
 
+execute_stmts
+    : execute_stmt (SEMICOLON execute_stmt)* SEMICOLON
+    ;
+
 execute_stmt
-    : EXECUTE_GS identifier LEFT_PAREN param_expr_list RIGHT_PAREN
+    : EXECUTE_GS identifier attr* LEFT_PAREN param_expr_list RIGHT_PAREN
     ;
 
 execute_direct_stmt
-    : EXECUTE_GS DIRECT_GS ON_GS paren_node_list select_stmt
+    : EXECUTE_GS DIRECT_GS ON_GS paren_node_list (select_stmt | CHAR_STRING)
     ;
 
 explain_stmt
-    : EXPLAIN_GS (explain_option_list? | analyze_keyword? VERBOSE_GS | PERFORMANCE_GS) gs_stmt
+    : EXPLAIN_GS (explain_option_list? | analyze_keyword? VERBOSE_GS | PERFORMANCE_GS) stmt
     ;
 
 explain_option_list
-    : explain_option (COMMA explain_option)*
+    : LEFT_PAREN explain_option (COMMA explain_option)* RIGHT_PAREN
     ;
 
 explain_option
@@ -2173,7 +2253,7 @@ explain_option
 
 // explain plan
 explain_plan_stmt
-    : EXPLAIN_GS PLAN_GS (SET_GS assignment_stmt)? FOR_GS gs_stmt
+    : EXPLAIN_GS PLAN_GS (SET_GS assignment_stmt)? FOR_GS stmt
     ;
 
 // fetch stmt
@@ -2206,7 +2286,7 @@ privileges_for_obj
     | (database_privileges | all_privileges)
     | (USAGE_GS | all_privileges)
     | (function_privilege | all_privileges)
-    | cluster_privilege
+    | cluster_privilege (COMMA cluster_privilege)*
     | ALL_GS PRIVILEGE_GS
     | (READ_GS | WRITE_GS | all_privileges)
     ;
@@ -2267,7 +2347,7 @@ in_mode_option
 
 // prepare stmt
 prepare_stmt
-    : PREPARE_GS identifier (LEFT_PAREN typename_gs (COMMA typename_gs)* RIGHT_PAREN)? AS_GS gs_stmt
+    : PREPARE_GS identifier (LEFT_PAREN typename_gs (COMMA typename_gs)* RIGHT_PAREN)? AS_GS stmt
     ;
 
 prepare_transaction_stmt
@@ -2290,7 +2370,7 @@ when_matched_update_clause
     ;
 
 update_set_column_option
-    : assignment_stmt
+    : assignment_stmt_list
     | paren_column_list EQUALS_OP (LEFT_PAREN expr_default (COMMA expr_default)* RIGHT_PAREN | simple_select)
     ;
 
@@ -2314,7 +2394,7 @@ reassign_owned_stmt
 
 // reindex stmt
 reindex_stmt
-    : REINDEX_GS reindex_option index_name (PARTITION_GS partition_name)? FORCE_GS
+    : REINDEX_GS reindex_option index_name (PARTITION_GS partition_name)? FORCE_GS?
     ;
 
 reindex_option
@@ -2591,6 +2671,8 @@ unary_expr
     | quantified_expression
     | atom
     | ARRAY_GS array_expr
+    | PARAM
+    | unary_expr (PERIOD unary_expr)+
     ;
 
 geometry_op2
@@ -2616,10 +2698,12 @@ typename_gs
     | hll_type
     | oid_type // object identify
     | other_type
+    | identifier // user defined type
     ;
 
 precision_part
     : LEFT_PAREN (numeric | ASTERISK) (COMMA numeric)? RIGHT_PAREN
+    | LEFT_BRACKET ICONST? RIGHT_BRACKET
     ;
 
 numeric
@@ -2646,6 +2730,7 @@ number_type
     | DOUBLE_GS PRECISION_GS
     | BINARY_DOUBLE_GS
     | DEC_GS
+    | INT_GS
     ;
 
 concurrency_type
@@ -2915,9 +3000,9 @@ func_name
     ;
 
 simple_func_params
-    : LEFT_PAREN (ASTERISK | expression_list)? RIGHT_PAREN
-    | LEFT_PAREN VARIADIC_GS expression_list RIGHT_PAREN
-    | LEFT_PAREN expression_list COMMA VARIADIC_GS expression RIGHT_PAREN
+    : LEFT_PAREN (ASTERISK | param_expr_list)? RIGHT_PAREN
+    | LEFT_PAREN VARIADIC_GS param_expr_list RIGHT_PAREN
+    | LEFT_PAREN param_expr_list COMMA VARIADIC_GS param_expr RIGHT_PAREN
     ;
 
 atom
@@ -2948,6 +3033,7 @@ regular_id_common
     | reserved_keywords_normal
     | reserved_keywords_can_be_name
     | nonreserved_keywords_normal
+    | non_keywords_but_token
     ;
 
 // regular_id could be name of any, but some nonreserved keywords can not be
@@ -3074,7 +3160,7 @@ reserved_keywords_normal
     | SPLIT_GS
     | SYMMETRIC_GS
     | SYSDATE_GS
-    | TABLE_GS
+//    | TABLE_GS
     | THEN_GS
     | TO_GS
     | TRAILING_GS
@@ -3442,6 +3528,13 @@ nonreserved_keywords_normal
     | YEAR_GS
     | YES_GS
     | ZONE_GS
+    ;
+
+non_keywords_but_token
+    : SERIAL_GS
+    | OID_GS
+    | PUBLIC_GS
+    | FORMAT_GS
     ;
 
 // nonreserved keywords can not be name of function and type;

@@ -1,5 +1,5 @@
 
-// Generated from Gauss200Parser.g4 by ANTLR 4.7.1
+// Generated from /home/jona/myGit/myCode_repository/antlr4_cpp/gauss200/Gauss200Parser.g4 by ANTLR 4.7.1
 
 #pragma once
 
@@ -23,11 +23,19 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitSql_stmt(Gauss200Parser::Sql_stmtContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitStmt(Gauss200Parser::StmtContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitGs_stmt(Gauss200Parser::Gs_stmtContext *ctx) override {
+  virtual antlrcpp::Any visitOther_stmt(Gauss200Parser::Other_stmtContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitBegin_stmt(Gauss200Parser::Begin_stmtContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -100,6 +108,10 @@ public:
   }
 
   virtual antlrcpp::Any visitSet_configuration_param(Gauss200Parser::Set_configuration_paramContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConfiguration_param_value(Gauss200Parser::Configuration_param_valueContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -248,6 +260,10 @@ public:
   }
 
   virtual antlrcpp::Any visitTable_name(Gauss200Parser::Table_nameContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitAttr(Gauss200Parser::AttrContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -455,6 +471,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitRole_option_common(Gauss200Parser::Role_option_commonContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitAlter_role_with_option(Gauss200Parser::Alter_role_with_optionContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -564,6 +584,10 @@ public:
   }
 
   virtual antlrcpp::Any visitAlter_table_action_list(Gauss200Parser::Alter_table_action_listContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitAlter_table_action(Gauss200Parser::Alter_table_actionContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -899,6 +923,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitCreate_function_procedure_clause(Gauss200Parser::Create_function_procedure_clauseContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitCreate_func_arg_list(Gauss200Parser::Create_func_arg_listContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -916,6 +944,38 @@ public:
   }
 
   virtual antlrcpp::Any visitCreate_func_procedure_as_option(Gauss200Parser::Create_func_procedure_as_optionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitPlsqlbody(Gauss200Parser::PlsqlbodyContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVariable_declarations(Gauss200Parser::Variable_declarationsContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitVariable_declaration(Gauss200Parser::Variable_declarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitDefault_value_part(Gauss200Parser::Default_value_partContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitCursor_declaration(Gauss200Parser::Cursor_declarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitParameter_spec(Gauss200Parser::Parameter_specContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSequence_of_statements(Gauss200Parser::Sequence_of_statementsContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSequence_of_statement(Gauss200Parser::Sequence_of_statementContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -967,11 +1027,19 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitCreate_source_pool_stmt(Gauss200Parser::Create_source_pool_stmtContext *ctx) override {
+  virtual antlrcpp::Any visitCreate_resource_pool_stmt(Gauss200Parser::Create_resource_pool_stmtContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitCreate_role_stmt(Gauss200Parser::Create_role_stmtContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitCreate_role_with_option(Gauss200Parser::Create_role_with_optionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitProfile_name(Gauss200Parser::Profile_nameContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -1035,10 +1103,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitCreate_table_partition_stmt(Gauss200Parser::Create_table_partition_stmtContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual antlrcpp::Any visitPartition_by_option(Gauss200Parser::Partition_by_optionContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -1072,10 +1136,6 @@ public:
   }
 
   virtual antlrcpp::Any visitTrigger_event(Gauss200Parser::Trigger_eventContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitCreate_trigger_option(Gauss200Parser::Create_trigger_optionContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -1515,6 +1575,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitCopy_obj(Gauss200Parser::Copy_objContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitCopy_stmt_clause(Gauss200Parser::Copy_stmt_clauseContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -1564,6 +1628,10 @@ public:
   }
 
   virtual antlrcpp::Any visitDo_stmt_code(Gauss200Parser::Do_stmt_codeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitExecute_stmts(Gauss200Parser::Execute_stmtsContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -2092,6 +2160,10 @@ public:
   }
 
   virtual antlrcpp::Any visitNonreserved_keywords_normal(Gauss200Parser::Nonreserved_keywords_normalContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitNon_keywords_but_token(Gauss200Parser::Non_keywords_but_tokenContext *ctx) override {
     return visitChildren(ctx);
   }
 

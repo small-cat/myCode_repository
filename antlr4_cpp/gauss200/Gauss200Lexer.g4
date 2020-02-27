@@ -622,6 +622,8 @@ SETS_GS:                  S E T S;
 COMPACT_GS:               C O M P A C T;
 DELTAMERGE_GS:            D E L T A M E R G E;
 HDFSDIRECTORY_GS:         H D F S D I R E C T O R Y;
+CONSTANT_GS:              C O N S T A N T;
+PACKAGE_GS:               P A C K A G E;
 
 PERCENT_SIGN:              '%';
 AMPERSAND:                 '&';
@@ -634,7 +636,6 @@ MINUS_SIGN:                '-';
 COMMA:                     ',';
 SOLIDUS:                   '/';
 AT_SIGN:                   '@';
-ASSIGN_OP:                 ':=';
 PERIOD:                    '.';
 SLASH_SINGLE:              '`';
 QUESTION_MARK:             '?';
@@ -664,12 +665,12 @@ SINGLE_LINE_COMMENT: '--' ~('\r' | '\n')* NEWLINE_EOF        -> channel(HIDDEN);
 MULTI_LINE_COMMENT:  '/*' .*? '*/'                           -> channel(HIDDEN);
 SPACES: [ \t\r\n]+ -> channel(HIDDEN);
 
-CHAR_STRING: '\''  (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\'';
+CHAR_STRING: E? '\''  (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\'';
 REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '#' | '$' | '_' | [0-9])*;
 
 DELIMITED_STR: '$' [A-Za-z_-]+ '$';
 SCONST: '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' 
-      | '$' '$' (~('$' | '\r' | '\n'))+ '$' '$';    // $$ 之间的作为字符串
+      | '$' '$' (~('$'))+ '$' '$';    // $$ 之间的作为字符串
 // integer -- ICONST
 ICONST: DIGIT+;
 // integer decimal real realfail1 realfail2 -- FCONST
@@ -678,6 +679,8 @@ FCONST: FLOAT_NUMBER (E ('+'|'-')? (FLOAT_NUMBER | [0-9]+))? (D | F)?;
 BCONST: B ('\'' [01]* '\'')+;
 // xh quotefail -- XCONST
 XCONST: X ('\'' [A-Fa-f0-9]* '\'')+;
+
+PARAM: '$' DIGIT+;
 
 fragment NEWLINE_EOF    : NEWLINE | EOF;
 fragment NEWLINE        : '\r'? '\n';

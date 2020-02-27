@@ -1,5 +1,5 @@
 
-// Generated from Gauss200Parser.g4 by ANTLR 4.7.1
+// Generated from /home/jona/myGit/myCode_repository/antlr4_cpp/gauss200/Gauss200Parser.g4 by ANTLR 4.7.1
 
 #pragma once
 
@@ -20,11 +20,17 @@ public:
   virtual void enterStmtmulti(Gauss200Parser::StmtmultiContext *ctx) = 0;
   virtual void exitStmtmulti(Gauss200Parser::StmtmultiContext *ctx) = 0;
 
+  virtual void enterSql_stmt(Gauss200Parser::Sql_stmtContext *ctx) = 0;
+  virtual void exitSql_stmt(Gauss200Parser::Sql_stmtContext *ctx) = 0;
+
   virtual void enterStmt(Gauss200Parser::StmtContext *ctx) = 0;
   virtual void exitStmt(Gauss200Parser::StmtContext *ctx) = 0;
 
-  virtual void enterGs_stmt(Gauss200Parser::Gs_stmtContext *ctx) = 0;
-  virtual void exitGs_stmt(Gauss200Parser::Gs_stmtContext *ctx) = 0;
+  virtual void enterOther_stmt(Gauss200Parser::Other_stmtContext *ctx) = 0;
+  virtual void exitOther_stmt(Gauss200Parser::Other_stmtContext *ctx) = 0;
+
+  virtual void enterBegin_stmt(Gauss200Parser::Begin_stmtContext *ctx) = 0;
+  virtual void exitBegin_stmt(Gauss200Parser::Begin_stmtContext *ctx) = 0;
 
   virtual void enterAbort_stmt(Gauss200Parser::Abort_stmtContext *ctx) = 0;
   virtual void exitAbort_stmt(Gauss200Parser::Abort_stmtContext *ctx) = 0;
@@ -79,6 +85,9 @@ public:
 
   virtual void enterSet_configuration_param(Gauss200Parser::Set_configuration_paramContext *ctx) = 0;
   virtual void exitSet_configuration_param(Gauss200Parser::Set_configuration_paramContext *ctx) = 0;
+
+  virtual void enterConfiguration_param_value(Gauss200Parser::Configuration_param_valueContext *ctx) = 0;
+  virtual void exitConfiguration_param_value(Gauss200Parser::Configuration_param_valueContext *ctx) = 0;
 
   virtual void enterReset_configuration_param(Gauss200Parser::Reset_configuration_paramContext *ctx) = 0;
   virtual void exitReset_configuration_param(Gauss200Parser::Reset_configuration_paramContext *ctx) = 0;
@@ -190,6 +199,9 @@ public:
 
   virtual void enterTable_name(Gauss200Parser::Table_nameContext *ctx) = 0;
   virtual void exitTable_name(Gauss200Parser::Table_nameContext *ctx) = 0;
+
+  virtual void enterAttr(Gauss200Parser::AttrContext *ctx) = 0;
+  virtual void exitAttr(Gauss200Parser::AttrContext *ctx) = 0;
 
   virtual void enterAlter_foreign_table_option(Gauss200Parser::Alter_foreign_table_optionContext *ctx) = 0;
   virtual void exitAlter_foreign_table_option(Gauss200Parser::Alter_foreign_table_optionContext *ctx) = 0;
@@ -344,6 +356,9 @@ public:
   virtual void enterAlter_role_option(Gauss200Parser::Alter_role_optionContext *ctx) = 0;
   virtual void exitAlter_role_option(Gauss200Parser::Alter_role_optionContext *ctx) = 0;
 
+  virtual void enterRole_option_common(Gauss200Parser::Role_option_commonContext *ctx) = 0;
+  virtual void exitRole_option_common(Gauss200Parser::Role_option_commonContext *ctx) = 0;
+
   virtual void enterAlter_role_with_option(Gauss200Parser::Alter_role_with_optionContext *ctx) = 0;
   virtual void exitAlter_role_with_option(Gauss200Parser::Alter_role_with_optionContext *ctx) = 0;
 
@@ -427,6 +442,9 @@ public:
 
   virtual void enterAlter_table_action_list(Gauss200Parser::Alter_table_action_listContext *ctx) = 0;
   virtual void exitAlter_table_action_list(Gauss200Parser::Alter_table_action_listContext *ctx) = 0;
+
+  virtual void enterAlter_table_action(Gauss200Parser::Alter_table_actionContext *ctx) = 0;
+  virtual void exitAlter_table_action(Gauss200Parser::Alter_table_actionContext *ctx) = 0;
 
   virtual void enterColumn_clause(Gauss200Parser::Column_clauseContext *ctx) = 0;
   virtual void exitColumn_clause(Gauss200Parser::Column_clauseContext *ctx) = 0;
@@ -677,6 +695,9 @@ public:
   virtual void enterCreate_function_procedure_stmt(Gauss200Parser::Create_function_procedure_stmtContext *ctx) = 0;
   virtual void exitCreate_function_procedure_stmt(Gauss200Parser::Create_function_procedure_stmtContext *ctx) = 0;
 
+  virtual void enterCreate_function_procedure_clause(Gauss200Parser::Create_function_procedure_clauseContext *ctx) = 0;
+  virtual void exitCreate_function_procedure_clause(Gauss200Parser::Create_function_procedure_clauseContext *ctx) = 0;
+
   virtual void enterCreate_func_arg_list(Gauss200Parser::Create_func_arg_listContext *ctx) = 0;
   virtual void exitCreate_func_arg_list(Gauss200Parser::Create_func_arg_listContext *ctx) = 0;
 
@@ -691,6 +712,30 @@ public:
 
   virtual void enterCreate_func_procedure_as_option(Gauss200Parser::Create_func_procedure_as_optionContext *ctx) = 0;
   virtual void exitCreate_func_procedure_as_option(Gauss200Parser::Create_func_procedure_as_optionContext *ctx) = 0;
+
+  virtual void enterPlsqlbody(Gauss200Parser::PlsqlbodyContext *ctx) = 0;
+  virtual void exitPlsqlbody(Gauss200Parser::PlsqlbodyContext *ctx) = 0;
+
+  virtual void enterVariable_declarations(Gauss200Parser::Variable_declarationsContext *ctx) = 0;
+  virtual void exitVariable_declarations(Gauss200Parser::Variable_declarationsContext *ctx) = 0;
+
+  virtual void enterVariable_declaration(Gauss200Parser::Variable_declarationContext *ctx) = 0;
+  virtual void exitVariable_declaration(Gauss200Parser::Variable_declarationContext *ctx) = 0;
+
+  virtual void enterDefault_value_part(Gauss200Parser::Default_value_partContext *ctx) = 0;
+  virtual void exitDefault_value_part(Gauss200Parser::Default_value_partContext *ctx) = 0;
+
+  virtual void enterCursor_declaration(Gauss200Parser::Cursor_declarationContext *ctx) = 0;
+  virtual void exitCursor_declaration(Gauss200Parser::Cursor_declarationContext *ctx) = 0;
+
+  virtual void enterParameter_spec(Gauss200Parser::Parameter_specContext *ctx) = 0;
+  virtual void exitParameter_spec(Gauss200Parser::Parameter_specContext *ctx) = 0;
+
+  virtual void enterSequence_of_statements(Gauss200Parser::Sequence_of_statementsContext *ctx) = 0;
+  virtual void exitSequence_of_statements(Gauss200Parser::Sequence_of_statementsContext *ctx) = 0;
+
+  virtual void enterSequence_of_statement(Gauss200Parser::Sequence_of_statementContext *ctx) = 0;
+  virtual void exitSequence_of_statement(Gauss200Parser::Sequence_of_statementContext *ctx) = 0;
 
   virtual void enterCreate_group_stmt(Gauss200Parser::Create_group_stmtContext *ctx) = 0;
   virtual void exitCreate_group_stmt(Gauss200Parser::Create_group_stmtContext *ctx) = 0;
@@ -728,11 +773,17 @@ public:
   virtual void enterRow_level_security_policy_obj(Gauss200Parser::Row_level_security_policy_objContext *ctx) = 0;
   virtual void exitRow_level_security_policy_obj(Gauss200Parser::Row_level_security_policy_objContext *ctx) = 0;
 
-  virtual void enterCreate_source_pool_stmt(Gauss200Parser::Create_source_pool_stmtContext *ctx) = 0;
-  virtual void exitCreate_source_pool_stmt(Gauss200Parser::Create_source_pool_stmtContext *ctx) = 0;
+  virtual void enterCreate_resource_pool_stmt(Gauss200Parser::Create_resource_pool_stmtContext *ctx) = 0;
+  virtual void exitCreate_resource_pool_stmt(Gauss200Parser::Create_resource_pool_stmtContext *ctx) = 0;
 
   virtual void enterCreate_role_stmt(Gauss200Parser::Create_role_stmtContext *ctx) = 0;
   virtual void exitCreate_role_stmt(Gauss200Parser::Create_role_stmtContext *ctx) = 0;
+
+  virtual void enterCreate_role_with_option(Gauss200Parser::Create_role_with_optionContext *ctx) = 0;
+  virtual void exitCreate_role_with_option(Gauss200Parser::Create_role_with_optionContext *ctx) = 0;
+
+  virtual void enterProfile_name(Gauss200Parser::Profile_nameContext *ctx) = 0;
+  virtual void exitProfile_name(Gauss200Parser::Profile_nameContext *ctx) = 0;
 
   virtual void enterCreate_schema_stmt(Gauss200Parser::Create_schema_stmtContext *ctx) = 0;
   virtual void exitCreate_schema_stmt(Gauss200Parser::Create_schema_stmtContext *ctx) = 0;
@@ -779,9 +830,6 @@ public:
   virtual void enterCreate_table_as_option(Gauss200Parser::Create_table_as_optionContext *ctx) = 0;
   virtual void exitCreate_table_as_option(Gauss200Parser::Create_table_as_optionContext *ctx) = 0;
 
-  virtual void enterCreate_table_partition_stmt(Gauss200Parser::Create_table_partition_stmtContext *ctx) = 0;
-  virtual void exitCreate_table_partition_stmt(Gauss200Parser::Create_table_partition_stmtContext *ctx) = 0;
-
   virtual void enterPartition_by_option(Gauss200Parser::Partition_by_optionContext *ctx) = 0;
   virtual void exitPartition_by_option(Gauss200Parser::Partition_by_optionContext *ctx) = 0;
 
@@ -808,9 +856,6 @@ public:
 
   virtual void enterTrigger_event(Gauss200Parser::Trigger_eventContext *ctx) = 0;
   virtual void exitTrigger_event(Gauss200Parser::Trigger_eventContext *ctx) = 0;
-
-  virtual void enterCreate_trigger_option(Gauss200Parser::Create_trigger_optionContext *ctx) = 0;
-  virtual void exitCreate_trigger_option(Gauss200Parser::Create_trigger_optionContext *ctx) = 0;
 
   virtual void enterCreate_type_stmt(Gauss200Parser::Create_type_stmtContext *ctx) = 0;
   virtual void exitCreate_type_stmt(Gauss200Parser::Create_type_stmtContext *ctx) = 0;
@@ -1139,6 +1184,9 @@ public:
   virtual void enterCopy_stmt(Gauss200Parser::Copy_stmtContext *ctx) = 0;
   virtual void exitCopy_stmt(Gauss200Parser::Copy_stmtContext *ctx) = 0;
 
+  virtual void enterCopy_obj(Gauss200Parser::Copy_objContext *ctx) = 0;
+  virtual void exitCopy_obj(Gauss200Parser::Copy_objContext *ctx) = 0;
+
   virtual void enterCopy_stmt_clause(Gauss200Parser::Copy_stmt_clauseContext *ctx) = 0;
   virtual void exitCopy_stmt_clause(Gauss200Parser::Copy_stmt_clauseContext *ctx) = 0;
 
@@ -1177,6 +1225,9 @@ public:
 
   virtual void enterDo_stmt_code(Gauss200Parser::Do_stmt_codeContext *ctx) = 0;
   virtual void exitDo_stmt_code(Gauss200Parser::Do_stmt_codeContext *ctx) = 0;
+
+  virtual void enterExecute_stmts(Gauss200Parser::Execute_stmtsContext *ctx) = 0;
+  virtual void exitExecute_stmts(Gauss200Parser::Execute_stmtsContext *ctx) = 0;
 
   virtual void enterExecute_stmt(Gauss200Parser::Execute_stmtContext *ctx) = 0;
   virtual void exitExecute_stmt(Gauss200Parser::Execute_stmtContext *ctx) = 0;
@@ -1573,6 +1624,9 @@ public:
 
   virtual void enterNonreserved_keywords_normal(Gauss200Parser::Nonreserved_keywords_normalContext *ctx) = 0;
   virtual void exitNonreserved_keywords_normal(Gauss200Parser::Nonreserved_keywords_normalContext *ctx) = 0;
+
+  virtual void enterNon_keywords_but_token(Gauss200Parser::Non_keywords_but_tokenContext *ctx) = 0;
+  virtual void exitNon_keywords_but_token(Gauss200Parser::Non_keywords_but_tokenContext *ctx) = 0;
 
   virtual void enterNonreserved_keywords_can_not_be_name(Gauss200Parser::Nonreserved_keywords_can_not_be_nameContext *ctx) = 0;
   virtual void exitNonreserved_keywords_can_not_be_name(Gauss200Parser::Nonreserved_keywords_can_not_be_nameContext *ctx) = 0;

@@ -1,5 +1,5 @@
 
-// Generated from Gauss200Parser.g4 by ANTLR 4.7.1
+// Generated from /home/jona/myGit/myCode_repository/antlr4_cpp/gauss200/Gauss200Parser.g4 by ANTLR 4.7.1
 
 #pragma once
 
@@ -153,201 +153,209 @@ public:
     PLAN_GS = 598, JSON_GS = 599, YAML_GS = 600, CONNECT_GS = 601, COMPUTE_GS = 602, 
     TABLESAMPLE_GS = 603, ROLLUP_GS = 604, CUBE_GS = 605, GROUPING_GS = 606, 
     SETS_GS = 607, COMPACT_GS = 608, DELTAMERGE_GS = 609, HDFSDIRECTORY_GS = 610, 
-    PERCENT_SIGN = 611, AMPERSAND = 612, LEFT_PAREN = 613, RIGHT_PAREN = 614, 
-    DOUBLE_ASTERISK = 615, ASTERISK = 616, PLUS_SIGN = 617, MINUS_SIGN = 618, 
-    COMMA = 619, SOLIDUS = 620, AT_SIGN = 621, ASSIGN_OP = 622, PERIOD = 623, 
-    SLASH_SINGLE = 624, QUESTION_MARK = 625, NOT_EQUAL_OP = 626, CARRET_OPERATOR_PART = 627, 
-    TILDE_OPERATOR_PART = 628, EXCLAMATION_OPERATOR_PART = 629, GREATER_THAN_OP = 630, 
-    LESS_THAN_OP = 631, COLON = 632, SEMICOLON = 633, POUND_SIGN = 634, 
-    TYPECAST = 635, BAR = 636, EQUALS_OP = 637, LEFT_BRACKET = 638, RIGHT_BRACKET = 639, 
-    SINGLE_LINE_COMMENT = 640, MULTI_LINE_COMMENT = 641, SPACES = 642, CHAR_STRING = 643, 
-    REGULAR_ID = 644, DELIMITED_STR = 645, SCONST = 646, ICONST = 647, FCONST = 648, 
-    BCONST = 649, XCONST = 650
+    CONSTANT_GS = 611, PACKAGE_GS = 612, PERCENT_SIGN = 613, AMPERSAND = 614, 
+    LEFT_PAREN = 615, RIGHT_PAREN = 616, DOUBLE_ASTERISK = 617, ASTERISK = 618, 
+    PLUS_SIGN = 619, MINUS_SIGN = 620, COMMA = 621, SOLIDUS = 622, AT_SIGN = 623, 
+    PERIOD = 624, SLASH_SINGLE = 625, QUESTION_MARK = 626, NOT_EQUAL_OP = 627, 
+    CARRET_OPERATOR_PART = 628, TILDE_OPERATOR_PART = 629, EXCLAMATION_OPERATOR_PART = 630, 
+    GREATER_THAN_OP = 631, LESS_THAN_OP = 632, COLON = 633, SEMICOLON = 634, 
+    POUND_SIGN = 635, TYPECAST = 636, BAR = 637, EQUALS_OP = 638, LEFT_BRACKET = 639, 
+    RIGHT_BRACKET = 640, SINGLE_LINE_COMMENT = 641, MULTI_LINE_COMMENT = 642, 
+    SPACES = 643, CHAR_STRING = 644, REGULAR_ID = 645, DELIMITED_STR = 646, 
+    SCONST = 647, ICONST = 648, FCONST = 649, BCONST = 650, XCONST = 651, 
+    PARAM = 652
   };
 
   enum {
-    RuleStmtblock = 0, RuleStmtmulti = 1, RuleStmt = 2, RuleGs_stmt = 3, 
-    RuleAbort_stmt = 4, RuleWork_transaction = 5, RuleAlter_group_mapping_stmt = 6, 
-    RuleApp_name = 7, RuleParen_assignment_stmt_list = 8, RuleAssignment_stmt_list = 9, 
-    RuleAssignment_stmt = 10, RuleAssignment_value = 11, RuleAlter_database_stmt = 12, 
-    RuleDatabase_name = 13, RuleAlter_database_option = 14, RuleConnection_limit = 15, 
-    RuleInteger = 16, RuleRename_owner_to_option = 17, RuleRename_to_option = 18, 
-    RuleOwner_to_option = 19, RuleNew_name = 20, RuleSet_configuration_param = 21, 
-    RuleReset_configuration_param = 22, RuleConfiguration_param = 23, RuleAlter_data_source_stmt = 24, 
-    RuleSrc_name = 25, RuleAlter_data_src_option = 26, RuleData_src_type_version_option = 27, 
-    RuleAlter_property_options = 28, RuleAlter_property_option = 29, RuleOptname = 30, 
-    RuleAlter_default_privilege_stmt = 31, RuleTarget_role_list = 32, RuleTarget_role = 33, 
-    RuleSchema_name_list = 34, RuleSchema_name = 35, RuleAbbreviated_grant_or_revoke = 36, 
-    RuleGrant_on_tables_clause = 37, RuleAll_privileges = 38, RuleTable_privileges = 39, 
-    RuleTable_privilege = 40, RuleGrant_revoke_objects = 41, RuleGrant_revoke_obj = 42, 
-    RuleRole_name = 43, RuleWith_grant_option = 44, RuleGrant_on_functions_clause = 45, 
-    RuleFunction_privilege = 46, RuleGrant_on_types_clause = 47, RuleType_privilege = 48, 
-    RuleRevoke_on_tables_clause = 49, RuleGrant_option_for = 50, RuleCascade_restrict = 51, 
-    RuleRevoke_on_functions_clause = 52, RuleRevoke_on_types_clause = 53, 
-    RuleAlter_directory_stmt = 54, RuleDirectory_name = 55, RuleAlter_foreign_table_stmt = 56, 
-    RuleIf_exists_or_not = 57, RuleTable_name = 58, RuleAlter_foreign_table_option = 59, 
-    RuleAlter_foreign_table_action_list = 60, RuleAlter_foreign_table_action = 61, 
-    RuleColumn_name = 62, RuleAlter_foreign_table_action_option = 63, RuleAlter_set_statistics_option = 64, 
-    RuleAlter_add_information_constraint = 65, RuleColumn_constraint_primary_unique = 66, 
-    RuleConstraint_name = 67, RuleAdd_info_constraint_option = 68, RuleAlter_drop_information_constraint = 69, 
-    RuleAlter_function_stmt = 70, RuleFunction_with_argtypes = 71, RuleFunc_args = 72, 
-    RuleFunc_args_list = 73, RuleFunc_arg = 74, RuleArgmode = 75, RuleParam_name = 76, 
-    RuleAlter_func_option = 77, RuleAlter_function_action = 78, RuleAlter_set_schema = 79, 
-    RuleAlter_group_stmt = 80, RuleGroup_name = 81, RuleAlter_group_option = 82, 
-    RuleUser_name_list = 83, RuleUser_name = 84, RuleAlter_index_stmt = 85, 
-    RuleIndex_name = 86, RuleAlter_index_option = 87, RuleSet_tablespace_option = 88, 
-    RuleTablespace_name_option = 89, RuleSet_assignment_list = 90, RuleReset_param_list = 91, 
-    RuleTablespace_name = 92, RuleParameter_list = 93, RuleParameter_name = 94, 
-    RulePartition_name = 95, RuleAlter_large_obj_stmt = 96, RuleAlter_node_stmt = 97, 
-    RuleNodename = 98, RuleParen_node_list = 99, RuleNode_list = 100, RuleAlter_node_option = 101, 
-    RuleAlter_node_group_stmt = 102, RuleAlter_node_group_option = 103, 
-    RuleAdd_node_list = 104, RuleDelete_node_list = 105, RuleAlter_resource_pool_stmt = 106, 
-    RulePool_name = 107, RuleAlter_role_stmt = 108, RuleAlter_role_option = 109, 
-    RuleAlter_role_with_option = 110, RuleAlter_role_encrypt_option = 111, 
-    RuleLogic_cluster_name = 112, RuleAlter_role_level_security_policy_stmt = 113, 
-    RuleRow_level_security = 114, RulePolicy_name = 115, RuleAlter_role_level_security_policy_option = 116, 
-    RuleUsing_expr_option = 117, RuleAlter_schema_stmt = 118, RuleAlter_sequence_stmt = 119, 
-    RuleSequence_name = 120, RuleAlter_seq_option = 121, RuleAlter_server_stmt = 122, 
-    RuleServer_name = 123, RuleAlter_server_option = 124, RuleAlter_session_stmt = 125, 
-    RuleAlter_session_option = 126, RuleAlter_session_transaction_param_list = 127, 
-    RuleAlter_session_transaction_param = 128, RuleAlter_session_runtime_param = 129, 
-    RuleExpr_default = 130, RuleEncoding_name = 131, RuleAlter_sys_kill_session_stmt = 132, 
-    RuleAlter_table_stmt = 133, RuleAlter_table_name = 134, RuleAlter_table_stmt_option = 135, 
-    RuleAlter_table_option = 136, RuleAlter_table_action_list = 137, RuleColumn_clause = 138, 
-    RuleColumn_clause_add_column_option = 139, RuleColumn_with_type = 140, 
-    RuleCompress_type = 141, RuleCollate_option = 142, RuleCollation = 143, 
-    RuleAlter_table_column_constraint = 144, RuleColumn_constraint_option = 145, 
-    RuleColumn_clause_alter_column_option = 146, RuleAlter_table_constraint = 147, 
-    RuleAlter_table_constraint_option = 148, RuleParen_column_list = 149, 
-    RuleIndex_parameters = 150, RuleTable_constraint_deferrable = 151, RuleTable_constraint_using_index = 152, 
-    RuleTrigger_name = 153, RuleAlter_table_partition_option = 154, RuleAlter_table_partition_action = 155, 
-    RuleMove_clause = 156, RuleParen_partition_value_list = 157, RuleParen_partition_value = 158, 
-    RulePartition_value = 159, RuleExchange_clause = 160, RuleRow_clause = 161, 
-    RuleMerge_clause = 162, RuleModify_clause = 163, RuleSplit_clause = 164, 
-    RuleSplit_point_clause = 165, RuleSplit_point_clause_option = 166, RuleNo_split_point_clause = 167, 
-    RulePartition_item_list = 168, RulePartition_item = 169, RulePartition_less_than_item = 170, 
-    RulePartition_start_end_item = 171, RulePartition_start_end_item_option = 172, 
-    RuleAdd_clause = 173, RuleDrop_clause = 174, RuleAlter_tablespace_stmt = 175, 
-    RuleAlter_tablespace_option = 176, RuleAlter_txt_search_conf_stmt = 177, 
-    RuleConfiguration_name = 178, RuleAlter_txt_search_conf_option = 179, 
-    RuleToken_type_list = 180, RuleToken_type = 181, RuleDictionary_name_list = 182, 
-    RuleDictionary_name = 183, RuleAlter_txt_search_dictionary_stmt = 184, 
-    RuleAlter_txt_search_dictionary_option = 185, RuleAlter_trigger_stmt = 186, 
-    RuleAlter_type_stmt = 187, RuleType_name = 188, RuleAlter_type_option = 189, 
-    RuleAlter_type_action_list = 190, RuleAlter_type_action = 191, RuleAttr_name = 192, 
-    RuleEnum_value = 193, RuleAlter_type_add_attr_option = 194, RuleAlter_type_drop_attr_option = 195, 
-    RuleAlter_type_alter_attr = 196, RuleAlter_user_stmt = 197, RuleAlter_user_clause = 198, 
-    RuleAlter_view_stmt = 199, RuleView_name = 200, RuleAlter_view_option = 201, 
-    RuleWorkload_group_stmt = 202, RuleCreate_group_mapping_stmt = 203, 
-    RuleCreate_barrier_stmt = 204, RuleBarrier_name = 205, RuleCreate_database_stmt = 206, 
-    RuleCreate_data_source_stmt = 207, RuleCreate_directory_stmt = 208, 
-    RuleOr_replace = 209, RuleCreate_foreign_table_stmt = 210, RuleCreate_foreign_table_option = 211, 
-    RuleCreate_foreign_table_import_export_option = 212, RuleForeign_table_import_export_column_type_list = 213, 
-    RuleForeign_table_import_export_column_type = 214, RuleTable_constraint_to_group_node = 215, 
-    RuleCreate_foreign_table_on_hadoop_option = 216, RuleForeign_table_on_hadoop_column_type_list = 217, 
-    RuleForeign_table_on_hadoop_column_type = 218, RuleCreate_foreign_table_column_constraint = 219, 
-    RuleCreate_function_procedure_stmt = 220, RuleCreate_func_arg_list = 221, 
-    RuleCreate_func_arg = 222, RuleFunc_return_type = 223, RuleLang_name = 224, 
-    RuleCreate_func_procedure_as_option = 225, RuleCreate_group_stmt = 226, 
-    RuleCreate_index_stmt = 227, RuleCreate_index_column_list = 228, RuleCreate_index_column = 229, 
-    RuleOpclass = 230, RuleAsc_desc = 231, RuleNulls_first_last = 232, RuleCreate_node_stmt = 233, 
-    RuleCreate_node_group_stmt = 234, RuleCreate_row_level_security_policy_stmt = 235, 
-    RuleRow_level_security_policy_objects = 236, RuleRow_level_security_policy_obj = 237, 
-    RuleCreate_source_pool_stmt = 238, RuleCreate_role_stmt = 239, RuleCreate_schema_stmt = 240, 
-    RuleCreate_schema_option = 241, RuleSchema_element = 242, RuleCreate_sequence_stmt = 243, 
-    RuleMinvalue_option = 244, RuleMaxvalue_option = 245, RuleCreate_server_stmt = 246, 
-    RuleCreate_table_stmt = 247, RuleTemporary_temp = 248, RuleCreate_table_column_type_option_list = 249, 
-    RuleCreate_table_column_type_option = 250, RuleLike_option = 251, RuleLike_option_other = 252, 
-    RuleCreate_table_stmt_option = 253, RuleCreate_table_as_option = 254, 
-    RuleCreate_table_partition_stmt = 255, RulePartition_by_option = 256, 
-    RuleParen_partition_key = 257, RulePartition_key = 258, RuleCreate_tablespace_stmt = 259, 
-    RuleCreate_txt_search_stmt = 260, RuleCreate_trigger_stmt = 261, RuleTrigger_type = 262, 
-    RuleTrigger_event_list = 263, RuleTrigger_event = 264, RuleCreate_trigger_option = 265, 
-    RuleCreate_type_stmt = 266, RuleCreate_type_option = 267, RuleCreate_user_stmt = 268, 
-    RuleCreate_view_stmt = 269, RuleData_manipulate_stmt = 270, RuleSelect_stmt = 271, 
-    RuleSubquery_basic_elements = 272, RuleSelect_with_parens = 273, RuleSubquery_operation_part = 274, 
-    RuleSubquery = 275, RuleSimple_select = 276, RuleAll_distinct = 277, 
-    RuleSelected_list = 278, RuleSelected_list_element = 279, RuleInto_clause = 280, 
-    RuleFrom_clause = 281, RuleFrom_list = 282, RuleTable_ref = 283, RulePartition_clause = 284, 
-    RuleTable_alias = 285, RuleTable_sampling_clause = 286, RuleSample_method = 287, 
-    RuleJoin_type = 288, RuleUsing_clause = 289, RuleGroup_by_clause = 290, 
-    RuleGrouping_elements = 291, RuleGrouping_element = 292, RuleParen_group_element_expr_list = 293, 
-    RuleGroup_element_expr = 294, RuleHaving_clause = 295, RuleWindow_clause = 296, 
-    RuleWindow_clause_options = 297, RuleWindow_clause_option = 298, RuleWindow_name = 299, 
-    RuleWindow_definition = 300, RuleFrame_clause = 301, RuleFrame_start_end = 302, 
-    RuleOrder_by_clause = 303, RuleOrder_by_clause_options = 304, RuleOrder_by_clause_option = 305, 
-    RuleOrder_by_clause_expr = 306, RuleNlssort_expression_clause = 307, 
-    RuleLimit_clause = 308, RuleOffset_clause = 309, RuleFetch_clause = 310, 
-    RuleFor_update_share_clause = 311, RuleInsert_stmt = 312, RuleInsert_values_option = 313, 
-    RuleValues_expression = 314, RuleUpdate_stmt = 315, RuleUpdate_set_clause = 316, 
-    RuleDelete_stmt = 317, RuleWith_clause = 318, RuleWith_query = 319, 
-    RuleWith_query_name = 320, RuleAs_alias = 321, RuleAlias_name = 322, 
-    RuleWhere_clause = 323, RuleReturn_clause = 324, RuleOutput_expr_alias = 325, 
-    RuleDrop_database_stmt = 326, RuleDrop_group_mapping_stmt = 327, RuleDrop_data_source_stmt = 328, 
-    RuleDrop_directory_stmt = 329, RuleDrop_foreign_table_stmt = 330, RuleDrop_function_stmt = 331, 
-    RuleDrop_group_stmt = 332, RuleDrop_index_stmt = 333, RuleDrop_node_stmt = 334, 
-    RuleDrop_node_group_stmt = 335, RuleDrop_owned_stmt = 336, RuleDrop_row_level_security_policy_stmt = 337, 
-    RuleDrop_procedure_stmt = 338, RuleDrop_resource_pool_stmt = 339, RuleDrop_role_stmt = 340, 
-    RuleDrop_schema_stmt = 341, RuleDrop_sequence_stmt = 342, RuleDrop_name_list = 343, 
-    RuleDrop_name = 344, RuleDrop_server_stmt = 345, RuleDrop_table_stmt = 346, 
-    RuleDrop_tablespace_stmt = 347, RuleDrop_txt_search_stmt = 348, RuleDrop_trigger_stmt = 349, 
-    RuleDrop_type_stmt = 350, RuleDrop_user_stmt = 351, RuleDrop_view_stmt = 352, 
-    RuleDrop_workload_group_stmt = 353, RuleAnalyze_stmt = 354, RuleAnalyze_keyword = 355, 
-    RuleAnalyze_option = 356, RulePartition_name_option = 357, RuleCall_stmt = 358, 
-    RuleParam_expr_list = 359, RuleParam_expr = 360, RuleParam_op = 361, 
-    RuleCheckpoint_stmt = 362, RuleClean_connection_stmt = 363, RuleClose_stmt = 364, 
-    RuleCursor_name = 365, RuleCluster_stmt = 366, RuleCluster_stmt_option = 367, 
-    RuleComment_stmt = 368, RuleComment_stmt_option = 369, RuleAgg_name = 370, 
-    RuleObject_name = 371, RuleCommit_end_stmt = 372, RuleCommit_prepared_stmt = 373, 
-    RuleCopy_stmt = 374, RuleCopy_stmt_clause = 375, RuleCopy_stmt_option = 376, 
-    RuleParen_copy_clause_option_list = 377, RuleCopy_clause_option = 378, 
-    RuleColumn_offset_list = 379, RuleColumn_offset_ele = 380, RuleCopy_option = 381, 
-    RuleCopy_clause_common_option = 382, RuleBoolean_value = 383, RuleCursor_stmt = 384, 
-    RuleDeallocate_stmt = 385, RuleDo_stmt = 386, RuleDo_stmt_code = 387, 
-    RuleExecute_stmt = 388, RuleExecute_direct_stmt = 389, RuleExplain_stmt = 390, 
-    RuleExplain_option_list = 391, RuleExplain_option = 392, RuleExplain_plan_stmt = 393, 
-    RuleFetch_move_stmt = 394, RuleFetch_direction_clause = 395, RuleGrant_stmt = 396, 
-    RulePrivileges_for_obj = 397, RuleDatabase_privileges = 398, RuleDatabase_privilege = 399, 
-    RuleCluster_privilege = 400, RuleGrant_on_option = 401, RuleGrant_on_function_option_list = 402, 
-    RuleGrant_on_function_option = 403, RuleLock_stmt = 404, RuleLock_in_mode = 405, 
-    RuleIn_mode_option = 406, RulePrepare_stmt = 407, RulePrepare_transaction_stmt = 408, 
-    RuleMerge_into_stmt = 409, RuleOn_condition_clause = 410, RuleWhen_matched_update_clause = 411, 
-    RuleUpdate_set_column_option = 412, RuleWhen_not_matched_insert_clause = 413, 
-    RuleNot_matched_insert_value_option = 414, RuleNot_matched_insert_value = 415, 
-    RuleReassign_owned_stmt = 416, RuleReindex_stmt = 417, RuleReindex_option = 418, 
-    RuleRelease_savepoint_stmt = 419, RuleReset_stmt = 420, RuleSavepoint_name = 421, 
-    RuleRevoke_stmt = 422, RuleAdmin_option_for = 423, RuleRollback_stmt = 424, 
-    RuleSavepoint_stmt = 425, RuleSet_reset_stmt = 426, RuleSet_config_parameters = 427, 
-    RuleSession_local = 428, RuleSet_parameter_option = 429, RuleTimezone = 430, 
-    RuleSet_constraints = 431, RuleSet_role = 432, RuleReset_config_parameters = 433, 
-    RuleSet_session_authorization = 434, RuleSet_transaction = 435, RuleIsolation_level_options = 436, 
-    RuleIsolation_level_option = 437, RuleShow_stmt = 438, RuleStart_transaction_stmt = 439, 
-    RuleStart_transaction_option = 440, RuleTruncate_stmt = 441, RuleVacuum_stmt = 442, 
-    RuleVacuum_keyword_list = 443, RuleVacuum_keyword = 444, RuleVacuum_option = 445, 
-    RuleValues_stmt = 446, RuleParen_expr_list = 447, RuleExpression_list = 448, 
-    RuleExpression = 449, RuleLogical_expr = 450, RuleMultiset_expr = 451, 
-    RuleRelational_expr = 452, RuleRelational_op = 453, RuleCompound_expr = 454, 
-    RuleIn_expr = 455, RuleBetween_elements = 456, RuleConcatenation_list = 457, 
-    RuleConcatenation = 458, RuleGeometry_op1 = 459, RuleModel_expr = 460, 
-    RuleUnary_expr = 461, RuleGeometry_op2 = 462, RuleTypename_gs = 463, 
-    RulePrecision_part = 464, RuleNumeric = 465, RuleNumber_type = 466, 
-    RuleConcurrency_type = 467, RuleBoolean_type = 468, RuleChar_type = 469, 
-    RuleBinary_type = 470, RuleDate_type = 471, RuleTime_zone_part = 472, 
-    RuleGeometry_type = 473, RuleInet_type = 474, RuleBit_type = 475, RuleTxt_search_type = 476, 
-    RuleHll_type = 477, RuleOid_type = 478, RuleOther_type = 479, RuleTypecast_arg = 480, 
-    RuleFunction_expr = 481, RuleCol_label = 482, RuleXmlelement_part = 483, 
-    RuleXml_root_version = 484, RuleOpt_xml_root_standalone = 485, RuleXml_attributes = 486, 
-    RuleXml_attribute_list = 487, RuleXml_attribute_el = 488, RuleDocument_or_content = 489, 
-    RuleXml_whitespace_option = 490, RuleXmlexists_argument = 491, RuleExtract_list = 492, 
-    RuleExtract_arg = 493, RuleOverlay_list = 494, RuleOverlay_placing = 495, 
-    RulePosition_list = 496, RuleSubstr_list = 497, RuleSubstr_from = 498, 
-    RuleSubstr_for = 499, RuleTrim_list = 500, RuleSimple_function = 501, 
-    RuleFunc_name = 502, RuleSimple_func_params = 503, RuleAtom = 504, RuleGeneral_element = 505, 
-    RuleGeneral_element_part = 506, RuleIdentifier = 507, RuleRegular_id_common = 508, 
-    RuleRegular_id = 509, RuleConstant = 510, RuleCase_expr = 511, RuleWhen_clause = 512, 
-    RuleCase_default = 513, RuleQuantified_expression = 514, RuleArray_expr = 515, 
-    RuleArray_expr_list = 516, RuleReserved_keywords_normal = 517, RuleReserved_keywords_can_be_name = 518, 
-    RuleNonreserved_keywords_normal = 519, RuleNonreserved_keywords_can_not_be_name = 520
+    RuleStmtblock = 0, RuleStmtmulti = 1, RuleSql_stmt = 2, RuleStmt = 3, 
+    RuleOther_stmt = 4, RuleBegin_stmt = 5, RuleAbort_stmt = 6, RuleWork_transaction = 7, 
+    RuleAlter_group_mapping_stmt = 8, RuleApp_name = 9, RuleParen_assignment_stmt_list = 10, 
+    RuleAssignment_stmt_list = 11, RuleAssignment_stmt = 12, RuleAssignment_value = 13, 
+    RuleAlter_database_stmt = 14, RuleDatabase_name = 15, RuleAlter_database_option = 16, 
+    RuleConnection_limit = 17, RuleInteger = 18, RuleRename_owner_to_option = 19, 
+    RuleRename_to_option = 20, RuleOwner_to_option = 21, RuleNew_name = 22, 
+    RuleSet_configuration_param = 23, RuleConfiguration_param_value = 24, 
+    RuleReset_configuration_param = 25, RuleConfiguration_param = 26, RuleAlter_data_source_stmt = 27, 
+    RuleSrc_name = 28, RuleAlter_data_src_option = 29, RuleData_src_type_version_option = 30, 
+    RuleAlter_property_options = 31, RuleAlter_property_option = 32, RuleOptname = 33, 
+    RuleAlter_default_privilege_stmt = 34, RuleTarget_role_list = 35, RuleTarget_role = 36, 
+    RuleSchema_name_list = 37, RuleSchema_name = 38, RuleAbbreviated_grant_or_revoke = 39, 
+    RuleGrant_on_tables_clause = 40, RuleAll_privileges = 41, RuleTable_privileges = 42, 
+    RuleTable_privilege = 43, RuleGrant_revoke_objects = 44, RuleGrant_revoke_obj = 45, 
+    RuleRole_name = 46, RuleWith_grant_option = 47, RuleGrant_on_functions_clause = 48, 
+    RuleFunction_privilege = 49, RuleGrant_on_types_clause = 50, RuleType_privilege = 51, 
+    RuleRevoke_on_tables_clause = 52, RuleGrant_option_for = 53, RuleCascade_restrict = 54, 
+    RuleRevoke_on_functions_clause = 55, RuleRevoke_on_types_clause = 56, 
+    RuleAlter_directory_stmt = 57, RuleDirectory_name = 58, RuleAlter_foreign_table_stmt = 59, 
+    RuleIf_exists_or_not = 60, RuleTable_name = 61, RuleAttr = 62, RuleAlter_foreign_table_option = 63, 
+    RuleAlter_foreign_table_action_list = 64, RuleAlter_foreign_table_action = 65, 
+    RuleColumn_name = 66, RuleAlter_foreign_table_action_option = 67, RuleAlter_set_statistics_option = 68, 
+    RuleAlter_add_information_constraint = 69, RuleColumn_constraint_primary_unique = 70, 
+    RuleConstraint_name = 71, RuleAdd_info_constraint_option = 72, RuleAlter_drop_information_constraint = 73, 
+    RuleAlter_function_stmt = 74, RuleFunction_with_argtypes = 75, RuleFunc_args = 76, 
+    RuleFunc_args_list = 77, RuleFunc_arg = 78, RuleArgmode = 79, RuleParam_name = 80, 
+    RuleAlter_func_option = 81, RuleAlter_function_action = 82, RuleAlter_set_schema = 83, 
+    RuleAlter_group_stmt = 84, RuleGroup_name = 85, RuleAlter_group_option = 86, 
+    RuleUser_name_list = 87, RuleUser_name = 88, RuleAlter_index_stmt = 89, 
+    RuleIndex_name = 90, RuleAlter_index_option = 91, RuleSet_tablespace_option = 92, 
+    RuleTablespace_name_option = 93, RuleSet_assignment_list = 94, RuleReset_param_list = 95, 
+    RuleTablespace_name = 96, RuleParameter_list = 97, RuleParameter_name = 98, 
+    RulePartition_name = 99, RuleAlter_large_obj_stmt = 100, RuleAlter_node_stmt = 101, 
+    RuleNodename = 102, RuleParen_node_list = 103, RuleNode_list = 104, 
+    RuleAlter_node_option = 105, RuleAlter_node_group_stmt = 106, RuleAlter_node_group_option = 107, 
+    RuleAdd_node_list = 108, RuleDelete_node_list = 109, RuleAlter_resource_pool_stmt = 110, 
+    RulePool_name = 111, RuleAlter_role_stmt = 112, RuleAlter_role_option = 113, 
+    RuleRole_option_common = 114, RuleAlter_role_with_option = 115, RuleAlter_role_encrypt_option = 116, 
+    RuleLogic_cluster_name = 117, RuleAlter_role_level_security_policy_stmt = 118, 
+    RuleRow_level_security = 119, RulePolicy_name = 120, RuleAlter_role_level_security_policy_option = 121, 
+    RuleUsing_expr_option = 122, RuleAlter_schema_stmt = 123, RuleAlter_sequence_stmt = 124, 
+    RuleSequence_name = 125, RuleAlter_seq_option = 126, RuleAlter_server_stmt = 127, 
+    RuleServer_name = 128, RuleAlter_server_option = 129, RuleAlter_session_stmt = 130, 
+    RuleAlter_session_option = 131, RuleAlter_session_transaction_param_list = 132, 
+    RuleAlter_session_transaction_param = 133, RuleAlter_session_runtime_param = 134, 
+    RuleExpr_default = 135, RuleEncoding_name = 136, RuleAlter_sys_kill_session_stmt = 137, 
+    RuleAlter_table_stmt = 138, RuleAlter_table_name = 139, RuleAlter_table_stmt_option = 140, 
+    RuleAlter_table_option = 141, RuleAlter_table_action_list = 142, RuleAlter_table_action = 143, 
+    RuleColumn_clause = 144, RuleColumn_clause_add_column_option = 145, 
+    RuleColumn_with_type = 146, RuleCompress_type = 147, RuleCollate_option = 148, 
+    RuleCollation = 149, RuleAlter_table_column_constraint = 150, RuleColumn_constraint_option = 151, 
+    RuleColumn_clause_alter_column_option = 152, RuleAlter_table_constraint = 153, 
+    RuleAlter_table_constraint_option = 154, RuleParen_column_list = 155, 
+    RuleIndex_parameters = 156, RuleTable_constraint_deferrable = 157, RuleTable_constraint_using_index = 158, 
+    RuleTrigger_name = 159, RuleAlter_table_partition_option = 160, RuleAlter_table_partition_action = 161, 
+    RuleMove_clause = 162, RuleParen_partition_value_list = 163, RuleParen_partition_value = 164, 
+    RulePartition_value = 165, RuleExchange_clause = 166, RuleRow_clause = 167, 
+    RuleMerge_clause = 168, RuleModify_clause = 169, RuleSplit_clause = 170, 
+    RuleSplit_point_clause = 171, RuleSplit_point_clause_option = 172, RuleNo_split_point_clause = 173, 
+    RulePartition_item_list = 174, RulePartition_item = 175, RulePartition_less_than_item = 176, 
+    RulePartition_start_end_item = 177, RulePartition_start_end_item_option = 178, 
+    RuleAdd_clause = 179, RuleDrop_clause = 180, RuleAlter_tablespace_stmt = 181, 
+    RuleAlter_tablespace_option = 182, RuleAlter_txt_search_conf_stmt = 183, 
+    RuleConfiguration_name = 184, RuleAlter_txt_search_conf_option = 185, 
+    RuleToken_type_list = 186, RuleToken_type = 187, RuleDictionary_name_list = 188, 
+    RuleDictionary_name = 189, RuleAlter_txt_search_dictionary_stmt = 190, 
+    RuleAlter_txt_search_dictionary_option = 191, RuleAlter_trigger_stmt = 192, 
+    RuleAlter_type_stmt = 193, RuleType_name = 194, RuleAlter_type_option = 195, 
+    RuleAlter_type_action_list = 196, RuleAlter_type_action = 197, RuleAttr_name = 198, 
+    RuleEnum_value = 199, RuleAlter_type_add_attr_option = 200, RuleAlter_type_drop_attr_option = 201, 
+    RuleAlter_type_alter_attr = 202, RuleAlter_user_stmt = 203, RuleAlter_user_clause = 204, 
+    RuleAlter_view_stmt = 205, RuleView_name = 206, RuleAlter_view_option = 207, 
+    RuleWorkload_group_stmt = 208, RuleCreate_group_mapping_stmt = 209, 
+    RuleCreate_barrier_stmt = 210, RuleBarrier_name = 211, RuleCreate_database_stmt = 212, 
+    RuleCreate_data_source_stmt = 213, RuleCreate_directory_stmt = 214, 
+    RuleOr_replace = 215, RuleCreate_foreign_table_stmt = 216, RuleCreate_foreign_table_option = 217, 
+    RuleCreate_foreign_table_import_export_option = 218, RuleForeign_table_import_export_column_type_list = 219, 
+    RuleForeign_table_import_export_column_type = 220, RuleTable_constraint_to_group_node = 221, 
+    RuleCreate_foreign_table_on_hadoop_option = 222, RuleForeign_table_on_hadoop_column_type_list = 223, 
+    RuleForeign_table_on_hadoop_column_type = 224, RuleCreate_foreign_table_column_constraint = 225, 
+    RuleCreate_function_procedure_stmt = 226, RuleCreate_function_procedure_clause = 227, 
+    RuleCreate_func_arg_list = 228, RuleCreate_func_arg = 229, RuleFunc_return_type = 230, 
+    RuleLang_name = 231, RuleCreate_func_procedure_as_option = 232, RulePlsqlbody = 233, 
+    RuleVariable_declarations = 234, RuleVariable_declaration = 235, RuleDefault_value_part = 236, 
+    RuleCursor_declaration = 237, RuleParameter_spec = 238, RuleSequence_of_statements = 239, 
+    RuleSequence_of_statement = 240, RuleCreate_group_stmt = 241, RuleCreate_index_stmt = 242, 
+    RuleCreate_index_column_list = 243, RuleCreate_index_column = 244, RuleOpclass = 245, 
+    RuleAsc_desc = 246, RuleNulls_first_last = 247, RuleCreate_node_stmt = 248, 
+    RuleCreate_node_group_stmt = 249, RuleCreate_row_level_security_policy_stmt = 250, 
+    RuleRow_level_security_policy_objects = 251, RuleRow_level_security_policy_obj = 252, 
+    RuleCreate_resource_pool_stmt = 253, RuleCreate_role_stmt = 254, RuleCreate_role_with_option = 255, 
+    RuleProfile_name = 256, RuleCreate_schema_stmt = 257, RuleCreate_schema_option = 258, 
+    RuleSchema_element = 259, RuleCreate_sequence_stmt = 260, RuleMinvalue_option = 261, 
+    RuleMaxvalue_option = 262, RuleCreate_server_stmt = 263, RuleCreate_table_stmt = 264, 
+    RuleTemporary_temp = 265, RuleCreate_table_column_type_option_list = 266, 
+    RuleCreate_table_column_type_option = 267, RuleLike_option = 268, RuleLike_option_other = 269, 
+    RuleCreate_table_stmt_option = 270, RuleCreate_table_as_option = 271, 
+    RulePartition_by_option = 272, RuleParen_partition_key = 273, RulePartition_key = 274, 
+    RuleCreate_tablespace_stmt = 275, RuleCreate_txt_search_stmt = 276, 
+    RuleCreate_trigger_stmt = 277, RuleTrigger_type = 278, RuleTrigger_event_list = 279, 
+    RuleTrigger_event = 280, RuleCreate_type_stmt = 281, RuleCreate_type_option = 282, 
+    RuleCreate_user_stmt = 283, RuleCreate_view_stmt = 284, RuleData_manipulate_stmt = 285, 
+    RuleSelect_stmt = 286, RuleSubquery_basic_elements = 287, RuleSelect_with_parens = 288, 
+    RuleSubquery_operation_part = 289, RuleSubquery = 290, RuleSimple_select = 291, 
+    RuleAll_distinct = 292, RuleSelected_list = 293, RuleSelected_list_element = 294, 
+    RuleInto_clause = 295, RuleFrom_clause = 296, RuleFrom_list = 297, RuleTable_ref = 298, 
+    RulePartition_clause = 299, RuleTable_alias = 300, RuleTable_sampling_clause = 301, 
+    RuleSample_method = 302, RuleJoin_type = 303, RuleUsing_clause = 304, 
+    RuleGroup_by_clause = 305, RuleGrouping_elements = 306, RuleGrouping_element = 307, 
+    RuleParen_group_element_expr_list = 308, RuleGroup_element_expr = 309, 
+    RuleHaving_clause = 310, RuleWindow_clause = 311, RuleWindow_clause_options = 312, 
+    RuleWindow_clause_option = 313, RuleWindow_name = 314, RuleWindow_definition = 315, 
+    RuleFrame_clause = 316, RuleFrame_start_end = 317, RuleOrder_by_clause = 318, 
+    RuleOrder_by_clause_options = 319, RuleOrder_by_clause_option = 320, 
+    RuleOrder_by_clause_expr = 321, RuleNlssort_expression_clause = 322, 
+    RuleLimit_clause = 323, RuleOffset_clause = 324, RuleFetch_clause = 325, 
+    RuleFor_update_share_clause = 326, RuleInsert_stmt = 327, RuleInsert_values_option = 328, 
+    RuleValues_expression = 329, RuleUpdate_stmt = 330, RuleUpdate_set_clause = 331, 
+    RuleDelete_stmt = 332, RuleWith_clause = 333, RuleWith_query = 334, 
+    RuleWith_query_name = 335, RuleAs_alias = 336, RuleAlias_name = 337, 
+    RuleWhere_clause = 338, RuleReturn_clause = 339, RuleOutput_expr_alias = 340, 
+    RuleDrop_database_stmt = 341, RuleDrop_group_mapping_stmt = 342, RuleDrop_data_source_stmt = 343, 
+    RuleDrop_directory_stmt = 344, RuleDrop_foreign_table_stmt = 345, RuleDrop_function_stmt = 346, 
+    RuleDrop_group_stmt = 347, RuleDrop_index_stmt = 348, RuleDrop_node_stmt = 349, 
+    RuleDrop_node_group_stmt = 350, RuleDrop_owned_stmt = 351, RuleDrop_row_level_security_policy_stmt = 352, 
+    RuleDrop_procedure_stmt = 353, RuleDrop_resource_pool_stmt = 354, RuleDrop_role_stmt = 355, 
+    RuleDrop_schema_stmt = 356, RuleDrop_sequence_stmt = 357, RuleDrop_name_list = 358, 
+    RuleDrop_name = 359, RuleDrop_server_stmt = 360, RuleDrop_table_stmt = 361, 
+    RuleDrop_tablespace_stmt = 362, RuleDrop_txt_search_stmt = 363, RuleDrop_trigger_stmt = 364, 
+    RuleDrop_type_stmt = 365, RuleDrop_user_stmt = 366, RuleDrop_view_stmt = 367, 
+    RuleDrop_workload_group_stmt = 368, RuleAnalyze_stmt = 369, RuleAnalyze_keyword = 370, 
+    RuleAnalyze_option = 371, RulePartition_name_option = 372, RuleCall_stmt = 373, 
+    RuleParam_expr_list = 374, RuleParam_expr = 375, RuleParam_op = 376, 
+    RuleCheckpoint_stmt = 377, RuleClean_connection_stmt = 378, RuleClose_stmt = 379, 
+    RuleCursor_name = 380, RuleCluster_stmt = 381, RuleCluster_stmt_option = 382, 
+    RuleComment_stmt = 383, RuleComment_stmt_option = 384, RuleAgg_name = 385, 
+    RuleObject_name = 386, RuleCommit_end_stmt = 387, RuleCommit_prepared_stmt = 388, 
+    RuleCopy_stmt = 389, RuleCopy_obj = 390, RuleCopy_stmt_clause = 391, 
+    RuleCopy_stmt_option = 392, RuleParen_copy_clause_option_list = 393, 
+    RuleCopy_clause_option = 394, RuleColumn_offset_list = 395, RuleColumn_offset_ele = 396, 
+    RuleCopy_option = 397, RuleCopy_clause_common_option = 398, RuleBoolean_value = 399, 
+    RuleCursor_stmt = 400, RuleDeallocate_stmt = 401, RuleDo_stmt = 402, 
+    RuleDo_stmt_code = 403, RuleExecute_stmts = 404, RuleExecute_stmt = 405, 
+    RuleExecute_direct_stmt = 406, RuleExplain_stmt = 407, RuleExplain_option_list = 408, 
+    RuleExplain_option = 409, RuleExplain_plan_stmt = 410, RuleFetch_move_stmt = 411, 
+    RuleFetch_direction_clause = 412, RuleGrant_stmt = 413, RulePrivileges_for_obj = 414, 
+    RuleDatabase_privileges = 415, RuleDatabase_privilege = 416, RuleCluster_privilege = 417, 
+    RuleGrant_on_option = 418, RuleGrant_on_function_option_list = 419, 
+    RuleGrant_on_function_option = 420, RuleLock_stmt = 421, RuleLock_in_mode = 422, 
+    RuleIn_mode_option = 423, RulePrepare_stmt = 424, RulePrepare_transaction_stmt = 425, 
+    RuleMerge_into_stmt = 426, RuleOn_condition_clause = 427, RuleWhen_matched_update_clause = 428, 
+    RuleUpdate_set_column_option = 429, RuleWhen_not_matched_insert_clause = 430, 
+    RuleNot_matched_insert_value_option = 431, RuleNot_matched_insert_value = 432, 
+    RuleReassign_owned_stmt = 433, RuleReindex_stmt = 434, RuleReindex_option = 435, 
+    RuleRelease_savepoint_stmt = 436, RuleReset_stmt = 437, RuleSavepoint_name = 438, 
+    RuleRevoke_stmt = 439, RuleAdmin_option_for = 440, RuleRollback_stmt = 441, 
+    RuleSavepoint_stmt = 442, RuleSet_reset_stmt = 443, RuleSet_config_parameters = 444, 
+    RuleSession_local = 445, RuleSet_parameter_option = 446, RuleTimezone = 447, 
+    RuleSet_constraints = 448, RuleSet_role = 449, RuleReset_config_parameters = 450, 
+    RuleSet_session_authorization = 451, RuleSet_transaction = 452, RuleIsolation_level_options = 453, 
+    RuleIsolation_level_option = 454, RuleShow_stmt = 455, RuleStart_transaction_stmt = 456, 
+    RuleStart_transaction_option = 457, RuleTruncate_stmt = 458, RuleVacuum_stmt = 459, 
+    RuleVacuum_keyword_list = 460, RuleVacuum_keyword = 461, RuleVacuum_option = 462, 
+    RuleValues_stmt = 463, RuleParen_expr_list = 464, RuleExpression_list = 465, 
+    RuleExpression = 466, RuleLogical_expr = 467, RuleMultiset_expr = 468, 
+    RuleRelational_expr = 469, RuleRelational_op = 470, RuleCompound_expr = 471, 
+    RuleIn_expr = 472, RuleBetween_elements = 473, RuleConcatenation_list = 474, 
+    RuleConcatenation = 475, RuleGeometry_op1 = 476, RuleModel_expr = 477, 
+    RuleUnary_expr = 478, RuleGeometry_op2 = 479, RuleTypename_gs = 480, 
+    RulePrecision_part = 481, RuleNumeric = 482, RuleNumber_type = 483, 
+    RuleConcurrency_type = 484, RuleBoolean_type = 485, RuleChar_type = 486, 
+    RuleBinary_type = 487, RuleDate_type = 488, RuleTime_zone_part = 489, 
+    RuleGeometry_type = 490, RuleInet_type = 491, RuleBit_type = 492, RuleTxt_search_type = 493, 
+    RuleHll_type = 494, RuleOid_type = 495, RuleOther_type = 496, RuleTypecast_arg = 497, 
+    RuleFunction_expr = 498, RuleCol_label = 499, RuleXmlelement_part = 500, 
+    RuleXml_root_version = 501, RuleOpt_xml_root_standalone = 502, RuleXml_attributes = 503, 
+    RuleXml_attribute_list = 504, RuleXml_attribute_el = 505, RuleDocument_or_content = 506, 
+    RuleXml_whitespace_option = 507, RuleXmlexists_argument = 508, RuleExtract_list = 509, 
+    RuleExtract_arg = 510, RuleOverlay_list = 511, RuleOverlay_placing = 512, 
+    RulePosition_list = 513, RuleSubstr_list = 514, RuleSubstr_from = 515, 
+    RuleSubstr_for = 516, RuleTrim_list = 517, RuleSimple_function = 518, 
+    RuleFunc_name = 519, RuleSimple_func_params = 520, RuleAtom = 521, RuleGeneral_element = 522, 
+    RuleGeneral_element_part = 523, RuleIdentifier = 524, RuleRegular_id_common = 525, 
+    RuleRegular_id = 526, RuleConstant = 527, RuleCase_expr = 528, RuleWhen_clause = 529, 
+    RuleCase_default = 530, RuleQuantified_expression = 531, RuleArray_expr = 532, 
+    RuleArray_expr_list = 533, RuleReserved_keywords_normal = 534, RuleReserved_keywords_can_be_name = 535, 
+    RuleNonreserved_keywords_normal = 536, RuleNon_keywords_but_token = 537, 
+    RuleNonreserved_keywords_can_not_be_name = 538
   };
 
   Gauss200Parser(antlr4::TokenStream *input);
@@ -362,8 +370,10 @@ public:
 
   class StmtblockContext;
   class StmtmultiContext;
+  class Sql_stmtContext;
   class StmtContext;
-  class Gs_stmtContext;
+  class Other_stmtContext;
+  class Begin_stmtContext;
   class Abort_stmtContext;
   class Work_transactionContext;
   class Alter_group_mapping_stmtContext;
@@ -382,6 +392,7 @@ public:
   class Owner_to_optionContext;
   class New_nameContext;
   class Set_configuration_paramContext;
+  class Configuration_param_valueContext;
   class Reset_configuration_paramContext;
   class Configuration_paramContext;
   class Alter_data_source_stmtContext;
@@ -419,6 +430,7 @@ public:
   class Alter_foreign_table_stmtContext;
   class If_exists_or_notContext;
   class Table_nameContext;
+  class AttrContext;
   class Alter_foreign_table_optionContext;
   class Alter_foreign_table_action_listContext;
   class Alter_foreign_table_actionContext;
@@ -470,6 +482,7 @@ public:
   class Pool_nameContext;
   class Alter_role_stmtContext;
   class Alter_role_optionContext;
+  class Role_option_commonContext;
   class Alter_role_with_optionContext;
   class Alter_role_encrypt_optionContext;
   class Logic_cluster_nameContext;
@@ -498,6 +511,7 @@ public:
   class Alter_table_stmt_optionContext;
   class Alter_table_optionContext;
   class Alter_table_action_listContext;
+  class Alter_table_actionContext;
   class Column_clauseContext;
   class Column_clause_add_column_optionContext;
   class Column_with_typeContext;
@@ -581,11 +595,20 @@ public:
   class Foreign_table_on_hadoop_column_typeContext;
   class Create_foreign_table_column_constraintContext;
   class Create_function_procedure_stmtContext;
+  class Create_function_procedure_clauseContext;
   class Create_func_arg_listContext;
   class Create_func_argContext;
   class Func_return_typeContext;
   class Lang_nameContext;
   class Create_func_procedure_as_optionContext;
+  class PlsqlbodyContext;
+  class Variable_declarationsContext;
+  class Variable_declarationContext;
+  class Default_value_partContext;
+  class Cursor_declarationContext;
+  class Parameter_specContext;
+  class Sequence_of_statementsContext;
+  class Sequence_of_statementContext;
   class Create_group_stmtContext;
   class Create_index_stmtContext;
   class Create_index_column_listContext;
@@ -598,8 +621,10 @@ public:
   class Create_row_level_security_policy_stmtContext;
   class Row_level_security_policy_objectsContext;
   class Row_level_security_policy_objContext;
-  class Create_source_pool_stmtContext;
+  class Create_resource_pool_stmtContext;
   class Create_role_stmtContext;
+  class Create_role_with_optionContext;
+  class Profile_nameContext;
   class Create_schema_stmtContext;
   class Create_schema_optionContext;
   class Schema_elementContext;
@@ -615,7 +640,6 @@ public:
   class Like_option_otherContext;
   class Create_table_stmt_optionContext;
   class Create_table_as_optionContext;
-  class Create_table_partition_stmtContext;
   class Partition_by_optionContext;
   class Paren_partition_keyContext;
   class Partition_keyContext;
@@ -625,7 +649,6 @@ public:
   class Trigger_typeContext;
   class Trigger_event_listContext;
   class Trigger_eventContext;
-  class Create_trigger_optionContext;
   class Create_type_stmtContext;
   class Create_type_optionContext;
   class Create_user_stmtContext;
@@ -735,6 +758,7 @@ public:
   class Commit_end_stmtContext;
   class Commit_prepared_stmtContext;
   class Copy_stmtContext;
+  class Copy_objContext;
   class Copy_stmt_clauseContext;
   class Copy_stmt_optionContext;
   class Paren_copy_clause_option_listContext;
@@ -748,6 +772,7 @@ public:
   class Deallocate_stmtContext;
   class Do_stmtContext;
   class Do_stmt_codeContext;
+  class Execute_stmtsContext;
   class Execute_stmtContext;
   class Execute_direct_stmtContext;
   class Explain_stmtContext;
@@ -880,6 +905,7 @@ public:
   class Reserved_keywords_normalContext;
   class Reserved_keywords_can_be_nameContext;
   class Nonreserved_keywords_normalContext;
+  class Non_keywords_but_tokenContext;
   class Nonreserved_keywords_can_not_be_nameContext; 
 
   class  StmtblockContext : public antlr4::ParserRuleContext {
@@ -888,6 +914,7 @@ public:
     virtual size_t getRuleIndex() const override;
     StmtmultiContext *stmtmulti();
     antlr4::tree::TerminalNode *EOF();
+    antlr4::tree::TerminalNode *SEMICOLON();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -902,8 +929,8 @@ public:
   public:
     StmtmultiContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<StmtContext *> stmt();
-    StmtContext* stmt(size_t i);
+    std::vector<Sql_stmtContext *> sql_stmt();
+    Sql_stmtContext* sql_stmt(size_t i);
     std::vector<antlr4::tree::TerminalNode *> SEMICOLON();
     antlr4::tree::TerminalNode* SEMICOLON(size_t i);
 
@@ -916,12 +943,12 @@ public:
 
   StmtmultiContext* stmtmulti();
 
-  class  StmtContext : public antlr4::ParserRuleContext {
+  class  Sql_stmtContext : public antlr4::ParserRuleContext {
   public:
-    StmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Sql_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *SEMICOLON();
-    Gs_stmtContext *gs_stmt();
+    StmtContext *stmt();
+    Other_stmtContext *other_stmt();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -930,11 +957,11 @@ public:
    
   };
 
-  StmtContext* stmt();
+  Sql_stmtContext* sql_stmt();
 
-  class  Gs_stmtContext : public antlr4::ParserRuleContext {
+  class  StmtContext : public antlr4::ParserRuleContext {
   public:
-    Gs_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    StmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Abort_stmtContext *abort_stmt();
     Alter_group_mapping_stmtContext *alter_group_mapping_stmt();
@@ -978,13 +1005,12 @@ public:
     Create_node_stmtContext *create_node_stmt();
     Create_node_group_stmtContext *create_node_group_stmt();
     Create_row_level_security_policy_stmtContext *create_row_level_security_policy_stmt();
-    Create_source_pool_stmtContext *create_source_pool_stmt();
+    Create_resource_pool_stmtContext *create_resource_pool_stmt();
     Create_role_stmtContext *create_role_stmt();
     Create_schema_stmtContext *create_schema_stmt();
     Create_sequence_stmtContext *create_sequence_stmt();
     Create_server_stmtContext *create_server_stmt();
     Create_table_stmtContext *create_table_stmt();
-    Create_table_partition_stmtContext *create_table_partition_stmt();
     Create_tablespace_stmtContext *create_tablespace_stmt();
     Create_txt_search_stmtContext *create_txt_search_stmt();
     Create_trigger_stmtContext *create_trigger_stmt();
@@ -1025,16 +1051,12 @@ public:
     Close_stmtContext *close_stmt();
     Cluster_stmtContext *cluster_stmt();
     Comment_stmtContext *comment_stmt();
-    Commit_end_stmtContext *commit_end_stmt();
-    Commit_prepared_stmtContext *commit_prepared_stmt();
     Copy_stmtContext *copy_stmt();
     Cursor_stmtContext *cursor_stmt();
     Deallocate_stmtContext *deallocate_stmt();
     Do_stmtContext *do_stmt();
     Execute_stmtContext *execute_stmt();
     Execute_direct_stmtContext *execute_direct_stmt();
-    Explain_stmtContext *explain_stmt();
-    Explain_plan_stmtContext *explain_plan_stmt();
     Fetch_move_stmtContext *fetch_move_stmt();
     Grant_stmtContext *grant_stmt();
     Lock_stmtContext *lock_stmt();
@@ -1049,12 +1071,10 @@ public:
     Rollback_stmtContext *rollback_stmt();
     Savepoint_stmtContext *savepoint_stmt();
     Set_reset_stmtContext *set_reset_stmt();
-    Show_stmtContext *show_stmt();
     Start_transaction_stmtContext *start_transaction_stmt();
     Truncate_stmtContext *truncate_stmt();
     Update_stmtContext *update_stmt();
-    Vacuum_stmtContext *vacuum_stmt();
-    Values_stmtContext *values_stmt();
+    antlr4::tree::TerminalNode *SEMICOLON();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1063,7 +1083,48 @@ public:
    
   };
 
-  Gs_stmtContext* gs_stmt();
+  StmtContext* stmt();
+
+  class  Other_stmtContext : public antlr4::ParserRuleContext {
+  public:
+    Other_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Vacuum_stmtContext *vacuum_stmt();
+    Values_stmtContext *values_stmt();
+    Show_stmtContext *show_stmt();
+    Explain_stmtContext *explain_stmt();
+    Explain_plan_stmtContext *explain_plan_stmt();
+    Commit_end_stmtContext *commit_end_stmt();
+    Commit_prepared_stmtContext *commit_prepared_stmt();
+    Begin_stmtContext *begin_stmt();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Other_stmtContext* other_stmt();
+
+  class  Begin_stmtContext : public antlr4::ParserRuleContext {
+  public:
+    Begin_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *BEGIN_GS();
+    Execute_stmtsContext *execute_stmts();
+    antlr4::tree::TerminalNode *END_GS();
+    antlr4::tree::TerminalNode *DECLARE_GS();
+    Variable_declarationsContext *variable_declarations();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Begin_stmtContext* begin_stmt();
 
   class  Abort_stmtContext : public antlr4::ParserRuleContext {
   public:
@@ -1175,8 +1236,9 @@ public:
   public:
     Assignment_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    IdentifierContext *identifier();
+    ExpressionContext *expression();
     Assignment_valueContext *assignment_value();
+    antlr4::tree::TerminalNode *COLON();
     antlr4::tree::TerminalNode *EQUALS_OP();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1267,7 +1329,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CONNECTION_GS();
     antlr4::tree::TerminalNode *LIMIT_GS();
-    IntegerContext *integer();
+    ExpressionContext *expression();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1364,12 +1426,11 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *SET_GS();
     Configuration_paramContext *configuration_param();
-    Expr_defaultContext *expr_default();
-    antlr4::tree::TerminalNode *FROM_GS();
-    antlr4::tree::TerminalNode *CURRENT_GS();
+    std::vector<Configuration_param_valueContext *> configuration_param_value();
+    Configuration_param_valueContext* configuration_param_value(size_t i);
     Session_localContext *session_local();
-    antlr4::tree::TerminalNode *TO_GS();
-    antlr4::tree::TerminalNode *EQUALS_OP();
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1379,6 +1440,26 @@ public:
   };
 
   Set_configuration_paramContext* set_configuration_param();
+
+  class  Configuration_param_valueContext : public antlr4::ParserRuleContext {
+  public:
+    Configuration_param_valueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Expr_defaultContext *expr_default();
+    antlr4::tree::TerminalNode *TO_GS();
+    antlr4::tree::TerminalNode *EQUALS_OP();
+    antlr4::tree::TerminalNode *FROM_GS();
+    antlr4::tree::TerminalNode *CURRENT_GS();
+    antlr4::tree::TerminalNode *PUBLIC_GS();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Configuration_param_valueContext* configuration_param_value();
 
   class  Reset_configuration_paramContext : public antlr4::ParserRuleContext {
   public:
@@ -2007,10 +2088,11 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ALTER_GS();
     antlr4::tree::TerminalNode *FOREIGN_GS();
-    antlr4::tree::TerminalNode *TABLES_GS();
+    antlr4::tree::TerminalNode *TABLE_GS();
     Table_nameContext *table_name();
     Alter_foreign_table_optionContext *alter_foreign_table_option();
     If_exists_or_notContext *if_exists_or_not();
+    Cascade_restrictContext *cascade_restrict();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2043,6 +2125,8 @@ public:
     Table_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2052,6 +2136,22 @@ public:
   };
 
   Table_nameContext* table_name();
+
+  class  AttrContext : public antlr4::ParserRuleContext {
+  public:
+    AttrContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *PERIOD();
+    IdentifierContext *identifier();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  AttrContext* attr();
 
   class  Alter_foreign_table_optionContext : public antlr4::ParserRuleContext {
   public:
@@ -2113,6 +2213,8 @@ public:
     Column_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2346,6 +2448,7 @@ public:
     antlr4::tree::TerminalNode *IN_GS();
     antlr4::tree::TerminalNode *OUT_GS();
     antlr4::tree::TerminalNode *INOUT_GS();
+    antlr4::tree::TerminalNode *VARIADIC_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2419,6 +2522,7 @@ public:
     antlr4::tree::TerminalNode *ROWS_GS();
     Set_configuration_paramContext *set_configuration_param();
     Reset_configuration_paramContext *reset_configuration_param();
+    antlr4::tree::TerminalNode *PACKAGE_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2555,6 +2659,8 @@ public:
     Index_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2984,22 +3090,22 @@ public:
 
   Alter_role_optionContext* alter_role_option();
 
-  class  Alter_role_with_optionContext : public antlr4::ParserRuleContext {
+  class  Role_option_commonContext : public antlr4::ParserRuleContext {
   public:
-    Alter_role_with_optionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Role_option_commonContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *SYSADMIN_GS();
+    antlr4::tree::TerminalNode *NOSYSADMIN_GS();
+    antlr4::tree::TerminalNode *AUDITADMIN_GS();
+    antlr4::tree::TerminalNode *NOAUDITADMIN_GS();
     antlr4::tree::TerminalNode *CREATEDB_GS();
     antlr4::tree::TerminalNode *NOCREATEDB_GS();
+    antlr4::tree::TerminalNode *USEFT_GS();
+    antlr4::tree::TerminalNode *NOUSEFT_GS();
     antlr4::tree::TerminalNode *CREATEROLE_GS();
     antlr4::tree::TerminalNode *NOCREATEROLE_GS();
     antlr4::tree::TerminalNode *INHERIT_GS();
     antlr4::tree::TerminalNode *NOINHERIT_GS();
-    antlr4::tree::TerminalNode *AUDITADMIN_GS();
-    antlr4::tree::TerminalNode *NOAUDITADMIN_GS();
-    antlr4::tree::TerminalNode *SYSADMIN_GS();
-    antlr4::tree::TerminalNode *NOSYSADMIN_GS();
-    antlr4::tree::TerminalNode *USEFT_GS();
-    antlr4::tree::TerminalNode *NOUSEFT_GS();
     antlr4::tree::TerminalNode *LOGIN_GS();
     antlr4::tree::TerminalNode *NOLOGIN_GS();
     antlr4::tree::TerminalNode *REPLICATION_GS();
@@ -3009,9 +3115,6 @@ public:
     antlr4::tree::TerminalNode *VCADMIN_GS();
     antlr4::tree::TerminalNode *NOVCADMIN_GS();
     Connection_limitContext *connection_limit();
-    Alter_role_encrypt_optionContext *alter_role_encrypt_option();
-    antlr4::tree::TerminalNode *ENCRYPTED_GS();
-    antlr4::tree::TerminalNode *UNENCRYPTED_GS();
     antlr4::tree::TerminalNode *VALID_GS();
     antlr4::tree::TerminalNode *CHAR_STRING();
     antlr4::tree::TerminalNode *BEGIN_GS();
@@ -3024,10 +3127,28 @@ public:
     antlr4::tree::TerminalNode *SPACE_GS();
     antlr4::tree::TerminalNode *NODE_GS();
     Logic_cluster_nameContext *logic_cluster_name();
+    antlr4::tree::TerminalNode *PGUSER_GS();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Role_option_commonContext* role_option_common();
+
+  class  Alter_role_with_optionContext : public antlr4::ParserRuleContext {
+  public:
+    Alter_role_with_optionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Role_option_commonContext *role_option_common();
+    Alter_role_encrypt_optionContext *alter_role_encrypt_option();
+    antlr4::tree::TerminalNode *ENCRYPTED_GS();
+    antlr4::tree::TerminalNode *UNENCRYPTED_GS();
     antlr4::tree::TerminalNode *ACCOUNT_GS();
     antlr4::tree::TerminalNode *LOCK_GS();
     antlr4::tree::TerminalNode *UNLOCK_GS();
-    antlr4::tree::TerminalNode *PGUSER_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3547,6 +3668,24 @@ public:
   public:
     Alter_table_action_listContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    std::vector<Alter_table_actionContext *> alter_table_action();
+    Alter_table_actionContext* alter_table_action(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Alter_table_action_listContext* alter_table_action_list();
+
+  class  Alter_table_actionContext : public antlr4::ParserRuleContext {
+  public:
+    Alter_table_actionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
     Column_clauseContext *column_clause();
     antlr4::tree::TerminalNode *ADD_GS();
     Alter_table_constraintContext *alter_table_constraint();
@@ -3596,7 +3735,7 @@ public:
    
   };
 
-  Alter_table_action_listContext* alter_table_action_list();
+  Alter_table_actionContext* alter_table_action();
 
   class  Column_clauseContext : public antlr4::ParserRuleContext {
   public:
@@ -4100,11 +4239,11 @@ public:
     Merge_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *MERGE_GS();
-    std::vector<antlr4::tree::TerminalNode *> PARTITION_GS();
-    antlr4::tree::TerminalNode* PARTITION_GS(size_t i);
+    antlr4::tree::TerminalNode *PARTITIONS_GS();
     std::vector<Partition_nameContext *> partition_name();
     Partition_nameContext* partition_name(size_t i);
     antlr4::tree::TerminalNode *INTO_GS();
+    antlr4::tree::TerminalNode *PARTITION_GS();
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
     Tablespace_name_optionContext *tablespace_name_option();
@@ -4419,6 +4558,8 @@ public:
     Configuration_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -4441,7 +4582,7 @@ public:
     antlr4::tree::TerminalNode *ADD_GS();
     antlr4::tree::TerminalNode *ALTER_GS();
     antlr4::tree::TerminalNode *REPLACE_GS();
-    antlr4::tree::TerminalNode *DICTIONARY_GS();
+    Dictionary_nameContext *dictionary_name();
     New_nameContext *new_name();
     antlr4::tree::TerminalNode *DROP_GS();
     If_exists_or_notContext *if_exists_or_not();
@@ -4605,6 +4746,8 @@ public:
     Type_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -4843,6 +4986,8 @@ public:
     View_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -5265,17 +5410,17 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CREATE_GS();
     Func_nameContext *func_name();
-    Create_func_arg_listContext *create_func_arg_list();
-    antlr4::tree::TerminalNode *LANGUAGE_GS();
-    Lang_nameContext *lang_name();
-    Create_func_procedure_as_optionContext *create_func_procedure_as_option();
     antlr4::tree::TerminalNode *FUNCTION_GS();
     antlr4::tree::TerminalNode *PROCEDURE_GS();
     Or_replaceContext *or_replace();
-    antlr4::tree::TerminalNode *RETURNS_GS();
+    antlr4::tree::TerminalNode *LEFT_PAREN();
+    antlr4::tree::TerminalNode *RIGHT_PAREN();
     Func_return_typeContext *func_return_type();
-    std::vector<Alter_function_actionContext *> alter_function_action();
-    Alter_function_actionContext* alter_function_action(size_t i);
+    std::vector<Create_function_procedure_clauseContext *> create_function_procedure_clause();
+    Create_function_procedure_clauseContext* create_function_procedure_clause(size_t i);
+    antlr4::tree::TerminalNode *RETURNS_GS();
+    antlr4::tree::TerminalNode *RETURN_GS();
+    Create_func_arg_listContext *create_func_arg_list();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -5285,6 +5430,26 @@ public:
   };
 
   Create_function_procedure_stmtContext* create_function_procedure_stmt();
+
+  class  Create_function_procedure_clauseContext : public antlr4::ParserRuleContext {
+  public:
+    Create_function_procedure_clauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *LANGUAGE_GS();
+    Lang_nameContext *lang_name();
+    std::vector<Alter_function_actionContext *> alter_function_action();
+    Alter_function_actionContext* alter_function_action(size_t i);
+    Create_func_procedure_as_optionContext *create_func_procedure_as_option();
+    PlsqlbodyContext *plsqlbody();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Create_function_procedure_clauseContext* create_function_procedure_clause();
 
   class  Create_func_arg_listContext : public antlr4::ParserRuleContext {
   public:
@@ -5308,8 +5473,8 @@ public:
   public:
     Create_func_argContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    Param_nameContext *param_name();
     Typename_gsContext *typename_gs();
+    Param_nameContext *param_name();
     ArgmodeContext *argmode();
     ExpressionContext *expression();
     antlr4::tree::TerminalNode *DEFAULT_GS();
@@ -5371,6 +5536,10 @@ public:
     antlr4::tree::TerminalNode *AS_GS();
     std::vector<antlr4::tree::TerminalNode *> CHAR_STRING();
     antlr4::tree::TerminalNode* CHAR_STRING(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> SCONST();
+    antlr4::tree::TerminalNode* SCONST(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
     antlr4::tree::TerminalNode *IS_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -5381,6 +5550,157 @@ public:
   };
 
   Create_func_procedure_as_optionContext* create_func_procedure_as_option();
+
+  class  PlsqlbodyContext : public antlr4::ParserRuleContext {
+  public:
+    PlsqlbodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *BEGIN_GS();
+    Sequence_of_statementsContext *sequence_of_statements();
+    antlr4::tree::TerminalNode *END_GS();
+    antlr4::tree::TerminalNode *DECLARE_GS();
+    Variable_declarationsContext *variable_declarations();
+    Cursor_declarationContext *cursor_declaration();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  PlsqlbodyContext* plsqlbody();
+
+  class  Variable_declarationsContext : public antlr4::ParserRuleContext {
+  public:
+    Variable_declarationsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<Variable_declarationContext *> variable_declaration();
+    Variable_declarationContext* variable_declaration(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> SEMICOLON();
+    antlr4::tree::TerminalNode* SEMICOLON(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Variable_declarationsContext* variable_declarations();
+
+  class  Variable_declarationContext : public antlr4::ParserRuleContext {
+  public:
+    Variable_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    IdentifierContext *identifier();
+    Typename_gsContext *typename_gs();
+    antlr4::tree::TerminalNode *CONSTANT_GS();
+    antlr4::tree::TerminalNode *NOT_GS();
+    antlr4::tree::TerminalNode *NULL_GS();
+    Default_value_partContext *default_value_part();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Variable_declarationContext* variable_declaration();
+
+  class  Default_value_partContext : public antlr4::ParserRuleContext {
+  public:
+    Default_value_partContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *COLON();
+    antlr4::tree::TerminalNode *EQUALS_OP();
+    antlr4::tree::TerminalNode *DEFAULT_GS();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Default_value_partContext* default_value_part();
+
+  class  Cursor_declarationContext : public antlr4::ParserRuleContext {
+  public:
+    Cursor_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *CURSOR_GS();
+    Cursor_nameContext *cursor_name();
+    antlr4::tree::TerminalNode *FOR_GS();
+    Select_stmtContext *select_stmt();
+    antlr4::tree::TerminalNode *SEMICOLON();
+    antlr4::tree::TerminalNode *LEFT_PAREN();
+    antlr4::tree::TerminalNode *RIGHT_PAREN();
+    std::vector<Parameter_specContext *> parameter_spec();
+    Parameter_specContext* parameter_spec(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Cursor_declarationContext* cursor_declaration();
+
+  class  Parameter_specContext : public antlr4::ParserRuleContext {
+  public:
+    Parameter_specContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Parameter_nameContext *parameter_name();
+    Typename_gsContext *typename_gs();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Parameter_specContext* parameter_spec();
+
+  class  Sequence_of_statementsContext : public antlr4::ParserRuleContext {
+  public:
+    Sequence_of_statementsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<Sequence_of_statementContext *> sequence_of_statement();
+    Sequence_of_statementContext* sequence_of_statement(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> SEMICOLON();
+    antlr4::tree::TerminalNode* SEMICOLON(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Sequence_of_statementsContext* sequence_of_statements();
+
+  class  Sequence_of_statementContext : public antlr4::ParserRuleContext {
+  public:
+    Sequence_of_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    StmtContext *stmt();
+    Assignment_stmtContext *assignment_stmt();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Sequence_of_statementContext* sequence_of_statement();
 
   class  Create_group_stmtContext : public antlr4::ParserRuleContext {
   public:
@@ -5630,12 +5950,12 @@ public:
 
   Row_level_security_policy_objContext* row_level_security_policy_obj();
 
-  class  Create_source_pool_stmtContext : public antlr4::ParserRuleContext {
+  class  Create_resource_pool_stmtContext : public antlr4::ParserRuleContext {
   public:
-    Create_source_pool_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Create_resource_pool_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CREATE_GS();
-    antlr4::tree::TerminalNode *SOURCE_GS();
+    antlr4::tree::TerminalNode *RESOURCE_GS();
     antlr4::tree::TerminalNode *POOL_GS();
     Pool_nameContext *pool_name();
     antlr4::tree::TerminalNode *WITH_GS();
@@ -5648,7 +5968,7 @@ public:
    
   };
 
-  Create_source_pool_stmtContext* create_source_pool_stmt();
+  Create_resource_pool_stmtContext* create_resource_pool_stmt();
 
   class  Create_role_stmtContext : public antlr4::ParserRuleContext {
   public:
@@ -5661,8 +5981,8 @@ public:
     antlr4::tree::TerminalNode *ENCRYPTED_GS();
     antlr4::tree::TerminalNode *UNENCRYPTED_GS();
     antlr4::tree::TerminalNode *WITH_GS();
-    std::vector<Alter_role_with_optionContext *> alter_role_with_option();
-    Alter_role_with_optionContext* alter_role_with_option(size_t i);
+    std::vector<Create_role_with_optionContext *> create_role_with_option();
+    Create_role_with_optionContext* create_role_with_option(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -5672,6 +5992,52 @@ public:
   };
 
   Create_role_stmtContext* create_role_stmt();
+
+  class  Create_role_with_optionContext : public antlr4::ParserRuleContext {
+  public:
+    Create_role_with_optionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Role_option_commonContext *role_option_common();
+    std::vector<Role_nameContext *> role_name();
+    Role_nameContext* role_name(size_t i);
+    antlr4::tree::TerminalNode *ROLE_GS();
+    antlr4::tree::TerminalNode *IN_GS();
+    antlr4::tree::TerminalNode *GROUP_GS();
+    antlr4::tree::TerminalNode *ADMIN_GS();
+    antlr4::tree::TerminalNode *USER_GS();
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+    antlr4::tree::TerminalNode *SYSID_GS();
+    IdentifierContext *identifier();
+    antlr4::tree::TerminalNode *DEFAULT_GS();
+    antlr4::tree::TerminalNode *TABLESPACE_GS();
+    Tablespace_nameContext *tablespace_name();
+    antlr4::tree::TerminalNode *PROFILE_GS();
+    Profile_nameContext *profile_name();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Create_role_with_optionContext* create_role_with_option();
+
+  class  Profile_nameContext : public antlr4::ParserRuleContext {
+  public:
+    Profile_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    IdentifierContext *identifier();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Profile_nameContext* profile_name();
 
   class  Create_schema_stmtContext : public antlr4::ParserRuleContext {
   public:
@@ -5716,7 +6082,6 @@ public:
     Create_table_stmtContext *create_table_stmt();
     Create_view_stmtContext *create_view_stmt();
     Create_index_stmtContext *create_index_stmt();
-    Create_table_partition_stmtContext *create_table_partition_stmt();
     Grant_stmtContext *grant_stmt();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -5741,7 +6106,6 @@ public:
     Minvalue_optionContext *minvalue_option();
     Maxvalue_optionContext *maxvalue_option();
     antlr4::tree::TerminalNode *START_GS();
-    antlr4::tree::TerminalNode *WITH_GS();
     antlr4::tree::TerminalNode *CACHE_GS();
     NumericContext *numeric();
     antlr4::tree::TerminalNode *CYCLE_GS();
@@ -5753,6 +6117,7 @@ public:
     antlr4::tree::TerminalNode *PERIOD();
     Column_nameContext *column_name();
     antlr4::tree::TerminalNode *NONE_GS();
+    antlr4::tree::TerminalNode *WITH_GS();
     antlr4::tree::TerminalNode *NO_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -5829,17 +6194,21 @@ public:
     antlr4::tree::TerminalNode *CREATE_GS();
     antlr4::tree::TerminalNode *TABLE_GS();
     Table_nameContext *table_name();
-    antlr4::tree::TerminalNode *LEFT_PAREN();
-    Create_table_column_type_option_listContext *create_table_column_type_option_list();
-    antlr4::tree::TerminalNode *RIGHT_PAREN();
+    antlr4::tree::TerminalNode *PARTITION_GS();
+    antlr4::tree::TerminalNode *BY_GS();
+    Partition_by_optionContext *partition_by_option();
     Temporary_tempContext *temporary_temp();
     antlr4::tree::TerminalNode *UNLOGGED_GS();
     antlr4::tree::TerminalNode *IF_GS();
     antlr4::tree::TerminalNode *NOT_GS();
     antlr4::tree::TerminalNode *EXISTS_GS();
+    antlr4::tree::TerminalNode *LEFT_PAREN();
+    antlr4::tree::TerminalNode *RIGHT_PAREN();
     std::vector<Create_table_stmt_optionContext *> create_table_stmt_option();
     Create_table_stmt_optionContext* create_table_stmt_option(size_t i);
     Create_table_as_optionContext *create_table_as_option();
+    Row_clauseContext *row_clause();
+    Create_table_column_type_option_listContext *create_table_column_type_option_list();
     antlr4::tree::TerminalNode *GLOBAL_GS();
     antlr4::tree::TerminalNode *LOCAL_GS();
 
@@ -5983,6 +6352,8 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *AS_GS();
     Select_stmtContext *select_stmt();
+    antlr4::tree::TerminalNode *TABLE_GS();
+    Table_nameContext *table_name();
     antlr4::tree::TerminalNode *WITH_GS();
     antlr4::tree::TerminalNode *DATA_GS();
     antlr4::tree::TerminalNode *NO_GS();
@@ -5995,35 +6366,6 @@ public:
   };
 
   Create_table_as_optionContext* create_table_as_option();
-
-  class  Create_table_partition_stmtContext : public antlr4::ParserRuleContext {
-  public:
-    Create_table_partition_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *CREATE_GS();
-    antlr4::tree::TerminalNode *TABLE_GS();
-    Partition_nameContext *partition_name();
-    antlr4::tree::TerminalNode *LEFT_PAREN();
-    antlr4::tree::TerminalNode *RIGHT_PAREN();
-    antlr4::tree::TerminalNode *PARTITION_GS();
-    antlr4::tree::TerminalNode *BY_GS();
-    Partition_by_optionContext *partition_by_option();
-    antlr4::tree::TerminalNode *IF_GS();
-    antlr4::tree::TerminalNode *NOT_GS();
-    antlr4::tree::TerminalNode *EXISTS_GS();
-    Create_table_column_type_option_listContext *create_table_column_type_option_list();
-    std::vector<Create_table_stmt_optionContext *> create_table_stmt_option();
-    Create_table_stmt_optionContext* create_table_stmt_option(size_t i);
-    Row_clauseContext *row_clause();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  Create_table_partition_stmtContext* create_table_partition_stmt();
 
   class  Partition_by_optionContext : public antlr4::ParserRuleContext {
   public:
@@ -6136,15 +6478,25 @@ public:
     Trigger_typeContext *trigger_type();
     Trigger_event_listContext *trigger_event_list();
     antlr4::tree::TerminalNode *ON_GS();
-    Table_nameContext *table_name();
-    Create_trigger_optionContext *create_trigger_option();
+    std::vector<Table_nameContext *> table_name();
+    Table_nameContext* table_name(size_t i);
     antlr4::tree::TerminalNode *EXECUTE_GS();
     antlr4::tree::TerminalNode *PROCEDURE_GS();
-    antlr4::tree::TerminalNode *LEFT_PAREN();
     Func_nameContext *func_name();
-    Param_expr_listContext *param_expr_list();
-    antlr4::tree::TerminalNode *RIGHT_PAREN();
+    std::vector<antlr4::tree::TerminalNode *> LEFT_PAREN();
+    antlr4::tree::TerminalNode* LEFT_PAREN(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> RIGHT_PAREN();
+    antlr4::tree::TerminalNode* RIGHT_PAREN(size_t i);
     antlr4::tree::TerminalNode *CONSTRAINT_GS();
+    antlr4::tree::TerminalNode *FROM_GS();
+    Table_constraint_deferrableContext *table_constraint_deferrable();
+    antlr4::tree::TerminalNode *FOR_GS();
+    antlr4::tree::TerminalNode *WHEN_GS();
+    ExpressionContext *expression();
+    Param_expr_listContext *param_expr_list();
+    antlr4::tree::TerminalNode *ROW_GS();
+    antlr4::tree::TerminalNode *STATEMENT_GS();
+    antlr4::tree::TerminalNode *EACH_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -6214,31 +6566,6 @@ public:
 
   Trigger_eventContext* trigger_event();
 
-  class  Create_trigger_optionContext : public antlr4::ParserRuleContext {
-  public:
-    Create_trigger_optionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    Table_constraint_deferrableContext *table_constraint_deferrable();
-    antlr4::tree::TerminalNode *FROM_GS();
-    Table_nameContext *table_name();
-    antlr4::tree::TerminalNode *FOR_GS();
-    antlr4::tree::TerminalNode *WHEN_GS();
-    antlr4::tree::TerminalNode *LEFT_PAREN();
-    ExpressionContext *expression();
-    antlr4::tree::TerminalNode *RIGHT_PAREN();
-    antlr4::tree::TerminalNode *ROW_GS();
-    antlr4::tree::TerminalNode *STATEMENT_GS();
-    antlr4::tree::TerminalNode *EACH_GS();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  Create_trigger_optionContext* create_trigger_option();
-
   class  Create_type_stmtContext : public antlr4::ParserRuleContext {
   public:
     Create_type_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -6246,6 +6573,8 @@ public:
     antlr4::tree::TerminalNode *CREATE_GS();
     antlr4::tree::TerminalNode *TYPE_GS();
     Type_nameContext *type_name();
+    antlr4::tree::TerminalNode *AS_GS();
+    antlr4::tree::TerminalNode *ENUM_GS();
     antlr4::tree::TerminalNode *LEFT_PAREN();
     Create_type_optionContext *create_type_option();
     antlr4::tree::TerminalNode *RIGHT_PAREN();
@@ -8312,6 +8641,8 @@ public:
     Object_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -8363,7 +8694,7 @@ public:
     Copy_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *COPY_GS();
-    IdentifierContext *identifier();
+    Copy_objContext *copy_obj();
     antlr4::tree::TerminalNode *FROM_GS();
     antlr4::tree::TerminalNode *TO_GS();
     antlr4::tree::TerminalNode *CHAR_STRING();
@@ -8383,6 +8714,25 @@ public:
   };
 
   Copy_stmtContext* copy_stmt();
+
+  class  Copy_objContext : public antlr4::ParserRuleContext {
+  public:
+    Copy_objContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Table_nameContext *table_name();
+    antlr4::tree::TerminalNode *LEFT_PAREN();
+    antlr4::tree::TerminalNode *RIGHT_PAREN();
+    Select_stmtContext *select_stmt();
+    Values_stmtContext *values_stmt();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Copy_objContext* copy_obj();
 
   class  Copy_stmt_clauseContext : public antlr4::ParserRuleContext {
   public:
@@ -8568,6 +8918,8 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *TRUE_GS();
     antlr4::tree::TerminalNode *FALSE_GS();
+    antlr4::tree::TerminalNode *ON_GS();
+    antlr4::tree::TerminalNode *OFF_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -8586,6 +8938,7 @@ public:
     Cursor_nameContext *cursor_name();
     antlr4::tree::TerminalNode *FOR_GS();
     Select_stmtContext *select_stmt();
+    Values_stmtContext *values_stmt();
     antlr4::tree::TerminalNode *BINARY_GS();
     antlr4::tree::TerminalNode *NO_GS();
     antlr4::tree::TerminalNode *SCROLL_GS();
@@ -8653,6 +9006,24 @@ public:
 
   Do_stmt_codeContext* do_stmt_code();
 
+  class  Execute_stmtsContext : public antlr4::ParserRuleContext {
+  public:
+    Execute_stmtsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<Execute_stmtContext *> execute_stmt();
+    Execute_stmtContext* execute_stmt(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> SEMICOLON();
+    antlr4::tree::TerminalNode* SEMICOLON(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Execute_stmtsContext* execute_stmts();
+
   class  Execute_stmtContext : public antlr4::ParserRuleContext {
   public:
     Execute_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -8662,6 +9033,8 @@ public:
     antlr4::tree::TerminalNode *LEFT_PAREN();
     Param_expr_listContext *param_expr_list();
     antlr4::tree::TerminalNode *RIGHT_PAREN();
+    std::vector<AttrContext *> attr();
+    AttrContext* attr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -8681,6 +9054,7 @@ public:
     antlr4::tree::TerminalNode *ON_GS();
     Paren_node_listContext *paren_node_list();
     Select_stmtContext *select_stmt();
+    antlr4::tree::TerminalNode *CHAR_STRING();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -8696,7 +9070,7 @@ public:
     Explain_stmtContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *EXPLAIN_GS();
-    Gs_stmtContext *gs_stmt();
+    StmtContext *stmt();
     antlr4::tree::TerminalNode *VERBOSE_GS();
     antlr4::tree::TerminalNode *PERFORMANCE_GS();
     Explain_option_listContext *explain_option_list();
@@ -8715,8 +9089,10 @@ public:
   public:
     Explain_option_listContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *LEFT_PAREN();
     std::vector<Explain_optionContext *> explain_option();
     Explain_optionContext* explain_option(size_t i);
+    antlr4::tree::TerminalNode *RIGHT_PAREN();
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
 
@@ -8766,7 +9142,7 @@ public:
     antlr4::tree::TerminalNode *EXPLAIN_GS();
     antlr4::tree::TerminalNode *PLAN_GS();
     antlr4::tree::TerminalNode *FOR_GS();
-    Gs_stmtContext *gs_stmt();
+    StmtContext *stmt();
     antlr4::tree::TerminalNode *SET_GS();
     Assignment_stmtContext *assignment_stmt();
 
@@ -8862,7 +9238,8 @@ public:
     Database_privilegesContext *database_privileges();
     antlr4::tree::TerminalNode *USAGE_GS();
     Function_privilegeContext *function_privilege();
-    Cluster_privilegeContext *cluster_privilege();
+    std::vector<Cluster_privilegeContext *> cluster_privilege();
+    Cluster_privilegeContext* cluster_privilege(size_t i);
     antlr4::tree::TerminalNode *ALL_GS();
     antlr4::tree::TerminalNode *PRIVILEGE_GS();
     antlr4::tree::TerminalNode *READ_GS();
@@ -9083,7 +9460,7 @@ public:
     antlr4::tree::TerminalNode *PREPARE_GS();
     IdentifierContext *identifier();
     antlr4::tree::TerminalNode *AS_GS();
-    Gs_stmtContext *gs_stmt();
+    StmtContext *stmt();
     antlr4::tree::TerminalNode *LEFT_PAREN();
     std::vector<Typename_gsContext *> typename_gs();
     Typename_gsContext* typename_gs(size_t i);
@@ -9185,7 +9562,7 @@ public:
   public:
     Update_set_column_optionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    Assignment_stmtContext *assignment_stmt();
+    Assignment_stmt_listContext *assignment_stmt_list();
     Paren_column_listContext *paren_column_list();
     antlr4::tree::TerminalNode *EQUALS_OP();
     antlr4::tree::TerminalNode *LEFT_PAREN();
@@ -9298,9 +9675,9 @@ public:
     antlr4::tree::TerminalNode *REINDEX_GS();
     Reindex_optionContext *reindex_option();
     Index_nameContext *index_name();
-    antlr4::tree::TerminalNode *FORCE_GS();
     antlr4::tree::TerminalNode *PARTITION_GS();
     Partition_nameContext *partition_name();
+    antlr4::tree::TerminalNode *FORCE_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -10111,7 +10488,7 @@ public:
 
   class  ConcatenationContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *op = nullptr;
+    antlr4::Token *op = nullptr;;
     ConcatenationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Model_exprContext *model_expr();
@@ -10193,7 +10570,8 @@ public:
   public:
     Unary_exprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    Unary_exprContext *unary_expr();
+    std::vector<Unary_exprContext *> unary_expr();
+    Unary_exprContext* unary_expr(size_t i);
     antlr4::tree::TerminalNode *MINUS_SIGN();
     antlr4::tree::TerminalNode *PLUS_SIGN();
     antlr4::tree::TerminalNode *AT_SIGN();
@@ -10210,12 +10588,15 @@ public:
     AtomContext *atom();
     antlr4::tree::TerminalNode *ARRAY_GS();
     Array_exprContext *array_expr();
+    antlr4::tree::TerminalNode *PARAM();
     std::vector<antlr4::tree::TerminalNode *> TYPECAST();
     antlr4::tree::TerminalNode* TYPECAST(size_t i);
     std::vector<Typename_gsContext *> typename_gs();
     Typename_gsContext* typename_gs(size_t i);
     std::vector<Typecast_argContext *> typecast_arg();
     Typecast_argContext* typecast_arg(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> PERIOD();
+    antlr4::tree::TerminalNode* PERIOD(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -10263,6 +10644,7 @@ public:
     Hll_typeContext *hll_type();
     Oid_typeContext *oid_type();
     Other_typeContext *other_type();
+    IdentifierContext *identifier();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -10283,6 +10665,9 @@ public:
     NumericContext* numeric(size_t i);
     antlr4::tree::TerminalNode *ASTERISK();
     antlr4::tree::TerminalNode *COMMA();
+    antlr4::tree::TerminalNode *LEFT_BRACKET();
+    antlr4::tree::TerminalNode *RIGHT_BRACKET();
+    antlr4::tree::TerminalNode *ICONST();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -10332,6 +10717,7 @@ public:
     antlr4::tree::TerminalNode *PRECISION_GS();
     antlr4::tree::TerminalNode *BINARY_DOUBLE_GS();
     antlr4::tree::TerminalNode *DEC_GS();
+    antlr4::tree::TerminalNode *INT_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -11061,10 +11447,10 @@ public:
     antlr4::tree::TerminalNode *LEFT_PAREN();
     antlr4::tree::TerminalNode *RIGHT_PAREN();
     antlr4::tree::TerminalNode *ASTERISK();
-    Expression_listContext *expression_list();
+    Param_expr_listContext *param_expr_list();
     antlr4::tree::TerminalNode *VARIADIC_GS();
     antlr4::tree::TerminalNode *COMMA();
-    ExpressionContext *expression();
+    Param_exprContext *param_expr();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -11156,6 +11542,7 @@ public:
     Reserved_keywords_normalContext *reserved_keywords_normal();
     Reserved_keywords_can_be_nameContext *reserved_keywords_can_be_name();
     Nonreserved_keywords_normalContext *nonreserved_keywords_normal();
+    Non_keywords_but_tokenContext *non_keywords_but_token();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -11396,7 +11783,6 @@ public:
     antlr4::tree::TerminalNode *SPLIT_GS();
     antlr4::tree::TerminalNode *SYMMETRIC_GS();
     antlr4::tree::TerminalNode *SYSDATE_GS();
-    antlr4::tree::TerminalNode *TABLE_GS();
     antlr4::tree::TerminalNode *THEN_GS();
     antlr4::tree::TerminalNode *TO_GS();
     antlr4::tree::TerminalNode *TRAILING_GS();
@@ -11793,6 +12179,24 @@ public:
   };
 
   Nonreserved_keywords_normalContext* nonreserved_keywords_normal();
+
+  class  Non_keywords_but_tokenContext : public antlr4::ParserRuleContext {
+  public:
+    Non_keywords_but_tokenContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *SERIAL_GS();
+    antlr4::tree::TerminalNode *OID_GS();
+    antlr4::tree::TerminalNode *PUBLIC_GS();
+    antlr4::tree::TerminalNode *FORMAT_GS();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Non_keywords_but_tokenContext* non_keywords_but_token();
 
   class  Nonreserved_keywords_can_not_be_nameContext : public antlr4::ParserRuleContext {
   public:

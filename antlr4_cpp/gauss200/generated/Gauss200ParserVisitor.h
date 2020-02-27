@@ -1,5 +1,5 @@
 
-// Generated from Gauss200Parser.g4 by ANTLR 4.7.1
+// Generated from /home/jona/myGit/myCode_repository/antlr4_cpp/gauss200/Gauss200Parser.g4 by ANTLR 4.7.1
 
 #pragma once
 
@@ -23,9 +23,13 @@ public:
 
     virtual antlrcpp::Any visitStmtmulti(Gauss200Parser::StmtmultiContext *context) = 0;
 
+    virtual antlrcpp::Any visitSql_stmt(Gauss200Parser::Sql_stmtContext *context) = 0;
+
     virtual antlrcpp::Any visitStmt(Gauss200Parser::StmtContext *context) = 0;
 
-    virtual antlrcpp::Any visitGs_stmt(Gauss200Parser::Gs_stmtContext *context) = 0;
+    virtual antlrcpp::Any visitOther_stmt(Gauss200Parser::Other_stmtContext *context) = 0;
+
+    virtual antlrcpp::Any visitBegin_stmt(Gauss200Parser::Begin_stmtContext *context) = 0;
 
     virtual antlrcpp::Any visitAbort_stmt(Gauss200Parser::Abort_stmtContext *context) = 0;
 
@@ -62,6 +66,8 @@ public:
     virtual antlrcpp::Any visitNew_name(Gauss200Parser::New_nameContext *context) = 0;
 
     virtual antlrcpp::Any visitSet_configuration_param(Gauss200Parser::Set_configuration_paramContext *context) = 0;
+
+    virtual antlrcpp::Any visitConfiguration_param_value(Gauss200Parser::Configuration_param_valueContext *context) = 0;
 
     virtual antlrcpp::Any visitReset_configuration_param(Gauss200Parser::Reset_configuration_paramContext *context) = 0;
 
@@ -136,6 +142,8 @@ public:
     virtual antlrcpp::Any visitIf_exists_or_not(Gauss200Parser::If_exists_or_notContext *context) = 0;
 
     virtual antlrcpp::Any visitTable_name(Gauss200Parser::Table_nameContext *context) = 0;
+
+    virtual antlrcpp::Any visitAttr(Gauss200Parser::AttrContext *context) = 0;
 
     virtual antlrcpp::Any visitAlter_foreign_table_option(Gauss200Parser::Alter_foreign_table_optionContext *context) = 0;
 
@@ -239,6 +247,8 @@ public:
 
     virtual antlrcpp::Any visitAlter_role_option(Gauss200Parser::Alter_role_optionContext *context) = 0;
 
+    virtual antlrcpp::Any visitRole_option_common(Gauss200Parser::Role_option_commonContext *context) = 0;
+
     virtual antlrcpp::Any visitAlter_role_with_option(Gauss200Parser::Alter_role_with_optionContext *context) = 0;
 
     virtual antlrcpp::Any visitAlter_role_encrypt_option(Gauss200Parser::Alter_role_encrypt_optionContext *context) = 0;
@@ -294,6 +304,8 @@ public:
     virtual antlrcpp::Any visitAlter_table_option(Gauss200Parser::Alter_table_optionContext *context) = 0;
 
     virtual antlrcpp::Any visitAlter_table_action_list(Gauss200Parser::Alter_table_action_listContext *context) = 0;
+
+    virtual antlrcpp::Any visitAlter_table_action(Gauss200Parser::Alter_table_actionContext *context) = 0;
 
     virtual antlrcpp::Any visitColumn_clause(Gauss200Parser::Column_clauseContext *context) = 0;
 
@@ -461,6 +473,8 @@ public:
 
     virtual antlrcpp::Any visitCreate_function_procedure_stmt(Gauss200Parser::Create_function_procedure_stmtContext *context) = 0;
 
+    virtual antlrcpp::Any visitCreate_function_procedure_clause(Gauss200Parser::Create_function_procedure_clauseContext *context) = 0;
+
     virtual antlrcpp::Any visitCreate_func_arg_list(Gauss200Parser::Create_func_arg_listContext *context) = 0;
 
     virtual antlrcpp::Any visitCreate_func_arg(Gauss200Parser::Create_func_argContext *context) = 0;
@@ -470,6 +484,22 @@ public:
     virtual antlrcpp::Any visitLang_name(Gauss200Parser::Lang_nameContext *context) = 0;
 
     virtual antlrcpp::Any visitCreate_func_procedure_as_option(Gauss200Parser::Create_func_procedure_as_optionContext *context) = 0;
+
+    virtual antlrcpp::Any visitPlsqlbody(Gauss200Parser::PlsqlbodyContext *context) = 0;
+
+    virtual antlrcpp::Any visitVariable_declarations(Gauss200Parser::Variable_declarationsContext *context) = 0;
+
+    virtual antlrcpp::Any visitVariable_declaration(Gauss200Parser::Variable_declarationContext *context) = 0;
+
+    virtual antlrcpp::Any visitDefault_value_part(Gauss200Parser::Default_value_partContext *context) = 0;
+
+    virtual antlrcpp::Any visitCursor_declaration(Gauss200Parser::Cursor_declarationContext *context) = 0;
+
+    virtual antlrcpp::Any visitParameter_spec(Gauss200Parser::Parameter_specContext *context) = 0;
+
+    virtual antlrcpp::Any visitSequence_of_statements(Gauss200Parser::Sequence_of_statementsContext *context) = 0;
+
+    virtual antlrcpp::Any visitSequence_of_statement(Gauss200Parser::Sequence_of_statementContext *context) = 0;
 
     virtual antlrcpp::Any visitCreate_group_stmt(Gauss200Parser::Create_group_stmtContext *context) = 0;
 
@@ -495,9 +525,13 @@ public:
 
     virtual antlrcpp::Any visitRow_level_security_policy_obj(Gauss200Parser::Row_level_security_policy_objContext *context) = 0;
 
-    virtual antlrcpp::Any visitCreate_source_pool_stmt(Gauss200Parser::Create_source_pool_stmtContext *context) = 0;
+    virtual antlrcpp::Any visitCreate_resource_pool_stmt(Gauss200Parser::Create_resource_pool_stmtContext *context) = 0;
 
     virtual antlrcpp::Any visitCreate_role_stmt(Gauss200Parser::Create_role_stmtContext *context) = 0;
+
+    virtual antlrcpp::Any visitCreate_role_with_option(Gauss200Parser::Create_role_with_optionContext *context) = 0;
+
+    virtual antlrcpp::Any visitProfile_name(Gauss200Parser::Profile_nameContext *context) = 0;
 
     virtual antlrcpp::Any visitCreate_schema_stmt(Gauss200Parser::Create_schema_stmtContext *context) = 0;
 
@@ -529,8 +563,6 @@ public:
 
     virtual antlrcpp::Any visitCreate_table_as_option(Gauss200Parser::Create_table_as_optionContext *context) = 0;
 
-    virtual antlrcpp::Any visitCreate_table_partition_stmt(Gauss200Parser::Create_table_partition_stmtContext *context) = 0;
-
     virtual antlrcpp::Any visitPartition_by_option(Gauss200Parser::Partition_by_optionContext *context) = 0;
 
     virtual antlrcpp::Any visitParen_partition_key(Gauss200Parser::Paren_partition_keyContext *context) = 0;
@@ -548,8 +580,6 @@ public:
     virtual antlrcpp::Any visitTrigger_event_list(Gauss200Parser::Trigger_event_listContext *context) = 0;
 
     virtual antlrcpp::Any visitTrigger_event(Gauss200Parser::Trigger_eventContext *context) = 0;
-
-    virtual antlrcpp::Any visitCreate_trigger_option(Gauss200Parser::Create_trigger_optionContext *context) = 0;
 
     virtual antlrcpp::Any visitCreate_type_stmt(Gauss200Parser::Create_type_stmtContext *context) = 0;
 
@@ -769,6 +799,8 @@ public:
 
     virtual antlrcpp::Any visitCopy_stmt(Gauss200Parser::Copy_stmtContext *context) = 0;
 
+    virtual antlrcpp::Any visitCopy_obj(Gauss200Parser::Copy_objContext *context) = 0;
+
     virtual antlrcpp::Any visitCopy_stmt_clause(Gauss200Parser::Copy_stmt_clauseContext *context) = 0;
 
     virtual antlrcpp::Any visitCopy_stmt_option(Gauss200Parser::Copy_stmt_optionContext *context) = 0;
@@ -794,6 +826,8 @@ public:
     virtual antlrcpp::Any visitDo_stmt(Gauss200Parser::Do_stmtContext *context) = 0;
 
     virtual antlrcpp::Any visitDo_stmt_code(Gauss200Parser::Do_stmt_codeContext *context) = 0;
+
+    virtual antlrcpp::Any visitExecute_stmts(Gauss200Parser::Execute_stmtsContext *context) = 0;
 
     virtual antlrcpp::Any visitExecute_stmt(Gauss200Parser::Execute_stmtContext *context) = 0;
 
@@ -1058,6 +1092,8 @@ public:
     virtual antlrcpp::Any visitReserved_keywords_can_be_name(Gauss200Parser::Reserved_keywords_can_be_nameContext *context) = 0;
 
     virtual antlrcpp::Any visitNonreserved_keywords_normal(Gauss200Parser::Nonreserved_keywords_normalContext *context) = 0;
+
+    virtual antlrcpp::Any visitNon_keywords_but_token(Gauss200Parser::Non_keywords_but_tokenContext *context) = 0;
 
     virtual antlrcpp::Any visitNonreserved_keywords_can_not_be_name(Gauss200Parser::Nonreserved_keywords_can_not_be_nameContext *context) = 0;
 
