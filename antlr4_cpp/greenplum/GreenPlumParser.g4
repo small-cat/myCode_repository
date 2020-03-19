@@ -4,6 +4,10 @@ options {
     tokenVocab=GreenPlumLexer;
 }
 
+@parser::postinclude {
+#include <string.h>
+}
+
 /*
  *  psql already handles such cases, but other interfaces don't.
  *  here, the rules can only support such cases:
@@ -446,9 +450,12 @@ variable_set_stmt
 
 /* Generic SET syntaxes: */
 set_rest
-    : var_name TO (var_list | DEFAULT)
-    | var_name EQUALS_OP (var_list | DEFAULT)
-    | var_name FROM CURRENT_P
+    locals [
+    std::string current_schema
+    ]
+    : var_name (TO | EQUALS_OP) var_list {if (strcasecmp("search_path", $var_name.text.c_str()) == 0) $current_schema = $var_list.text;}
+    | var_name (TO | EQUALS_OP) DEFAULT {if (strcasecmp("search_path", $var_name.text.c_str()) == 0) $current_schema = "\"\$user\",public";}
+    | var_name FROM CURRENT_P // this case current schema not changed
     /* Special syntaxes mandated by SQL standard: */
     | TIME ZONE zone_value
     | TRANSACTION transaction_mode_list

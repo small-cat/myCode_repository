@@ -10,6 +10,8 @@
 #include "tree/ErrorNode.h"
 #include "PlSqlParser.h"
 
+#include <typeinfo>
+
 using namespace antlr4::tree;
 using namespace oracle;
 
@@ -63,11 +65,21 @@ void OracleParseTreeWalker::walk(ParseTreeListener *listener, ParseTree *t) cons
 }
 
 bool OracleParseTreeWalker::excludeNode(ParseTree *t) const {
+  /*
   if (antlrcpp::is<PlSqlParser::Where_clauseContext *>(t)) {
     return true;
   } else if (antlrcpp::is<PlSqlParser::Pivot_clauseContext *>(t)) {
     return true;
   } else if (antlrcpp::is<PlSqlParser::Unpivot_clauseContext *>(t)) {
+    return true;
+  }
+  */
+
+  if (typeid(*t) == typeid(PlSqlParser::Where_clauseContext)) {
+    return true;
+  } else if (typeid(*t) == typeid(PlSqlParser::Pivot_clauseContext)) {
+    return true;
+  } else if (typeid(*t) == typeid(PlSqlParser::Unpivot_clauseContext)) {
     return true;
   }
 

@@ -1692,10 +1692,10 @@ from_list
     ;
 
 table_ref
-    : ONLY_GS? table_name ASTERISK? partition_clause? table_alias? table_sampling_clause?
-    | select_with_parens table_alias?
-    | func_name paren_expr_list AS_GS? alias_name? paren_column_list?
-    | table_ref NATURAL_GS? join_type? JOIN_GS table_ref (on_condition_clause | using_clause)?
+    : ONLY_GS? table_name ASTERISK? partition_clause? table_alias? table_sampling_clause? # table_ref_simple
+    | select_with_parens table_alias?   # table_ref_subquery
+    | func_name paren_expr_list AS_GS? alias_name? paren_column_list?   # table_ref_func
+    | table_ref NATURAL_GS? join_type? JOIN_GS table_ref (on_condition_clause | using_clause)?  # table_ref_join
     ;
 
 partition_clause

@@ -17,11 +17,10 @@
 #include <fstream>
 
 #include "antlr4-runtime.h"
-#include "GreenPlumLexer.h"
-#include "GreenPlumParser.h"
+#include "plpgsqlLexer.h"
+#include "plpgsqlParser.h"
 
 #include "error_verbose_listener.hpp"
-#include "greenplum_get_dag_listener.hpp"
 
 using namespace antlr4;
 
@@ -55,7 +54,7 @@ void ParseFile(const char* filename) {
 
 void ParseString(std::string &sql) {
   ANTLRInputStream input(string_toupper(sql));
-  GreenPlumLexer lexer(&input);
+  plpgsqlLexer lexer(&input);
   CommonTokenStream tokens(&lexer);
 
   // show all the tokens
@@ -64,7 +63,7 @@ void ParseString(std::string &sql) {
     std::cout << token->toString() << std::endl;
   }
 
-  GreenPlumParser parser(&tokens);
+  plpgsqlParser parser(&tokens);
 
   parser.removeErrorListeners();
 
@@ -72,48 +71,13 @@ void ParseString(std::string &sql) {
   ErrorVerboseListener err_verbose;
   parser.addErrorListener(&err_verbose);
 
-  auto stmtblock_ctx = parser.stmtblock();
+  tree::ParseTree *tree = parser.plfunction();
   std::cout << "sql: " << tokens.getText() << std::endl;
-  std::cout << ((tree::ParseTree*)stmtblock_ctx)->toStringTree(&parser) << std::endl;
+  std::cout << tree->toStringTree(&parser) << std::endl;
 
   // the following here is not apt
   if (err_verbose.has_error())
     std::cout << "Parse failed: " << err_verbose.err_message() << std::endl;
-
-  auto stmtmulti_ctx = stmtblock_ctx->stmtmulti();
-  if (stmtmulti_ctx == nullptr) {
-    return;
-  }
-
-  auto stmts_ctx = stmtmulti_ctx->stmt();
-  if (stmts_ctx.empty()) {
-    return;
-  }
-
-  tree::ParseTreeWalker walker;
-
-  std::cout << "========== DAG ============" << std::endl;
-  for (auto& stmt_ctx : stmts_ctx) {
-    auto variable_set_stmt_ctx = stmt_ctx->variable_set_stmt();
-    if (variable_set_stmt_ctx) {
-      auto set_rest_ctx = variable_set_stmt_ctx->set_rest();
-      if (set_rest_ctx) {
-        if (!set_rest_ctx->current_schema.empty()) {
-          std::cout << "current schema change to: " << set_rest_ctx->current_schema << std::endl;
-        }
-      }
-      continue;
-    }
-
-    auto select_stmt_ctx = stmt_ctx->select_stmt();
-    if (select_stmt_ctx == nullptr) {
-      continue;
-    }
-    GreenPlumGetColumnDAG gp_dag(&parser);
-    walker.walk(&gp_dag, stmt_ctx);
-    TravelColumnDag(gp_dag.column_dag());
-  }
-  
 }
 
 std::string& string_toupper(std::string &str) {
