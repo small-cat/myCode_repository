@@ -223,13 +223,21 @@ void GetFuncInfo(FuncInfo_s &func_info, std::string name) {
       func_info.data_type = Trim(sv[1], ' ');
       func_info.mask_type = Trim(sv[2], ' ');
       func_info.algname = Trim(sv[3], ' ');
-      func_info.func_tool = 0;
+
+      if (strcasecmp("builtin", func_info.data_type.c_str()) == 0) {
+        func_info.func_tool = 1;
+      } else
+        func_info.func_tool = 0;
 
       return;
     }
   }
 
-  func_info.function_name = "unknown"; // function is not standard
+  func_info.function_name = name; // function is not standard
+  func_info.category = "内置算法";
+  func_info.data_type = "reserved";
+  func_info.mask_type = "遮蔽脱敏";
+  func_info.algname = "reserved";
   func_info.func_tool = 1;
 }
 
