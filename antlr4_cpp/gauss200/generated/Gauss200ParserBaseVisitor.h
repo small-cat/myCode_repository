@@ -1207,7 +1207,19 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitTable_ref(Gauss200Parser::Table_refContext *ctx) override {
+  virtual antlrcpp::Any visitTable_ref_join(Gauss200Parser::Table_ref_joinContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitTable_ref_subquery(Gauss200Parser::Table_ref_subqueryContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitTable_ref_func(Gauss200Parser::Table_ref_funcContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitTable_ref_simple(Gauss200Parser::Table_ref_simpleContext *ctx) override {
     return visitChildren(ctx);
   }
 

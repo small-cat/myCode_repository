@@ -514,6 +514,7 @@ argmode
 
 param_name
     : identifier
+    | SCONST
     ;
 
 alter_func_option
@@ -2997,6 +2998,7 @@ simple_function
 func_name
     : regular_id_common
     | CHAR_STRING
+    | SCONST
     ;
 
 simple_func_params

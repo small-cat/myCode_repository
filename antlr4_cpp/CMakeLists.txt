@@ -119,6 +119,7 @@ if(WITH_DEMO)
  add_subdirectory(dynamic_scope)
  add_subdirectory(greenplum)
  add_subdirectory(gauss200)
+ add_subdirectory(create_sql_xml_tool)
  # add_compile_options(plpgsql)
 endif(WITH_DEMO)
 

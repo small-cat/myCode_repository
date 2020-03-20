@@ -2464,6 +2464,7 @@ public:
     Param_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
+    antlr4::tree::TerminalNode *SCONST();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -6897,19 +6898,20 @@ public:
   class  Table_refContext : public antlr4::ParserRuleContext {
   public:
     Table_refContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    Table_refContext() : antlr4::ParserRuleContext() { }
+    void copyFrom(Table_refContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
     virtual size_t getRuleIndex() const override;
-    Table_nameContext *table_name();
-    antlr4::tree::TerminalNode *ONLY_GS();
-    antlr4::tree::TerminalNode *ASTERISK();
-    Partition_clauseContext *partition_clause();
-    Table_aliasContext *table_alias();
-    Table_sampling_clauseContext *table_sampling_clause();
-    Select_with_parensContext *select_with_parens();
-    Func_nameContext *func_name();
-    Paren_expr_listContext *paren_expr_list();
-    antlr4::tree::TerminalNode *AS_GS();
-    Alias_nameContext *alias_name();
-    Paren_column_listContext *paren_column_list();
+
+   
+  };
+
+  class  Table_ref_joinContext : public Table_refContext {
+  public:
+    Table_ref_joinContext(Table_refContext *ctx);
+
     std::vector<Table_refContext *> table_ref();
     Table_refContext* table_ref(size_t i);
     antlr4::tree::TerminalNode *JOIN_GS();
@@ -6917,12 +6919,53 @@ public:
     Join_typeContext *join_type();
     On_condition_clauseContext *on_condition_clause();
     Using_clauseContext *using_clause();
-
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
+  };
+
+  class  Table_ref_subqueryContext : public Table_refContext {
+  public:
+    Table_ref_subqueryContext(Table_refContext *ctx);
+
+    Select_with_parensContext *select_with_parens();
+    Table_aliasContext *table_alias();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  Table_ref_funcContext : public Table_refContext {
+  public:
+    Table_ref_funcContext(Table_refContext *ctx);
+
+    Func_nameContext *func_name();
+    Paren_expr_listContext *paren_expr_list();
+    antlr4::tree::TerminalNode *AS_GS();
+    Alias_nameContext *alias_name();
+    Paren_column_listContext *paren_column_list();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  Table_ref_simpleContext : public Table_refContext {
+  public:
+    Table_ref_simpleContext(Table_refContext *ctx);
+
+    Table_nameContext *table_name();
+    antlr4::tree::TerminalNode *ONLY_GS();
+    antlr4::tree::TerminalNode *ASTERISK();
+    Partition_clauseContext *partition_clause();
+    Table_aliasContext *table_alias();
+    Table_sampling_clauseContext *table_sampling_clause();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   Table_refContext* table_ref();
@@ -11430,6 +11473,7 @@ public:
     virtual size_t getRuleIndex() const override;
     Regular_id_commonContext *regular_id_common();
     antlr4::tree::TerminalNode *CHAR_STRING();
+    antlr4::tree::TerminalNode *SCONST();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

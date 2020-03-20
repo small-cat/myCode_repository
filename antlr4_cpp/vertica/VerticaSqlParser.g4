@@ -5,6 +5,7 @@ options {
 }
 
 // sql elements
+// in vertica, hints like /*+ ... */, we just regard it as a comment and ignore it
 reserved_keywords
     :
     ;
@@ -25,6 +26,15 @@ literals
     : number_literal
     | string_literal
     | date_time_literal
+    | external_type_literal
+    | V_TRUE
+    | V_FALSE
+    | V_NULL
+    ;
+
+external_type_literal
+    : V_ARRAY? array_expr
+    | V_ROW paren_expression_list
     ;
 
 numerics
@@ -50,12 +60,16 @@ var_binary_string_literal
     | BIT_STRING_LIT
     ;
 
-// TODO
 date_time_literal
-    :
+    : date_time_data_type CHAR_STRING
+    | (number_literal year_month_subtype_unit)+ V_AGO?
     ;
 
 // expression definitions
+
+paren_expression_list
+    : LEFT_PAREN expression_list RIGHT_PAREN
+    ;
 
 expression_list
     : expression (COMMA expression)*
@@ -107,7 +121,7 @@ in_elements
     ;
 
 between_elements
-    : concatenation AND concatenation
+    : concatenation V_AND concatenation
     ;
 
 concatenation_list
@@ -129,11 +143,21 @@ model_expression
 
 unary_expression
     : (SUB_SIGN | ADD_SIGN) unary_expression
-    |  V_DISTINCT unary_expression
-    |  V_ALL unary_expression 
-    |  case_expression
-    |  standard_function
-    |  atom
+    | BAR_SIGN DIV_SIGN unary_expression
+    | BAR_SIGN BAR_SIGN DIV_SIGN unary_expression
+    | FACTORIAL_SIGN FACTORIAL_SIGN unary_expression
+    | AT_SIGN unary_expression
+    | unary_expression FACTORIAL_SIGN
+    | unary_expression DATA_TYPE_CAST data_type
+    | V_DISTINCT unary_expression
+    | V_ALL unary_expression 
+    | case_expression
+    | standard_function
+    | atom
+    ;
+
+array_expr
+    : LEFT_BRACKET expression_list? RIGHT_BRACKET
     ;
 
 case_expression
@@ -161,17 +185,35 @@ func_params
     ;
 
 func_parameters
-    : (V_ALL | V_DISTINCT)? expression (COMMA expression)?
+    : (V_ALL | V_DISTINCT)? expression (COMMA expression (V_IGNORE V_NULLS)?)?
+    | expression_list using_parameters?
+    ;
+
+using_parameters
+    : V_USING V_PARAMETERS assignment_param_value_list
+    ;
+
+assignment_param_value_list
+    : assignment_param_value (COMMA assignment_param_value)*
+    ;
+
+assignment_param_value
+    : parameter_name EQUAL_SIGN expression
+    ;
+
+parameter_name
+    : identifier
     ;
 
 func_options
-    : V_OVER LEFT_PAREN func_window_clause* RIGHT_PAREN
+    : (V_WITHIN V_GROUP LEFT_PAREN V_ORDER V_BY expression asc_desc? RIGHT_PAREN)? V_OVER LEFT_PAREN func_window_clause* RIGHT_PAREN
     ;
 
 func_window_clause
     : window_partition_clause
     | window_order_clause
     | window_frame_clause
+    | window_name_clause
     ;
 
 window_partition_clause
@@ -193,7 +235,36 @@ order_by_expression
     ;
 
 sort_qualifiers
-    : (V_ASC | V_DESC) (V_NULLS? (V_FIRST | V_LAST | V_AUTO))?
+    : asc_desc (V_NULLS? (V_FIRST | V_LAST | V_AUTO))?
+    ;
+
+asc_desc
+    : V_ASC 
+    | V_DESC
+    ;
+
+window_frame_clause
+    : (V_ROWS | V_RANGE) V_BETWEEN start_end_point V_AND start_end_point 
+    | start_end_point
+    ;
+
+start_end_point
+    : V_UNBOUNDED (V_PRECEDING | V_FOLLOWING)
+    | V_CURRENT V_ROW
+    | literals preceding_following
+    ;
+
+preceding_following
+    : V_PRECEDING 
+    | V_FOLLOWING
+    ;
+
+window_name_clause
+    : V_WINDOW window_name V_AS LEFT_PAREN window_partition_clause window_order_clause? RIGHT_PAREN
+    ;
+
+window_name
+    : identifier
     ;
 
 atom
@@ -210,4 +281,132 @@ general_element
 
 general_element_part
     : identifier (PERIOD identifier)*
+    ;
+
+data_type
+    : binary_data_type
+    | boolean_data_type
+    | character_data_type
+    | date_time_data_type
+    | long_data_type
+    | numeric_data_type
+    | spatial_data_type
+    | uuid_data_type
+    | external_data_type
+    ;
+
+binary_data_type
+    : (V_BINARY | V_VARBINARY) data_type_precision
+    ;
+
+boolean_data_type
+    : V_BOOLEAN
+    ;
+
+character_data_type
+    : (V_CHAR | V_VARCHAR | V_CHARACTER V_VARYING?) (LEFT_PAREN UNSIGNED_INTEGER RIGHT_PAREN)?
+    ;
+
+date_time_data_type
+    : V_DATE
+    | V_DATETIME
+    | V_SMALLDATETIME
+    | V_TIMESTAMP
+    | (V_TIME | V_TIMETZ | V_TIMESTAMP | V_TIMESTAMPTZ) data_type_precision? ((V_WITH | V_WITHOUT) V_TIME V_ZONE)? CHAR_STRING (V_AT V_TIME V_ZONE time_zone)?
+    | V_INTERVAL data_type_precision? CHAR_STRING interval_qualifier
+    ;
+
+time_zone
+    : V_INTERVAL? CHAR_STRING
+    ;
+
+data_type_precision
+    : LEFT_PAREN UNSIGNED_INTEGER (COMMA UNSIGNED_INTEGER)? RIGHT_PAREN
+    ;
+
+interval_qualifier
+    : interval_unit data_type_precision? (V_TO interval_unit data_type_precision?)?
+    ;
+
+interval_unit
+    : year_month_subtype_unit
+    | day_time_subtype_unit
+    ;
+
+year_month_subtype_unit
+    : V_MILLENNIUM
+    | V_CENTURY
+    | V_DECADE
+    | V_YEAR
+    | V_QUARTER
+    | V_MONTH
+    | V_WEEK
+    ;
+
+day_time_subtype_unit
+    : V_DAY
+    | V_HOUR
+    | V_MINUTE
+    | V_SECOND
+    | V_MILLISECOND
+    | V_MICROSECOND
+    ;
+
+long_data_type
+    : V_LONG (V_VARBINARY | V_VARCHAR) data_type_precision
+    ;
+
+numeric_data_type
+    : double_precision_type
+    | interger_date_type
+    | numeric_type data_type_precision?
+    ;
+
+double_precision_type
+    : V_DOUBLE V_PRECISION 
+    | V_FLOAT data_type_precision?
+    | V_FLOAT8
+    | V_REAL
+    ;
+
+interger_date_type
+    : V_INTEGER
+    | V_INT
+    | V_BIGINT
+    | V_INT8
+    | V_SMALLINT
+    | V_TINYINT
+    ;
+
+numeric_type
+    : V_NUMERIC
+    | V_DECIMAL
+    | V_NUMBER
+    | V_MONEY
+    ;
+
+spatial_data_type
+    : (V_GEOMETRY | V_GEOGRAPHY) data_type_precision?
+    ;
+
+uuid_data_type
+    : V_UUID
+    ;
+
+external_data_type
+    : V_ARRAY LEFT_BRACKET data_type RIGHT_BRACKET
+    | V_MAP LESS_THAN data_type COMMA data_type GREATER_THAN
+    | V_ROW LEFT_PAREN row_definition_list RIGHT_PAREN
+    ;
+
+row_definition_list
+    : row_definition (COMMA row_definition)*
+    ;
+
+row_definition
+    : row_name data_type
+    ;
+
+row_name
+    : identifier
     ;

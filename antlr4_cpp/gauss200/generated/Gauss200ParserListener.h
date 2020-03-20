@@ -908,8 +908,17 @@ public:
   virtual void enterFrom_list(Gauss200Parser::From_listContext *ctx) = 0;
   virtual void exitFrom_list(Gauss200Parser::From_listContext *ctx) = 0;
 
-  virtual void enterTable_ref(Gauss200Parser::Table_refContext *ctx) = 0;
-  virtual void exitTable_ref(Gauss200Parser::Table_refContext *ctx) = 0;
+  virtual void enterTable_ref_join(Gauss200Parser::Table_ref_joinContext *ctx) = 0;
+  virtual void exitTable_ref_join(Gauss200Parser::Table_ref_joinContext *ctx) = 0;
+
+  virtual void enterTable_ref_subquery(Gauss200Parser::Table_ref_subqueryContext *ctx) = 0;
+  virtual void exitTable_ref_subquery(Gauss200Parser::Table_ref_subqueryContext *ctx) = 0;
+
+  virtual void enterTable_ref_func(Gauss200Parser::Table_ref_funcContext *ctx) = 0;
+  virtual void exitTable_ref_func(Gauss200Parser::Table_ref_funcContext *ctx) = 0;
+
+  virtual void enterTable_ref_simple(Gauss200Parser::Table_ref_simpleContext *ctx) = 0;
+  virtual void exitTable_ref_simple(Gauss200Parser::Table_ref_simpleContext *ctx) = 0;
 
   virtual void enterPartition_clause(Gauss200Parser::Partition_clauseContext *ctx) = 0;
   virtual void exitPartition_clause(Gauss200Parser::Partition_clauseContext *ctx) = 0;

@@ -910,8 +910,17 @@ public:
   virtual void enterFrom_list(Gauss200Parser::From_listContext * /*ctx*/) override { }
   virtual void exitFrom_list(Gauss200Parser::From_listContext * /*ctx*/) override { }
 
-  virtual void enterTable_ref(Gauss200Parser::Table_refContext * /*ctx*/) override { }
-  virtual void exitTable_ref(Gauss200Parser::Table_refContext * /*ctx*/) override { }
+  virtual void enterTable_ref_join(Gauss200Parser::Table_ref_joinContext * /*ctx*/) override { }
+  virtual void exitTable_ref_join(Gauss200Parser::Table_ref_joinContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_subquery(Gauss200Parser::Table_ref_subqueryContext * /*ctx*/) override { }
+  virtual void exitTable_ref_subquery(Gauss200Parser::Table_ref_subqueryContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_func(Gauss200Parser::Table_ref_funcContext * /*ctx*/) override { }
+  virtual void exitTable_ref_func(Gauss200Parser::Table_ref_funcContext * /*ctx*/) override { }
+
+  virtual void enterTable_ref_simple(Gauss200Parser::Table_ref_simpleContext * /*ctx*/) override { }
+  virtual void exitTable_ref_simple(Gauss200Parser::Table_ref_simpleContext * /*ctx*/) override { }
 
   virtual void enterPartition_clause(Gauss200Parser::Partition_clauseContext * /*ctx*/) override { }
   virtual void exitPartition_clause(Gauss200Parser::Partition_clauseContext * /*ctx*/) override { }

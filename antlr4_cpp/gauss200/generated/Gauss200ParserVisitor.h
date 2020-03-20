@@ -615,7 +615,13 @@ public:
 
     virtual antlrcpp::Any visitFrom_list(Gauss200Parser::From_listContext *context) = 0;
 
-    virtual antlrcpp::Any visitTable_ref(Gauss200Parser::Table_refContext *context) = 0;
+    virtual antlrcpp::Any visitTable_ref_join(Gauss200Parser::Table_ref_joinContext *context) = 0;
+
+    virtual antlrcpp::Any visitTable_ref_subquery(Gauss200Parser::Table_ref_subqueryContext *context) = 0;
+
+    virtual antlrcpp::Any visitTable_ref_func(Gauss200Parser::Table_ref_funcContext *context) = 0;
+
+    virtual antlrcpp::Any visitTable_ref_simple(Gauss200Parser::Table_ref_simpleContext *context) = 0;
 
     virtual antlrcpp::Any visitPartition_clause(Gauss200Parser::Partition_clauseContext *context) = 0;
 
