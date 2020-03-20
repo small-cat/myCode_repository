@@ -225,7 +225,7 @@ void GetFuncInfo(FuncInfo_s &func_info, std::string name) {
       func_info.algname = Trim(sv[3], ' ');
       func_info.func_tool = 0;
 
-      break;
+      return;
     }
   }
 

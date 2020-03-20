@@ -145,6 +145,8 @@ public:
     antlr4::tree::TerminalNode* EUQAL(size_t i);
     std::vector<antlr4::tree::TerminalNode *> REPLACE();
     antlr4::tree::TerminalNode* REPLACE(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> OR_();
+    antlr4::tree::TerminalNode* OR_(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
