@@ -26,6 +26,8 @@
 
 using namespace antlr4;
 
+const static std::string DATA_TYPE_FOR_STRING_NULL = "字符串,台湾居民来往大陆通行证,港澳居民来往大陆通行证,车架号,邮政编码,军队证件,护照号,中文姓名,身份证号,固定电话,手机号,手机号,车牌号,中文地址,银行卡号,电子邮箱,企业单位名称,三证合一码";
+static int instr_index = 1;
 static std::map<std::string, std::string> function_map = {
   {"instr", "内置算法, builtin, builtin, instr"},
   {"MASK_BANK_CARD_RANDOM", "内置算法, 银行卡号, 随机脱敏, 随机替换"},
@@ -76,24 +78,7 @@ static std::map<std::string, std::string> function_map = {
   {"MASK_MILITARY_ID_SHADOW_MID", "内置算法, 军队证件, 遮蔽脱敏, 部分遮蔽"},
   {"MASK_PASSPORT_SHADOW_MIDDLE", "内置算法, 护照号, 遮蔽脱敏, 部分遮蔽"},
   {"MASK_PLATE_SHADOW_MIDDLE", "内置算法, 车牌号, 遮蔽脱敏, 部分遮蔽"},
-  {"MASK_STRING_NULL", "内置算法, 字符串, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 台湾居民来往大陆通行证, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 港澳居民来往大陆通行证, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 车架号, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 邮政编码, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 军队证件, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 护照号, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 中文姓名, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 身份证号, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 固定电话, 遮蔽脱敏, 设置为空"},
-  {"MASK_CELLPHONE_NUMBER_MIDDLE", "内置算法, 手机号, 遮蔽脱敏, 常量替换手机号码中间"},
-  {"MASK_STRING_NULL", "内置算法, 手机号, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 车牌号, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 中文地址, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 银行卡号, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 电子邮箱, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 企业单位名称, 遮蔽脱敏, 设置为空"},
-  {"MASK_STRING_NULL", "内置算法, 三证合一码, 遮蔽脱敏, 设置为空"}
+  {"MASK_STRING_NULL", "内置算法, 字符串, 遮蔽脱敏, 设置为空"}
 };
 
 typedef struct FuncInfo {
@@ -156,7 +141,7 @@ void ParseFile(const char* filename) {
 }
 
 void ParseString(std::string &sql) {
-  ANTLRInputStream input(string_toupper(sql));
+  ANTLRInputStream input(sql);
   SqlXmlLexer lexer(&input);
   CommonTokenStream tokens(&lexer);
 
@@ -226,8 +211,16 @@ void GetFuncInfo(FuncInfo_s &func_info, std::string name) {
 
       if (strcasecmp("builtin", func_info.data_type.c_str()) == 0) {
         func_info.func_tool = 1;
+        func_info.data_type.clear();
+        func_info.mask_type.clear();
       } else
         func_info.func_tool = 0;
+
+      if (strcasecmp("mask_string_null", func_info.function_name.c_str()) == 0) {
+        func_info.data_type = DATA_TYPE_FOR_STRING_NULL;
+      } else if (strcasecmp("instr", func_info.function_name.c_str()) == 0) {
+        func_info.function_name += std::to_string(instr_index++);
+      }
 
       return;
     }
@@ -235,10 +228,10 @@ void GetFuncInfo(FuncInfo_s &func_info, std::string name) {
 
   func_info.function_name = name; // function is not standard
   func_info.category = "内置算法";
-  func_info.data_type = "reserved";
-  func_info.mask_type = "遮蔽脱敏";
+  func_info.data_type = "";
+  func_info.mask_type = "";
   func_info.algname = "reserved";
-  func_info.func_tool = 1;
+  func_info.func_tool = 99;
 }
 
 // <alg category="内置算法" dataType="电子邮箱,身份证" maskType="遮蔽脱敏"  algName="设置为空" isTemplate="0" dbType="ORACLE" dbVersion="">
@@ -263,7 +256,7 @@ void PrintSqlXml(FuncInfo_s &func_info) {
   std::cout << "      <functionContent>" << std::endl;
   std::cout << "      <![CDATA[" << std::endl;
   std::cout << "          " << func_info.content << std::endl;
-  std::cout << "      ]]" << std::endl;
+  std::cout << "      ]]>" << std::endl;
   std::cout << "      </functionContent>" << std::endl;
   std::cout << "    </alg>" << std::endl;
 }
@@ -283,7 +276,7 @@ int main(int argc, char *argv[]) {
   int ret;
   extern char *optarg;
   if (1 == argc) {
-    std::cout << "Usage: " << argv[0] << " [-f filename] [-e sqlstatement]" << std::endl;
+    std::cout << "Usage: " << argv[0] << " [-f filename]" << std::endl;
     return 0;
   }
 
@@ -292,15 +285,9 @@ int main(int argc, char *argv[]) {
       case 'f':
         ParseFile(optarg);
         break;
-      case 'e':
-        {
-          std::string sqlstmt(optarg);
-          ParseString(sqlstmt);
-        }
-        break;
       case '?':
       default:
-        std::cout << "Usage: " << argv[0] << " [-f filename] [-e sqlstatement]" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [-f filename]" << std::endl;
         break;
     }
   }
