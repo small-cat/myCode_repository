@@ -242,14 +242,16 @@ public:
     }
 
     antlr4::TokenStream* tokens = parser_->getTokenStream();
+    auto oper_ctx  = ctx->relational_op();
+    if (oper_ctx) {
+      if (strcasecmp(oper_ctx->getText().c_str(), "=") != 0) {
+        return;
+      }
+    } else
+      return;
+    
     auto expr0_ctx = ctx->relational_expr(0);
     auto expr1_ctx = ctx->relational_expr(1);
-    auto oper_ctx  = ctx->relational_op();
-
-    if (strcasecmp(oper_ctx->getText().c_str(), "=") != 0) {
-      return;
-    }
-
     EquivalentCond equ_cond;
     equ_cond.from = GetColumn(tokens->getText(expr0_ctx));
     equ_cond.to = GetColumn(tokens->getText(expr1_ctx));

@@ -218,6 +218,8 @@ void GetFuncInfo(FuncInfo_s &func_info, std::string name) {
 
       if (strcasecmp("mask_string_null", func_info.function_name.c_str()) == 0) {
         func_info.data_type = DATA_TYPE_FOR_STRING_NULL;
+      } else if (strcasecmp("mask_string_shadow_all", func_info.function_name.c_str()) == 0) {
+        func_info.data_type = DATA_TYPE_FOR_STRING_NULL;
       } else if (strcasecmp("instr", func_info.function_name.c_str()) == 0) {
         func_info.function_name += std::to_string(instr_index++);
       }

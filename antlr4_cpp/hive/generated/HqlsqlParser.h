@@ -6441,6 +6441,9 @@ public:
     Bool_exprContext* bool_expr(size_t i);
     antlr4::tree::TerminalNode *T_CLOSE_P();
     antlr4::tree::TerminalNode *T_NOT();
+    antlr4::tree::TerminalNode *T_IF();
+    std::vector<antlr4::tree::TerminalNode *> T_COMMA();
+    antlr4::tree::TerminalNode* T_COMMA(size_t i);
     Bool_expr_atomContext *bool_expr_atom();
     Bool_expr_logical_operatorContext *bool_expr_logical_operator();
 
@@ -7135,7 +7138,7 @@ public:
   public:
     Func_paramContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    ExprContext *expr();
+    Bool_exprContext *bool_expr();
     IdentContext *ident();
     antlr4::tree::TerminalNode *T_EQUAL();
     antlr4::tree::TerminalNode *T_GREATER();

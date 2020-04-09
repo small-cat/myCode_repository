@@ -1671,12 +1671,12 @@ all_distinct
     ;
 
 selected_list
-    : ASTERISK
-    | selected_list_element (COMMA selected_list_element)*
+    : selected_list_element (COMMA selected_list_element)*
     ;
 
 selected_list_element
     : expression as_alias?
+    | ASTERISK
     ;
 
 into_clause
@@ -2700,6 +2700,7 @@ typename_gs
     | oid_type // object identify
     | other_type
     | identifier // user defined type
+    | reserved_keywords_can_be_name
     ;
 
 precision_part
@@ -2997,6 +2998,7 @@ simple_function
 
 func_name
     : regular_id_common
+    | reserved_keywords_can_be_name
     | CHAR_STRING
     | SCONST
     ;
@@ -3027,13 +3029,13 @@ identifier
     : regular_id_common
     | nonreserved_keywords_can_not_be_name
     | CHAR_STRING
+    | SCONST
     ;
 
 // this could be name of any, including function and typename
 regular_id_common
     : REGULAR_ID
     | reserved_keywords_normal
-    | reserved_keywords_can_be_name
     | nonreserved_keywords_normal
     | non_keywords_but_token
     ;
@@ -3048,6 +3050,7 @@ regular_id
 constant
     : numeric
     | CHAR_STRING
+    | SCONST
     | date_type CHAR_STRING
     | geometry_type CHAR_STRING
     | BCONST
@@ -3184,22 +3187,19 @@ reserved_keywords_can_be_name
     | BINARY_GS
     | COLLATION_GS
     | CONCURRENTLY_GS
-    | CROSS_GS
     | CURRENT_SCHEMA_GS
     | FREEZE_GS
-    | FULL_GS
     | ILIKE_GS
-    | INNER_GS
     | ISNULL_GS
     | JOIN_GS
     | LEFT_GS
+    | OUTER_GS
+    | INNER_GS
     | LIKE_GS
     | NATURAL_GS
     | NOTNULL_GS
-    | OUTER_GS
     | OVERLAPS_GS
     | OVER_GS
-    | RIGHT_GS
     | SIMILAR_GS
     | VERBOSE_GS
     ;

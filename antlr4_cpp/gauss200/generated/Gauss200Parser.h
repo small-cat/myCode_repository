@@ -6812,7 +6812,6 @@ public:
   public:
     Selected_listContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ASTERISK();
     std::vector<Selected_list_elementContext *> selected_list_element();
     Selected_list_elementContext* selected_list_element(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
@@ -6833,6 +6832,7 @@ public:
     virtual size_t getRuleIndex() const override;
     ExpressionContext *expression();
     As_aliasContext *as_alias();
+    antlr4::tree::TerminalNode *ASTERISK();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -10688,6 +10688,7 @@ public:
     Oid_typeContext *oid_type();
     Other_typeContext *other_type();
     IdentifierContext *identifier();
+    Reserved_keywords_can_be_nameContext *reserved_keywords_can_be_name();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -11472,6 +11473,7 @@ public:
     Func_nameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Regular_id_commonContext *regular_id_common();
+    Reserved_keywords_can_be_nameContext *reserved_keywords_can_be_name();
     antlr4::tree::TerminalNode *CHAR_STRING();
     antlr4::tree::TerminalNode *SCONST();
 
@@ -11568,6 +11570,7 @@ public:
     Regular_id_commonContext *regular_id_common();
     Nonreserved_keywords_can_not_be_nameContext *nonreserved_keywords_can_not_be_name();
     antlr4::tree::TerminalNode *CHAR_STRING();
+    antlr4::tree::TerminalNode *SCONST();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -11584,7 +11587,6 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *REGULAR_ID();
     Reserved_keywords_normalContext *reserved_keywords_normal();
-    Reserved_keywords_can_be_nameContext *reserved_keywords_can_be_name();
     Nonreserved_keywords_normalContext *nonreserved_keywords_normal();
     Non_keywords_but_tokenContext *non_keywords_but_token();
 
@@ -11618,6 +11620,7 @@ public:
     virtual size_t getRuleIndex() const override;
     NumericContext *numeric();
     antlr4::tree::TerminalNode *CHAR_STRING();
+    antlr4::tree::TerminalNode *SCONST();
     Date_typeContext *date_type();
     Geometry_typeContext *geometry_type();
     antlr4::tree::TerminalNode *BCONST();
@@ -11858,22 +11861,19 @@ public:
     antlr4::tree::TerminalNode *BINARY_GS();
     antlr4::tree::TerminalNode *COLLATION_GS();
     antlr4::tree::TerminalNode *CONCURRENTLY_GS();
-    antlr4::tree::TerminalNode *CROSS_GS();
     antlr4::tree::TerminalNode *CURRENT_SCHEMA_GS();
     antlr4::tree::TerminalNode *FREEZE_GS();
-    antlr4::tree::TerminalNode *FULL_GS();
     antlr4::tree::TerminalNode *ILIKE_GS();
-    antlr4::tree::TerminalNode *INNER_GS();
     antlr4::tree::TerminalNode *ISNULL_GS();
     antlr4::tree::TerminalNode *JOIN_GS();
     antlr4::tree::TerminalNode *LEFT_GS();
+    antlr4::tree::TerminalNode *OUTER_GS();
+    antlr4::tree::TerminalNode *INNER_GS();
     antlr4::tree::TerminalNode *LIKE_GS();
     antlr4::tree::TerminalNode *NATURAL_GS();
     antlr4::tree::TerminalNode *NOTNULL_GS();
-    antlr4::tree::TerminalNode *OUTER_GS();
     antlr4::tree::TerminalNode *OVERLAPS_GS();
     antlr4::tree::TerminalNode *OVER_GS();
-    antlr4::tree::TerminalNode *RIGHT_GS();
     antlr4::tree::TerminalNode *SIMILAR_GS();
     antlr4::tree::TerminalNode *VERBOSE_GS();
 

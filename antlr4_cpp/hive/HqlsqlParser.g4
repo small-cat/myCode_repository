@@ -1503,6 +1503,7 @@ describe_stmt
 bool_expr :                               // Boolean condition
        T_NOT? T_OPEN_P bool_expr T_CLOSE_P 
      | bool_expr bool_expr_logical_operator bool_expr 
+     | T_IF T_OPEN_P bool_expr (T_COMMA bool_expr)* T_CLOSE_P
      | bool_expr_atom
      ;
 
@@ -1728,7 +1729,7 @@ expr_func_params :
      ;
 
 func_param : 
-       (ident T_EQUAL T_GREATER?)? (expr | '*' )  
+       (ident T_EQUAL T_GREATER?)? (bool_expr | '*' )  
      ;
    
 expr_select :

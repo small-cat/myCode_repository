@@ -340,6 +340,11 @@ class KingbaseGetColumnDAG : public KingbaseSqlParserBaseListener {
           table_item_.schema = sv[0];
           table_item_.table  = sv[1];
           break;
+        case 3:
+          table_item_.database = sv[0];
+          table_item_.schema   = sv[1];
+          table_item_.table    = sv[2];
+          break;
         default:
           // error
           return;
