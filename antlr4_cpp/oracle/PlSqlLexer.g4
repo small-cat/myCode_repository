@@ -2310,7 +2310,7 @@ BINDVAR
     : ':' SIMPLE_LETTER  (SIMPLE_LETTER | [0-9] | '_')*
     | ':' DELIMITED_ID  // not used in SQL but spotted in v$sqltext when using cursor_sharing
     | ':' UNSIGNED_INTEGER
-    | QUESTION_MARK // not in SQL, not in Oracle, not in OCI, use this for JDBC
+    | ':'? QUESTION_MARK // not in SQL, not in Oracle, not in OCI, use this for JDBC, template
     ;
 
 NOT_EQUAL_OP:              '!='
