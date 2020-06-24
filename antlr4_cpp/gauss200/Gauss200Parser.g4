@@ -3530,6 +3530,15 @@ nonreserved_keywords_normal
     | YEAR_GS
     | YES_GS
     | ZONE_GS
+    | SPACE_GS
+    | CONNECT_GS
+    | CUBE_GS
+    | ROLLUP_GS
+    | GROUPING_GS
+    | PATH_GS
+    | SETS_GS
+    | SOURCE_GS
+    | USAGE_GS
     ;
 
 non_keywords_but_token

@@ -666,7 +666,7 @@ MULTI_LINE_COMMENT:  '/*' .*? '*/'                           -> channel(HIDDEN);
 SPACES: [ \t\r\n]+ -> channel(HIDDEN);
 
 CHAR_STRING: E? '\''  (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\'';
-REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR) ((SIMPLE_LETTER | UNI_CHAR) | '#' | '$' | '_' | [0-9])*;
+REGULAR_ID: (SIMPLE_LETTER | UNI_CHAR | '_') ((SIMPLE_LETTER | UNI_CHAR) | '#' | '$' | '_' | [0-9])*;
 
 DELIMITED_STR: '$' [A-Za-z_-]+ '$';
 SCONST: '"' (~('"' | '\r' | '\n') | '"' '"')+ '"' 

@@ -12214,6 +12214,15 @@ public:
     antlr4::tree::TerminalNode *YEAR_GS();
     antlr4::tree::TerminalNode *YES_GS();
     antlr4::tree::TerminalNode *ZONE_GS();
+    antlr4::tree::TerminalNode *SPACE_GS();
+    antlr4::tree::TerminalNode *CONNECT_GS();
+    antlr4::tree::TerminalNode *CUBE_GS();
+    antlr4::tree::TerminalNode *ROLLUP_GS();
+    antlr4::tree::TerminalNode *GROUPING_GS();
+    antlr4::tree::TerminalNode *PATH_GS();
+    antlr4::tree::TerminalNode *SETS_GS();
+    antlr4::tree::TerminalNode *SOURCE_GS();
+    antlr4::tree::TerminalNode *USAGE_GS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
