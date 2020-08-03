@@ -120,6 +120,8 @@ if(WITH_DEMO)
  add_subdirectory(greenplum)
  add_subdirectory(gauss200)
  add_subdirectory(create_sql_xml_tool)
+ add_subdirectory(expression)
+ add_subdirectory(cpp)
  # add_compile_options(plpgsql)
 endif(WITH_DEMO)
 
