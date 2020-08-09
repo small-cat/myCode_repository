@@ -20,7 +20,6 @@
 const static int FAILED = -1;
 extern std::map<int, int> list_memo;
 
-// cur_pos_ 应该是 current_pos_
 class Parser {
 public:
   Parser(Lexer* lexer): lexer_(lexer), cur_pos_(0) {

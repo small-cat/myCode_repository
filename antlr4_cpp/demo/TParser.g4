@@ -68,7 +68,7 @@ void doAfter() {}
 @parser::basevisitordefinitions {/* base visitor definitions section */}
 
 // Actual grammar start.
-main: stat+ EOF;
+main : stat+ EOF;
 divide : ID (and_ GreaterThan)? {doesItBlend()}?;
 and_ @init{ doInit(); } @after { doAfter(); } : And ;
 

@@ -122,6 +122,7 @@ if(WITH_DEMO)
  add_subdirectory(create_sql_xml_tool)
  add_subdirectory(expression)
  add_subdirectory(cpp)
+ add_subdirectory(monolithic_scope)
  # add_compile_options(plpgsql)
 endif(WITH_DEMO)
 

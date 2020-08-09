@@ -1,6 +1,6 @@
 /* lexer header section */
 
-// Generated from /home/jona/software/antlr4/antlr4-master/runtime/Cpp/demo/TLexer.g4 by ANTLR 4.7.1
+// Generated from TLexer.g4 by ANTLR 4.7.1
 
 /* lexer precinclude section */
 
