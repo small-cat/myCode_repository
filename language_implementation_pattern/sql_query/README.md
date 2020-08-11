@@ -1,1 +1,1 @@
-parser for simple select
+parser for iso/iec sql:1999

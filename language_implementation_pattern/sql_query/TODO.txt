@@ -1,0 +1,10 @@
+1. finished lexer
+2. finished parser
+  - queries first
+
+3. expression 
+4. from clause
+5. where clause
+6. order by clause
+7. reserved keywords and unreserved keywords
+8. abstract syntax tree and travel algorithms

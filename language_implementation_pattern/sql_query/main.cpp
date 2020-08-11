@@ -9,9 +9,8 @@
 */
 
 #include <iostream>
-#include "sqlquery_lexer.hpp"
-#include "sqlquery_parser.hpp"
-#include "token.hpp"
+#include "parser/sqlquery_lexer.hpp"
+#include "parser/sqlquery_parser.hpp"
 
 int main(int argc, char *argv[]) {
   if (argc == 1) {
@@ -20,10 +19,16 @@ int main(int argc, char *argv[]) {
   }
 
   SqlQueryLexer lexer(argv[1]);
-  SqlQueryParser parser(&lexer);
+  CommonTokenStream tokens(&lexer);
+
+  for (auto& token : tokens.GetTokens()) {
+    std::cout << token->ToString() << std::endl;
+  }
+
+  SqlQueryParser parser(&tokens);
 
   try {
-    parser.Simple_select();
+    parser.QuerySpecification();
   } catch (RuntimeException& e) {
     std::cout << "in main: " << e.what() << std::endl;
   }

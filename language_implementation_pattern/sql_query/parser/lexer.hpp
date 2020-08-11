@@ -20,30 +20,12 @@ const int EOF_TYPE = 1;
 
 class Lexer {
 public:
-  Lexer(std::string input) : input_(input), p_(0) {
-    c_ = input_.at(p_);
-  }
-  virtual ~Lexer() {}
+  Lexer(std::string input);
+  virtual ~Lexer();
 
-  void Consume() {
-    p_++;
-    if (p_ >= input_.length()) {
-      c_ = EOF;
-    } else {
-      c_ = input_.at(p_);
-    }
-  }
-
-  void Match(char x) {
-    if (c_ == x) {
-      Consume();
-    } else {
-      std::cout << "expecting " << x << "; found " << c_ << std::endl;
-      exit(EXIT_FAILURE);
-    }
-  }
-
-  virtual Token NextToken() = 0;
+  void Consume();
+  void Match(char x);
+  virtual Token* NextToken() = 0;
   virtual std::string GetTokenName(int token_type) = 0;
 
   std::string input_;

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.8.0)
 project(sqlquery_parser)
 
-FILE(GLOB SRCS "*.cpp")
-FILE(GLOB HEADERS "*.hpp")
+FILE(GLOB SRCS "parser/*.cpp")
+FILE(GLOB HEADERS "parser/*.hpp")
 
 add_definitions(-g)
 
