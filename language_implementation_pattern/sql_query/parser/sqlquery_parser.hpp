@@ -25,10 +25,14 @@ public:
   void QuerySpecification();
   void SelectList();
   void SelectListElement();
+  bool SpeculateSelectListElement_Alt1();
+  bool SpeculateSelectListElement_Alt2();
   void DerivedColumn();
   void QualifiedAsterisk();
   void Attrs();
   void AsClause();
+
+  void ValueExpression();
 
   void TableExpression();
   void FromClause();

@@ -30,6 +30,7 @@ int main(int , const char **) {
   }
 
   TParser parser(&tokens);
+  parser.triggerExitRuleEvent();
   tree::ParseTree* tree = parser.main();
 
   std::cout << tree->toStringTree(&parser) << std::endl << std::endl;

@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
   for (auto& token : tokens.GetTokens()) {
     std::cout << token->ToString() << std::endl;
   }
+  std::cout << std::endl;
 
   SqlQueryParser parser(&tokens);
 

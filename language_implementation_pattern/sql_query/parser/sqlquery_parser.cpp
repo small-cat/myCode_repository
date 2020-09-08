@@ -60,15 +60,63 @@ void SqlQueryParser::SelectList() {
 //  : identifier attrs* PERIOD ASTERISK
 //  ;
 void SqlQueryParser::SelectListElement() {
+  if (SpeculateSelectListElement_Alt1()) {
+    DerivedColumn();
+  } else if (SpeculateSelectListElement_Alt2()) {
+    QualifiedAsterisk();
+  } else {
+    std::cout << "no viable alt, expect SelectListElement, but found " << LT(1)->ToString() << std::endl;
+  }
+}
+
+bool SqlQueryParser::SpeculateSelectListElement_Alt1() {
+  bool success = true;
+  Mark();
+
+  try {
+    DerivedColumn();
+  } catch (RuntimeException& e) {
+    std::cout << e.what() << std::endl;
+    success = false;
+  }
+
+  Release();
+  return success;
+}
+
+bool SqlQueryParser::SpeculateSelectListElement_Alt2() {
+  bool success = true;
+  Mark();
+
+  try {
+    QualifiedAsterisk();
+  } catch (RuntimeException& e) {
+    std::cout << e.what() << std::endl;
+    success = false;
+  }
+
+  Release();
+  return success;
+}
+
+void SqlQueryParser::QualifiedAsterisk() {
   Match(IDENTIFIER);
   while (LA(1) == PERIOD && LA(2) != ASTERISK) {
-    Attrs();
+    Match(PERIOD);
+    Match(IDENTIFIER);
   }
 
   if (LA(1) == PERIOD) {
     Match(PERIOD);
     Match(ASTERISK);
-  } else if (LA(1) == AS || LA(1) == IDENTIFIER) {
+  } else {
+    std::cout << "expect PERIOD found" << LT(1)->ToString() << std::endl;
+  }
+}
+
+void SqlQueryParser::DerivedColumn() {
+  ValueExpression();
+  if (LA(1) == AS || LA(1) == IDENTIFIER) {
     AsClause();
   }
 }
@@ -87,6 +135,11 @@ void SqlQueryParser::AsClause() {
   }
 
   Match(IDENTIFIER);
+}
+
+void SqlQueryParser::ValueExpression() {
+  // TODO
+  throw RuntimeException("TODO: ValueExpression");
 }
 
 void SqlQueryParser::TableExpression() {
@@ -113,6 +166,10 @@ void SqlQueryParser::TableRef() {
 
 void SqlQueryParser::TablePrimary() {
   Match(IDENTIFIER);
+  if (LA(1) == PERIOD) {
+    Attrs();
+  }
+
   if (LA(1) == AS || LA(1) == IDENTIFIER) {
     AsClause();
   }

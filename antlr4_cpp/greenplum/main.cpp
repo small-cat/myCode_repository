@@ -65,6 +65,7 @@ void ParseString(std::string &sql) {
   }
 
   GreenPlumParser parser(&tokens);
+  // parser.setBuildParseTree(false);
 
   parser.removeErrorListeners();
 

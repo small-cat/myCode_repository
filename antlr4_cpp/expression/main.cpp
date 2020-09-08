@@ -23,6 +23,7 @@
 #include "expr_parser/error_verbose_listener.hpp"
 #include "expr_parser/walker_listener.hpp"
 #include "expr_parser/pre_order_parser_tree_walker.hpp"
+#include "expr_parser/expr_get_value_listener.hpp"
 
 using namespace antlr4;
 
@@ -112,6 +113,11 @@ static void _ParseString(ExprParser &parser, CommonTokenStream &tokens) {
   std::cout << ((tree::ParseTree*)(prog_ctx))->toStringTree(&parser) << std::endl;
   
   tree::IterativeParseTreeWalker walker;
+
+  // test
+  ExprGetValue expr_val_listener(&parser);
+  walker.walk(&expr_val_listener, prog_ctx);
+
   WalkerListener walker_listener;
   walker.walk(&walker_listener, prog_ctx);
   auto exprs = walker_listener.GetExpr();
