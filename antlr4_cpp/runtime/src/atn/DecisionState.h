@@ -19,8 +19,9 @@ namespace atn {
     void InitializeInstanceFields();
 
   public:
-    DecisionState() {
+    DecisionState() : ATNState() {
       InitializeInstanceFields();
+      classtype |= DecisionStateClass;
     }
 
     virtual std::string toString() const override;

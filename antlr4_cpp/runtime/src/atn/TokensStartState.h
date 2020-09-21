@@ -14,6 +14,7 @@ namespace atn {
   class ANTLR4CPP_PUBLIC TokensStartState final : public DecisionState {
 
   public:
+    TokensStartState() : DecisionState() { classtype |= TokensStartStateClass; }
     virtual size_t getStateType() override;
   };
 

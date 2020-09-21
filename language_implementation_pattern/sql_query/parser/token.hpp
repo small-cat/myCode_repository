@@ -40,7 +40,8 @@ public:
   virtual ~Token() {}
 
   std::string ToString() {
-    return "<'" + text_ + "', " + std::to_string(type_) + ", " + std::to_string(start_) +  ":" + std::to_string(end_) + ">";
+    // return "<'" + text_ + "', " + std::to_string(type_) + ", " + std::to_string(start_) +  ":" + std::to_string(end_) + ">";
+    return "<" + std::to_string(start_) + ":" + std::to_string(end_) + "=" + "'" + text_ + "', <" + std::to_string(type_) + ">>";
   }
 
   std::string GetText() {

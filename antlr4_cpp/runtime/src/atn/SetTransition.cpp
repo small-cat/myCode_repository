@@ -13,6 +13,7 @@ using namespace antlr4::atn;
 
 SetTransition::SetTransition(ATNState *target, const misc::IntervalSet &aSet)
   : Transition(target), set(aSet.isEmpty() ? misc::IntervalSet::of(Token::INVALID_TYPE) : aSet) {
+    classtype |= SetTransitionClass;
 }
 
 Transition::SerializationType SetTransition::getSerializationType() const {

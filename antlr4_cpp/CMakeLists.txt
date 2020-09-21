@@ -51,7 +51,8 @@ if(WITH_DEMO)
   endif()
 endif(WITH_DEMO)
 
-add_compile_options(-g -gdwarf -std=c++11 -DDEBUG_ATN=1 -DDEBUG_DFA=1)
+#add_compile_options(-g -gdwarf -std=c++11 -DDEBUG_ATN=1 -DDEBUG_DFA=1)
+add_compile_options(-g -gdwarf -std=c++11)
 
 # Initialize CXXFLAGS.
 if("${CMAKE_VERSION}" VERSION_GREATER 3.1.0)

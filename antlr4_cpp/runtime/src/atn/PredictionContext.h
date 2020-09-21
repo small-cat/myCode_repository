@@ -32,6 +32,15 @@ namespace atn {
     //     conflict with real return states.
     static const size_t EMPTY_RETURN_STATE = static_cast<size_t>(-10); // std::numeric_limits<size_t>::max() - 9;
 
+    enum ClassType {
+      PredictionContextClass = 1,
+      SingletonPredictionContextClass = 2,
+      EmptyPredictionContextClass = 4
+    };
+
+    long classtype;
+    bool isType(ClassType type) { return (classtype & type); }
+
   private:
     static const size_t INITIAL_HASH = 1;
 

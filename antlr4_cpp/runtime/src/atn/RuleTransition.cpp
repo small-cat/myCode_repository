@@ -10,11 +10,13 @@ using namespace antlr4::atn;
 
 RuleTransition::RuleTransition(RuleStartState *ruleStart, size_t ruleIndex, ATNState *followState)
   : RuleTransition(ruleStart, ruleIndex, 0, followState) {
+    classtype |= RuleTransitionClass;
 }
 
 RuleTransition::RuleTransition(RuleStartState *ruleStart, size_t ruleIndex, int precedence, ATNState *followState)
   : Transition(ruleStart), ruleIndex(ruleIndex), precedence(precedence) {
   this->followState = followState;
+  classtype |= RuleTransitionClass;
 }
 
 Transition::SerializationType RuleTransition::getSerializationType() const {

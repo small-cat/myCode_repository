@@ -9,6 +9,7 @@ using namespace antlr4::atn;
 
 RuleStartState::RuleStartState() {
   isLeftRecursiveRule = false;
+  classtype |= RuleStartStateClass;
 }
 
 size_t RuleStartState::getStateType() {

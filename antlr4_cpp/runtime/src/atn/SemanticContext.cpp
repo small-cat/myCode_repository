@@ -57,9 +57,11 @@ std::string SemanticContext::Predicate::toString() const {
 //------------------ PrecedencePredicate -------------------------------------------------------------------------------
 
 SemanticContext::PrecedencePredicate::PrecedencePredicate() : precedence(0) {
+  classtype |= PrecedencePredicateClass;
 }
 
 SemanticContext::PrecedencePredicate::PrecedencePredicate(int precedence) : precedence(precedence) {
+  classtype |= PrecedencePredicateClass;
 }
 
 bool SemanticContext::PrecedencePredicate::eval(Recognizer *parser, RuleContext *parserCallStack) {
@@ -106,7 +108,7 @@ std::string SemanticContext::PrecedencePredicate::toString() const {
 SemanticContext::AND::AND(Ref<SemanticContext> const& a, Ref<SemanticContext> const& b) {
   Set operands;
 
-  if (is<AND>(a)) {
+  if (a->isType(SemanticContext::ANDClass)) {
     for (auto operand : std::dynamic_pointer_cast<AND>(a)->opnds) {
       operands.insert(operand);
     }
@@ -114,7 +116,7 @@ SemanticContext::AND::AND(Ref<SemanticContext> const& a, Ref<SemanticContext> co
     operands.insert(a);
   }
 
-  if (is<AND>(b)) {
+  if (b->isType(SemanticContext::ANDClass)) {
     for (auto operand : std::dynamic_pointer_cast<AND>(b)->opnds) {
       operands.insert(operand);
     }
@@ -210,7 +212,7 @@ std::string SemanticContext::AND::toString() const {
 SemanticContext::OR::OR(Ref<SemanticContext> const& a, Ref<SemanticContext> const& b) {
   Set operands;
 
-  if (is<OR>(a)) {
+  if (a->isType(SemanticContext::ORClass)) {
     for (auto operand : std::dynamic_pointer_cast<OR>(a)->opnds) {
       operands.insert(operand);
     }
@@ -218,7 +220,7 @@ SemanticContext::OR::OR(Ref<SemanticContext> const& a, Ref<SemanticContext> cons
     operands.insert(a);
   }
 
-  if (is<OR>(b)) {
+  if (b->isType(SemanticContext::ORClass)) {
     for (auto operand : std::dynamic_pointer_cast<OR>(b)->opnds) {
       operands.insert(operand);
     }
@@ -362,7 +364,7 @@ Ref<SemanticContext> SemanticContext::Or(Ref<SemanticContext> const& a, Ref<Sema
 std::vector<Ref<SemanticContext::PrecedencePredicate>> SemanticContext::filterPrecedencePredicates(const Set &collection) {
   std::vector<Ref<SemanticContext::PrecedencePredicate>> result;
   for (auto context : collection) {
-    if (antlrcpp::is<PrecedencePredicate>(context)) {
+    if (context->isType(SemanticContext::PrecedencePredicateClass)) {
       result.push_back(std::dynamic_pointer_cast<PrecedencePredicate>(context));
     }
   }

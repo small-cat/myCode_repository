@@ -22,6 +22,7 @@ Transition::Transition(ATNState *target) {
     throw NullPointerException("target cannot be null.");
   }
 
+  classtype |= TransitionClass;
   this->target = target;
 }
 

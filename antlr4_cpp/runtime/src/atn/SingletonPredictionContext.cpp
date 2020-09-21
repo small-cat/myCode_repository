@@ -13,6 +13,7 @@ SingletonPredictionContext::SingletonPredictionContext(Ref<PredictionContext> co
   : PredictionContext(parent ? calculateHashCode(parent, returnState) : calculateEmptyHashCode()),
     parent(parent), returnState(returnState) {
   assert(returnState != ATNState::INVALID_STATE_NUMBER);
+  classtype |= SingletonPredictionContextClass;
 }
 
 SingletonPredictionContext::~SingletonPredictionContext() {

@@ -11,6 +11,7 @@ using namespace antlr4;
 using namespace antlr4::atn;
 
 NotSetTransition::NotSetTransition(ATNState *target, const misc::IntervalSet &set) : SetTransition(target, set) {
+  classtype |= NotSetTransitionClass;
 }
 
 Transition::SerializationType NotSetTransition::getSerializationType() const {

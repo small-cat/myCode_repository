@@ -14,6 +14,7 @@ using namespace antlr4::atn;
 using namespace antlrcpp;
 
 ATNState::ATNState() {
+  classtype = ATNStateClass;
 }
 
 ATNState::~ATNState() {

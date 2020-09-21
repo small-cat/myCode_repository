@@ -8,6 +8,7 @@
 using namespace antlr4::atn;
 
 EmptyPredictionContext::EmptyPredictionContext() : SingletonPredictionContext(nullptr, EMPTY_RETURN_STATE) {
+  classtype |= EmptyPredictionContextClass;
 }
 
 bool EmptyPredictionContext::isEmpty() const {

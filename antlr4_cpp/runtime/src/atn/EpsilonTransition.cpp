@@ -8,10 +8,12 @@
 using namespace antlr4::atn;
 
 EpsilonTransition::EpsilonTransition(ATNState *target) : EpsilonTransition(target, INVALID_INDEX) {
+  classtype |= EpsilonTransitionClass;
 }
 
 EpsilonTransition::EpsilonTransition(ATNState *target, size_t outermostPrecedenceReturn)
   : Transition(target), _outermostPrecedenceReturn(outermostPrecedenceReturn) {
+  classtype |= EpsilonTransitionClass;
 }
 
 size_t EpsilonTransition::outermostPrecedenceReturn() {

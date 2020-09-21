@@ -11,6 +11,7 @@ using namespace antlr4;
 using namespace antlr4::atn;
 
 RangeTransition::RangeTransition(ATNState *target, size_t from, size_t to) : Transition(target), from(from), to(to) {
+  classtype |= RangeTransitionClass;
 }
 
 Transition::SerializationType RangeTransition::getSerializationType() const {

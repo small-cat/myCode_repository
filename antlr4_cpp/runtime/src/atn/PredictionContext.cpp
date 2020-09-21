@@ -26,6 +26,7 @@ const Ref<PredictionContext> PredictionContext::EMPTY = std::make_shared<EmptyPr
 //----------------- PredictionContext ----------------------------------------------------------------------------------
 
 PredictionContext::PredictionContext(size_t cachedHashCode) : id(globalNodeCount++), cachedHashCode(cachedHashCode)  {
+  classtype |= PredictionContextClass;
 }
 
 PredictionContext::~PredictionContext() {

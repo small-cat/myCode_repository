@@ -12,6 +12,7 @@ namespace atn {
 
   class ANTLR4CPP_PUBLIC StarLoopbackState final : public ATNState {
   public:
+    StarLoopbackState() : ATNState() { classtype |= StarLoopbackStateClass; }
     StarLoopEntryState *getLoopEntryState();
 
     virtual size_t getStateType() override;

@@ -16,6 +16,9 @@ namespace atn {
   /// real decision-making note for {@code A+}.
   class ANTLR4CPP_PUBLIC PlusBlockStartState final : public BlockStartState {
   public:
+    PlusBlockStartState() : BlockStartState() {
+      classtype |= PlusBlockStartStateClass;
+    }
     PlusLoopbackState *loopBackState = nullptr;
 
     virtual size_t getStateType() override;

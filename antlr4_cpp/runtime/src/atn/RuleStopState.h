@@ -17,6 +17,7 @@ namespace atn {
   class ANTLR4CPP_PUBLIC RuleStopState final : public ATNState {
 
   public:
+    RuleStopState() : ATNState() { classtype |= RuleStopStateClass; }
     virtual size_t getStateType() override;
 
   };

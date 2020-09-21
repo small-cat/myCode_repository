@@ -34,9 +34,16 @@
 
 #include "atn/ParserATNSimulator.h"
 
+#ifndef DEBUG_ATN
 #define DEBUG_ATN 0
+#endif
+
 #define DEBUG_LIST_ATN_DECISIONS 0
+
+#ifndef DEBUG_DFA
 #define DEBUG_DFA 0
+#endif 
+
 #define RETRY_DEBUG 0
 
 using namespace antlr4;
@@ -1306,7 +1313,8 @@ dfa::DFAState *ParserATNSimulator::addDFAState(dfa::DFA &dfa, dfa::DFAState *D) 
 void ParserATNSimulator::reportAttemptingFullContext(dfa::DFA &dfa, const antlrcpp::BitSet &conflictingAlts,
   ATNConfigSet *configs, size_t startIndex, size_t stopIndex) {
 #if DEBUG_DFA == 1 || RETRY_DEBUG == 1
-    misc::Interval interval = misc::Interval((int)startIndex, (int)stopIndex);
+    //misc::Interval interval = misc::Interval((int)startIndex, (int)stopIndex);
+    misc::Interval interval = misc::Interval(startIndex, stopIndex);
     std::cout << "reportAttemptingFullContext decision=" << dfa.decision << ":" << configs << ", input=" << parser->getTokenStream()->getText(interval) << std::endl;
 #endif
 
@@ -1330,7 +1338,8 @@ void ParserATNSimulator::reportContextSensitivity(dfa::DFA &dfa, size_t predicti
 void ParserATNSimulator::reportAmbiguity(dfa::DFA &dfa, dfa::DFAState * /*D*/, size_t startIndex, size_t stopIndex,
                                          bool exact, const antlrcpp::BitSet &ambigAlts, ATNConfigSet *configs) {
 #if DEBUG_DFA == 1 || RETRY_DEBUG == 1
-    misc::Interval interval = misc::Interval((int)startIndex, (int)stopIndex);
+    // misc::Interval interval = misc::Interval((int)startIndex, (int)stopIndex);
+    misc::Interval interval = misc::Interval(startIndex, stopIndex);
     std::cout << "reportAmbiguity " << ambigAlts << ":" << configs << ", input=" << parser->getTokenStream()->getText(interval) << std::endl;
 #endif
 

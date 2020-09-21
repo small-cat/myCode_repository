@@ -19,6 +19,7 @@ namespace atn {
   ///  SemanticContext within the scope of this outer class.
   class ANTLR4CPP_PUBLIC SemanticContext : public std::enable_shared_from_this<SemanticContext> {
   public:
+    SemanticContext() { classtype |= SemanticContextClass; }
     struct Hasher
     {
       size_t operator()(Ref<SemanticContext> const& k) const {
@@ -34,6 +35,15 @@ namespace atn {
       }
     };
 
+    enum ClassType {
+      SemanticContextClass = 1,
+      ANDClass = 2,
+      ORClass = 4,
+      PrecedencePredicateClass = 8
+    };
+
+    long classtype;
+    bool isType(ClassType type) { return (classtype & type); }
 
     using Set = std::unordered_set<Ref<SemanticContext>, Hasher, Comparer>;
 
@@ -165,7 +175,7 @@ namespace atn {
   class ANTLR4CPP_PUBLIC SemanticContext::AND : public SemanticContext::Operator {
   public:
     std::vector<Ref<SemanticContext>> opnds;
-
+    AND() : SemanticContext::Operator() { classtype |= ANDClass; }
     AND(Ref<SemanticContext> const& a, Ref<SemanticContext> const& b) ;
 
     virtual std::vector<Ref<SemanticContext>> getOperands() const override;
@@ -188,7 +198,7 @@ namespace atn {
   class ANTLR4CPP_PUBLIC SemanticContext::OR : public SemanticContext::Operator {
   public:
     std::vector<Ref<SemanticContext>> opnds;
-
+    OR() : SemanticContext::Operator() { classtype |= ORClass; }
     OR(Ref<SemanticContext> const& a, Ref<SemanticContext> const& b);
 
     virtual std::vector<Ref<SemanticContext>> getOperands() const override;

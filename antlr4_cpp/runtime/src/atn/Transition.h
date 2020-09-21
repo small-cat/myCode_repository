@@ -39,6 +39,23 @@ namespace atn {
       PRECEDENCE = 10,
     };
 
+    enum ClassType {
+      TransitionClass = 1,
+      AbstractPredicateTransitionClass = 2,
+      ActionTransitionClass = 4,
+      AtomTransitionClass = 8,
+      EpsilonTransitionClass = 16,
+      RangeTransitionClass = 32,
+      RuleTransitionClass = 64,
+      SetTransitionClass = 128,
+      WildcardTransitionClass = 256,
+      NotSetTransitionClass = 512,
+    };
+
+    long classtype;
+
+    bool isType(ClassType type) { return (classtype & type); }
+
     static const std::vector<std::string> serializationNames;
 
     /// The target of this transition.

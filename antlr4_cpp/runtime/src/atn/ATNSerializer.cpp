@@ -76,11 +76,11 @@ std::vector<size_t> ATNSerializer::serialize() {
     }
 
     size_t stateType = s->getStateType();
-    if (is<DecisionState *>(s) && (static_cast<DecisionState *>(s))->nonGreedy) {
+    if (s->isType(ATNState::DecisionStateClass) && (static_cast<DecisionState *>(s))->nonGreedy) {
       nonGreedyStates.push_back(s->stateNumber);
     }
 
-    if (is<RuleStartState *>(s) && (static_cast<RuleStartState *>(s))->isLeftRecursiveRule) {
+    if (s->isType(ATNState::RuleStartStateClass) && (static_cast<RuleStartState *>(s))->isLeftRecursiveRule) {
       precedenceStates.push_back(s->stateNumber);
     }
 
@@ -96,7 +96,7 @@ std::vector<size_t> ATNSerializer::serialize() {
     if (s->getStateType() == ATNState::LOOP_END) {
       data.push_back((static_cast<LoopEndState *>(s))->loopBackState->stateNumber);
     }
-    else if (is<BlockStartState *>(s)) {
+    else if (s->isType(ATNState::BlockStartStateClass)) {
       data.push_back((static_cast<BlockStartState *>(s))->endState->stateNumber);
     }
 

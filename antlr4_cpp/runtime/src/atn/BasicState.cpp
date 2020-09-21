@@ -7,6 +7,10 @@
 
 using namespace antlr4::atn;
 
+BasicState::BasicState() : ATNState() {
+  classtype |= BasicStateClass;
+}
+
 size_t BasicState::getStateType() {
   return BASIC;
 }

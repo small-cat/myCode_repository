@@ -12,6 +12,7 @@ using namespace antlr4::misc;
 using namespace antlr4::atn;
 
 AtomTransition::AtomTransition(ATNState *target, size_t label) : Transition(target), _label(label) {
+  classtype |= AtomTransitionClass;
 }
 
 Transition::SerializationType AtomTransition::getSerializationType() const {
