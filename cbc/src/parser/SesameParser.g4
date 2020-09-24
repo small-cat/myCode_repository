@@ -16,8 +16,8 @@ options {
        >  -  <
  __.""`-------`"".__
 /         #         \
-\    hello sesame   /
-/    hello sesame   \
+\                   /
+/   I love Sesame   \
 \___________________/
      ___)( )(___
     (((__) (__)))
@@ -27,14 +27,14 @@ compilation_unit
     : import_stmt* top_def+
     ;
 
-declaration_file
-    : 
-    ;
-
 // import stdio -> #include <stdio.h>
 // import sys.types -> #include <sys/types.h>
 import_stmt
-    : S_IMPORT name (PERIOD name)* SEMI
+    : S_IMPORT import_name SEMI
+    ;
+
+import_name
+    : name (PERIOD name)*
     ;
 
 name 
