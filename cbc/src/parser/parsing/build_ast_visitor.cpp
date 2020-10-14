@@ -20,7 +20,7 @@ void BuildAstVistor::AddKnownTypedefs(std::vector<TypedefNode*> typedefs) {
   }
 }
 
-antlrcpp::Any visitCompilation_unit(SesameParser::Compilation_unitContext* ctx) {
+antlrcpp::Any BuildAstVistor::visitCompilation_unit(SesameParser::Compilation_unitContext* ctx) {
   ast::ASTNode* ast = new ast::ASTNode();
   auto import_stmt_ctxs = ctx->import_stmt();
 
@@ -38,6 +38,37 @@ antlrcpp::Any visitCompilation_unit(SesameParser::Compilation_unitContext* ctx) 
   }
 
   return (antlrcpp::Any)ast;
+}
+
+antlrcpp::Any BuildAstVistor::visitTop_def(SesameParser::Top_defContext* ctx) {
+  Declarations* decl = new Declarations();
+  if (ctx->def_func()) {
+    // define function
+    DefinedFunction* defun = (DefinedFunction*)visit(ctx->def_func());
+    decl->AddDefun(defun);
+  } else if (ctx->def_vars()) {
+    // define variable
+    DefinedVariable* defvar = (DefinedVariable*)visit(ctx->def_vars());
+    decl->AddDefvar(defvar);
+  } else if (ctx->def_const()) {
+    Constant* cons = (Constant*)visit(ctx->def_const());
+    decl->AddConstant(cons);
+  } else if (ctx->def_struct()) {
+    StructTypeNode* s = (StructTypeNode*)visit(ctx->def_struct());
+    decl->AddStruct(s);
+  } else if (ctx->def_union()) {
+    UnionTypeNode* u = (UnionTypeNode*)visit(ctx->def_union());
+    decl->AddUnion(u);
+  } else if (ctx->s_typedef()) {
+    TypedefNode* t = (TypedefNode*)visit(ctx->s_typedef());
+    decl->AddTypedef(t);
+  }
+
+  return (antlrcpp::Any)decl;
+}
+
+antlrcpp::Any BuildAstVistor::visitDef_func(SesameParser::Def_funcContext* ctx) {
+
 }
 
 } /* end parser */
