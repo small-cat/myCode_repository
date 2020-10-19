@@ -5,25 +5,24 @@
 namespace compiler {
 
 CompilerMode::CompilerMode(Mode m) : mode_(m){
-  Init();
 }
 
 CompilerMode::~CompilerMode() {}
 
-void CompilerMode::Init() {
-  modes_map_.emplace(std::make_pair("--check-syntax", CheckSyntax));
-  modes_map_.emplace(std::make_pair("--dump-tokens", DumpTokens));
-  modes_map_.emplace(std::make_pair("--dump-ast", DumpAST));
-  modes_map_.emplace(std::make_pair("--dump-stmt", DumpStmt));
-  modes_map_.emplace(std::make_pair("--dump-expr", DumpExpr));
-  modes_map_.emplace(std::make_pair("--dump-semantic", DumpSemantic));
-  modes_map_.emplace(std::make_pair("--dump-reference", DumpReference));
-  modes_map_.emplace(std::make_pair("--dump-ir", DumpIR));
-  modes_map_.emplace(std::make_pair("--dump-asm", DumpAsm));
-  modes_map_.emplace(std::make_pair("--print-asm", PrintAsm));
-  modes_map_.emplace(std::make_pair("-S", Compile));
-  modes_map_.emplace(std::make_pair("-c", Assemble));
-}
+std::map<std::string, CompilerMode::Mode> modes_map_ = {
+  {"--check-syntax", CompilerMode::Mode::CheckSyntax},
+  {"--dump-tokens", CompilerMode::DumpTokens},
+  {"--dump-ast", CompilerMode::Mode::DumpAST},
+  {"--dump-stmt", CompilerMode::Mode::DumpStmt},
+  {"--dump-expr", CompilerMode::Mode::DumpExpr},
+  {"--dump-semantic", CompilerMode::Mode::DumpSemantic},
+  {"--dump-reference", CompilerMode::Mode::DumpReference},
+  {"--dump-ir", CompilerMode::Mode::DumpIR},
+  {"--dump-asm", CompilerMode::Mode::DumpAsm},
+  {"--print-asm", CompilerMode::Mode::PrintAsm},
+  {"-S", CompilerMode::Mode::Compile},
+  {"-c", CompilerMode::Mode::Assemble},
+};
 
 bool CompilerMode::IsModeOption(const std::string& opt) {
   for (auto iter = modes_map_.begin(); iter != modes_map_.end(); iter++) {
@@ -48,8 +47,22 @@ CompilerMode::Mode CompilerMode::mode() {
   return mode_;
 }
 
+void CompilerMode::SetMode(CompilerMode::Mode m) {
+  mode_ = m;
+}
+
 bool CompilerMode::Requires(CompilerMode::Mode m) {
   return mode_ > m;
+}
+
+std::string CompilerMode::ToOption() {
+  for (auto iter = modes_map_.begin(); iter != modes_map_.end(); iter++) {
+    if (iter->second == mode_) {
+      return iter->first;
+    }
+  }
+
+  return "UNKNOWN";
 }
 
 } /* end compiler */

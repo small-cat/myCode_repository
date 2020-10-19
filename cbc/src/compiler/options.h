@@ -12,9 +12,14 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 #include "compiler_mode.h"
 #include "source_file.h"
+
+#include "../sysdep/code_generator_options.h"
+#include "../sysdep/assembler_options.h"
+#include "../sysdep/linker_options.h"
 
 namespace compiler {
 
@@ -44,14 +49,21 @@ public:
   // LibraryLoader* loader();
   // TypeTable GetTypeTable();
   // CodeGenerator* GetCodeGenerator();
+  sysdep::CodeGeneratorOptions gen_options();
   // Assembler* GetAssembler();
-  // AssemblerOptions asm_options();
+  sysdep::AssemblerOptions asm_options();
   // Linker* GetLinker();
-  // LinkerOptions ld_options();
-  // std::list<LdArg> ld_args();
-  // void AddLdArg(std::string arg);
-  void ParseArgs(const std::string& args);
+  sysdep::LinkerOptions ld_options();
+  std::list<std::string> ld_args();
+  void AddLdArg(const std::string& arg);
+  void ParseArgs(int argc, char* argv[]);
   void PrintUsage();
+
+  void ParseError(const std::string& msg);
+private:
+  void Split(const std::string& s, std::vector<std::string>& sv, const char delim = ' ');
+  std::string Trim(std::string str);
+
 private:
   CompilerMode mode_;
   //Platform platform_;
@@ -59,10 +71,10 @@ private:
   bool verbose_;
   bool debug_parser_;
   //LibraryLoader* loader_;
-  //CodeGeneratorOptions gen_options_;
-  //AssemblerOptions asm_options_;
-  //LinkerOptions ld_options_;
-  //std::list<LdArg> ld_args_;
+  sysdep::CodeGeneratorOptions gen_options_;
+  sysdep::AssemblerOptions asm_options_;
+  sysdep::LinkerOptions ld_options_;
+  std::list<std::string> ld_args_;
   std::vector<SourceFile> src_files_;
 };
 }
