@@ -17,7 +17,7 @@ public:
   };
 
   enum {
-    RuleCompileUnit = 0, RuleExpr = 1
+    RuleCompileUnit = 0, RuleExpr = 1, RuleOpt = 2
   };
 
   MathParser(antlr4::TokenStream *input);
@@ -31,7 +31,8 @@ public:
 
 
   class CompileUnitContext;
-  class ExprContext; 
+  class ExprContext;
+  class OptContext; 
 
   class  CompileUnitContext : public antlr4::ParserRuleContext {
   public:
@@ -60,6 +61,26 @@ public:
     virtual size_t getRuleIndex() const override;
 
    
+  };
+
+  class  TestSubExprContext : public ExprContext {
+  public:
+    TestSubExprContext(ExprContext *ctx);
+
+    MathParser::ExprContext *left = nullptr;
+    antlr4::Token *op = nullptr;
+    MathParser::ExprContext *right = nullptr;
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+    OptContext *opt();
+    std::vector<antlr4::tree::TerminalNode *> ADD();
+    antlr4::tree::TerminalNode* ADD(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> SUB();
+    antlr4::tree::TerminalNode* SUB(size_t i);
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  UnaryExprContext : public ExprContext {
@@ -148,6 +169,21 @@ public:
 
   ExprContext* expr();
   ExprContext* expr(int precedence);
+  class  OptContext : public antlr4::ParserRuleContext {
+  public:
+    OptContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ADD();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  OptContext* opt();
+
 
   virtual bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
   bool exprSempred(ExprContext *_localctx, size_t predicateIndex);

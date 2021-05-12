@@ -17,6 +17,9 @@ public:
   virtual void enterCompileUnit(MathParser::CompileUnitContext *ctx) = 0;
   virtual void exitCompileUnit(MathParser::CompileUnitContext *ctx) = 0;
 
+  virtual void enterTestSubExpr(MathParser::TestSubExprContext *ctx) = 0;
+  virtual void exitTestSubExpr(MathParser::TestSubExprContext *ctx) = 0;
+
   virtual void enterUnaryExpr(MathParser::UnaryExprContext *ctx) = 0;
   virtual void exitUnaryExpr(MathParser::UnaryExprContext *ctx) = 0;
 
@@ -34,6 +37,9 @@ public:
 
   virtual void enterNumExpr(MathParser::NumExprContext *ctx) = 0;
   virtual void exitNumExpr(MathParser::NumExprContext *ctx) = 0;
+
+  virtual void enterOpt(MathParser::OptContext *ctx) = 0;
+  virtual void exitOpt(MathParser::OptContext *ctx) = 0;
 
 
 };

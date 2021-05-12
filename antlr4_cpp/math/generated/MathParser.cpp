@@ -80,9 +80,9 @@ MathParser::CompileUnitContext* MathParser::compileUnit() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(4);
+    setState(6);
     expr(0);
-    setState(5);
+    setState(7);
     match(MathParser::EOF);
    
   }
@@ -110,6 +110,55 @@ void MathParser::ExprContext::copyFrom(ExprContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
 }
 
+//----------------- TestSubExprContext ------------------------------------------------------------------
+
+std::vector<MathParser::ExprContext *> MathParser::TestSubExprContext::expr() {
+  return getRuleContexts<MathParser::ExprContext>();
+}
+
+MathParser::ExprContext* MathParser::TestSubExprContext::expr(size_t i) {
+  return getRuleContext<MathParser::ExprContext>(i);
+}
+
+MathParser::OptContext* MathParser::TestSubExprContext::opt() {
+  return getRuleContext<MathParser::OptContext>(0);
+}
+
+std::vector<tree::TerminalNode *> MathParser::TestSubExprContext::ADD() {
+  return getTokens(MathParser::ADD);
+}
+
+tree::TerminalNode* MathParser::TestSubExprContext::ADD(size_t i) {
+  return getToken(MathParser::ADD, i);
+}
+
+std::vector<tree::TerminalNode *> MathParser::TestSubExprContext::SUB() {
+  return getTokens(MathParser::SUB);
+}
+
+tree::TerminalNode* MathParser::TestSubExprContext::SUB(size_t i) {
+  return getToken(MathParser::SUB, i);
+}
+
+MathParser::TestSubExprContext::TestSubExprContext(ExprContext *ctx) { copyFrom(ctx); }
+
+void MathParser::TestSubExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<MathListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterTestSubExpr(this);
+}
+void MathParser::TestSubExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<MathListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitTestSubExpr(this);
+}
+
+antlrcpp::Any MathParser::TestSubExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<MathVisitor*>(visitor))
+    return parserVisitor->visitTestSubExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
 //----------------- UnaryExprContext ------------------------------------------------------------------
 
 MathParser::ExprContext* MathParser::UnaryExprContext::expr() {
@@ -321,7 +370,7 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(24);
+    setState(26);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case MathParser::T__0: {
@@ -329,11 +378,11 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
         _ctx = _localctx;
         previousContext = _localctx;
 
-        setState(8);
-        match(MathParser::T__0);
-        setState(9);
-        expr(0);
         setState(10);
+        match(MathParser::T__0);
+        setState(11);
+        expr(0);
+        setState(12);
         match(MathParser::T__1);
         break;
       }
@@ -343,7 +392,7 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
         _localctx = _tracker.createInstance<UnaryExprContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
-        setState(12);
+        setState(14);
         dynamic_cast<UnaryExprContext *>(_localctx)->op = _input->LT(1);
         _la = _input->LA(1);
         if (!(_la == MathParser::ADD
@@ -355,8 +404,8 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
           _errHandler->reportMatch(this);
           consume();
         }
-        setState(13);
-        expr(5);
+        setState(15);
+        expr(6);
         break;
       }
 
@@ -364,23 +413,23 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
         _localctx = _tracker.createInstance<FuncExprContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
-        setState(14);
-        dynamic_cast<FuncExprContext *>(_localctx)->func = match(MathParser::ID);
-        setState(15);
-        match(MathParser::T__0);
         setState(16);
+        dynamic_cast<FuncExprContext *>(_localctx)->func = match(MathParser::ID);
+        setState(17);
+        match(MathParser::T__0);
+        setState(18);
         expr(0);
-        setState(19);
+        setState(21);
         _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == MathParser::T__2) {
-          setState(17);
+          setState(19);
           match(MathParser::T__2);
-          setState(18);
+          setState(20);
           expr(0);
         }
-        setState(21);
+        setState(23);
         match(MathParser::T__1);
         break;
       }
@@ -389,7 +438,7 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
         _localctx = _tracker.createInstance<NumExprContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
-        setState(23);
+        setState(25);
         match(MathParser::NUM);
         break;
       }
@@ -398,26 +447,26 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
       throw NoViableAltException(this);
     }
     _ctx->stop = _input->LT(-1);
-    setState(34);
+    setState(46);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(32);
+        setState(44);
         _errHandler->sync(this);
-        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx)) {
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 4, _ctx)) {
         case 1: {
           auto newContext = _tracker.createInstance<MulDivExprContext>(_tracker.createInstance<ExprContext>(parentContext, parentState));
           _localctx = newContext;
           newContext->left = previousContext;
           pushNewRecursionContext(newContext, startState, RuleExpr);
-          setState(26);
+          setState(28);
 
-          if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(27);
+          if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
+          setState(29);
           dynamic_cast<MulDivExprContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == MathParser::MUL
@@ -429,8 +478,8 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(28);
-          dynamic_cast<MulDivExprContext *>(_localctx)->right = expr(5);
+          setState(30);
+          dynamic_cast<MulDivExprContext *>(_localctx)->right = expr(6);
           break;
         }
 
@@ -439,10 +488,10 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
           _localctx = newContext;
           newContext->left = previousContext;
           pushNewRecursionContext(newContext, startState, RuleExpr);
-          setState(29);
+          setState(31);
 
-          if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-          setState(30);
+          if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
+          setState(32);
           dynamic_cast<AddSubExprContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == MathParser::ADD
@@ -454,16 +503,68 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(31);
-          dynamic_cast<AddSubExprContext *>(_localctx)->right = expr(4);
+          setState(33);
+          dynamic_cast<AddSubExprContext *>(_localctx)->right = expr(5);
+          break;
+        }
+
+        case 3: {
+          auto newContext = _tracker.createInstance<TestSubExprContext>(_tracker.createInstance<ExprContext>(parentContext, parentState));
+          _localctx = newContext;
+          newContext->left = previousContext;
+          pushNewRecursionContext(newContext, startState, RuleExpr);
+          setState(34);
+
+          if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
+          setState(37); 
+          _errHandler->sync(this);
+          alt = 1;
+          do {
+            switch (alt) {
+              case 1: {
+                    setState(35);
+                    dynamic_cast<TestSubExprContext *>(_localctx)->op = _input->LT(1);
+                    _la = _input->LA(1);
+                    if (!(_la == MathParser::ADD
+
+                    || _la == MathParser::SUB)) {
+                      dynamic_cast<TestSubExprContext *>(_localctx)->op = _errHandler->recoverInline(this);
+                    }
+                    else {
+                      _errHandler->reportMatch(this);
+                      consume();
+                    }
+                    setState(36);
+                    dynamic_cast<TestSubExprContext *>(_localctx)->right = expr(0);
+                    break;
+                  }
+
+            default:
+              throw NoViableAltException(this);
+            }
+            setState(39); 
+            _errHandler->sync(this);
+            alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx);
+          } while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER);
+          setState(42);
+          _errHandler->sync(this);
+
+          switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, _ctx)) {
+          case 1: {
+            setState(41);
+            opt();
+            break;
+          }
+
+          }
           break;
         }
 
         } 
       }
-      setState(36);
+      setState(48);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -471,6 +572,63 @@ MathParser::ExprContext* MathParser::expr(int precedence) {
     _localctx->exception = std::current_exception();
     _errHandler->recover(this, _localctx->exception);
   }
+  return _localctx;
+}
+
+//----------------- OptContext ------------------------------------------------------------------
+
+MathParser::OptContext::OptContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+tree::TerminalNode* MathParser::OptContext::ADD() {
+  return getToken(MathParser::ADD, 0);
+}
+
+
+size_t MathParser::OptContext::getRuleIndex() const {
+  return MathParser::RuleOpt;
+}
+
+void MathParser::OptContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<MathListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterOpt(this);
+}
+
+void MathParser::OptContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<MathListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitOpt(this);
+}
+
+
+antlrcpp::Any MathParser::OptContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<MathVisitor*>(visitor))
+    return parserVisitor->visitOpt(this);
+  else
+    return visitor->visitChildren(this);
+}
+
+MathParser::OptContext* MathParser::opt() {
+  OptContext *_localctx = _tracker.createInstance<OptContext>(_ctx, getState());
+  enterRule(_localctx, 4, MathParser::RuleOpt);
+
+  auto onExit = finally([=] {
+    exitRule();
+  });
+  try {
+    enterOuterAlt(_localctx, 1);
+    setState(49);
+    match(MathParser::ADD);
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
   return _localctx;
 }
 
@@ -486,8 +644,9 @@ bool MathParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicat
 
 bool MathParser::exprSempred(ExprContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 0: return precpred(_ctx, 4);
-    case 1: return precpred(_ctx, 3);
+    case 0: return precpred(_ctx, 5);
+    case 1: return precpred(_ctx, 4);
+    case 2: return precpred(_ctx, 3);
 
   default:
     break;
@@ -504,7 +663,7 @@ atn::ATN MathParser::_atn;
 std::vector<uint16_t> MathParser::_serializedATN;
 
 std::vector<std::string> MathParser::_ruleNames = {
-  "compileUnit", "expr"
+  "compileUnit", "expr", "opt"
 };
 
 std::vector<std::string> MathParser::_literalNames = {
@@ -535,33 +694,42 @@ MathParser::Initializer::Initializer() {
 
   _serializedATN = {
     0x3, 0x608b, 0xa72a, 0x8133, 0xb9ed, 0x417c, 0x3be7, 0x7786, 0x5964, 
-    0x3, 0xc, 0x28, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 0x3, 0x2, 0x3, 
-    0x2, 0x3, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
-    0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x5, 
-    0x3, 0x16, 0xa, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x5, 0x3, 0x1b, 0xa, 
-    0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x7, 
-    0x3, 0x23, 0xa, 0x3, 0xc, 0x3, 0xe, 0x3, 0x26, 0xb, 0x3, 0x3, 0x3, 0x2, 
-    0x3, 0x4, 0x4, 0x2, 0x4, 0x2, 0x4, 0x3, 0x2, 0x6, 0x7, 0x3, 0x2, 0x8, 
-    0x9, 0x2, 0x2b, 0x2, 0x6, 0x3, 0x2, 0x2, 0x2, 0x4, 0x1a, 0x3, 0x2, 0x2, 
-    0x2, 0x6, 0x7, 0x5, 0x4, 0x3, 0x2, 0x7, 0x8, 0x7, 0x2, 0x2, 0x3, 0x8, 
-    0x3, 0x3, 0x2, 0x2, 0x2, 0x9, 0xa, 0x8, 0x3, 0x1, 0x2, 0xa, 0xb, 0x7, 
-    0x3, 0x2, 0x2, 0xb, 0xc, 0x5, 0x4, 0x3, 0x2, 0xc, 0xd, 0x7, 0x4, 0x2, 
-    0x2, 0xd, 0x1b, 0x3, 0x2, 0x2, 0x2, 0xe, 0xf, 0x9, 0x2, 0x2, 0x2, 0xf, 
-    0x1b, 0x5, 0x4, 0x3, 0x7, 0x10, 0x11, 0x7, 0xa, 0x2, 0x2, 0x11, 0x12, 
-    0x7, 0x3, 0x2, 0x2, 0x12, 0x15, 0x5, 0x4, 0x3, 0x2, 0x13, 0x14, 0x7, 
-    0x5, 0x2, 0x2, 0x14, 0x16, 0x5, 0x4, 0x3, 0x2, 0x15, 0x13, 0x3, 0x2, 
-    0x2, 0x2, 0x15, 0x16, 0x3, 0x2, 0x2, 0x2, 0x16, 0x17, 0x3, 0x2, 0x2, 
-    0x2, 0x17, 0x18, 0x7, 0x4, 0x2, 0x2, 0x18, 0x1b, 0x3, 0x2, 0x2, 0x2, 
-    0x19, 0x1b, 0x7, 0xb, 0x2, 0x2, 0x1a, 0x9, 0x3, 0x2, 0x2, 0x2, 0x1a, 
-    0xe, 0x3, 0x2, 0x2, 0x2, 0x1a, 0x10, 0x3, 0x2, 0x2, 0x2, 0x1a, 0x19, 
-    0x3, 0x2, 0x2, 0x2, 0x1b, 0x24, 0x3, 0x2, 0x2, 0x2, 0x1c, 0x1d, 0xc, 
-    0x6, 0x2, 0x2, 0x1d, 0x1e, 0x9, 0x3, 0x2, 0x2, 0x1e, 0x23, 0x5, 0x4, 
-    0x3, 0x7, 0x1f, 0x20, 0xc, 0x5, 0x2, 0x2, 0x20, 0x21, 0x9, 0x2, 0x2, 
-    0x2, 0x21, 0x23, 0x5, 0x4, 0x3, 0x6, 0x22, 0x1c, 0x3, 0x2, 0x2, 0x2, 
-    0x22, 0x1f, 0x3, 0x2, 0x2, 0x2, 0x23, 0x26, 0x3, 0x2, 0x2, 0x2, 0x24, 
-    0x22, 0x3, 0x2, 0x2, 0x2, 0x24, 0x25, 0x3, 0x2, 0x2, 0x2, 0x25, 0x5, 
-    0x3, 0x2, 0x2, 0x2, 0x26, 0x24, 0x3, 0x2, 0x2, 0x2, 0x6, 0x15, 0x1a, 
-    0x22, 0x24, 
+    0x3, 0xc, 0x36, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 0x4, 0x4, 0x9, 
+    0x4, 0x3, 0x2, 0x3, 0x2, 0x3, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
+    0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
+    0x3, 0x3, 0x3, 0x5, 0x3, 0x18, 0xa, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
+    0x5, 0x3, 0x1d, 0xa, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
+    0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x6, 0x3, 0x28, 0xa, 0x3, 
+    0xd, 0x3, 0xe, 0x3, 0x29, 0x3, 0x3, 0x5, 0x3, 0x2d, 0xa, 0x3, 0x7, 0x3, 
+    0x2f, 0xa, 0x3, 0xc, 0x3, 0xe, 0x3, 0x32, 0xb, 0x3, 0x3, 0x4, 0x3, 0x4, 
+    0x3, 0x4, 0x2, 0x3, 0x4, 0x5, 0x2, 0x4, 0x6, 0x2, 0x4, 0x3, 0x2, 0x6, 
+    0x7, 0x3, 0x2, 0x8, 0x9, 0x2, 0x3b, 0x2, 0x8, 0x3, 0x2, 0x2, 0x2, 0x4, 
+    0x1c, 0x3, 0x2, 0x2, 0x2, 0x6, 0x33, 0x3, 0x2, 0x2, 0x2, 0x8, 0x9, 0x5, 
+    0x4, 0x3, 0x2, 0x9, 0xa, 0x7, 0x2, 0x2, 0x3, 0xa, 0x3, 0x3, 0x2, 0x2, 
+    0x2, 0xb, 0xc, 0x8, 0x3, 0x1, 0x2, 0xc, 0xd, 0x7, 0x3, 0x2, 0x2, 0xd, 
+    0xe, 0x5, 0x4, 0x3, 0x2, 0xe, 0xf, 0x7, 0x4, 0x2, 0x2, 0xf, 0x1d, 0x3, 
+    0x2, 0x2, 0x2, 0x10, 0x11, 0x9, 0x2, 0x2, 0x2, 0x11, 0x1d, 0x5, 0x4, 
+    0x3, 0x8, 0x12, 0x13, 0x7, 0xa, 0x2, 0x2, 0x13, 0x14, 0x7, 0x3, 0x2, 
+    0x2, 0x14, 0x17, 0x5, 0x4, 0x3, 0x2, 0x15, 0x16, 0x7, 0x5, 0x2, 0x2, 
+    0x16, 0x18, 0x5, 0x4, 0x3, 0x2, 0x17, 0x15, 0x3, 0x2, 0x2, 0x2, 0x17, 
+    0x18, 0x3, 0x2, 0x2, 0x2, 0x18, 0x19, 0x3, 0x2, 0x2, 0x2, 0x19, 0x1a, 
+    0x7, 0x4, 0x2, 0x2, 0x1a, 0x1d, 0x3, 0x2, 0x2, 0x2, 0x1b, 0x1d, 0x7, 
+    0xb, 0x2, 0x2, 0x1c, 0xb, 0x3, 0x2, 0x2, 0x2, 0x1c, 0x10, 0x3, 0x2, 
+    0x2, 0x2, 0x1c, 0x12, 0x3, 0x2, 0x2, 0x2, 0x1c, 0x1b, 0x3, 0x2, 0x2, 
+    0x2, 0x1d, 0x30, 0x3, 0x2, 0x2, 0x2, 0x1e, 0x1f, 0xc, 0x7, 0x2, 0x2, 
+    0x1f, 0x20, 0x9, 0x3, 0x2, 0x2, 0x20, 0x2f, 0x5, 0x4, 0x3, 0x8, 0x21, 
+    0x22, 0xc, 0x6, 0x2, 0x2, 0x22, 0x23, 0x9, 0x2, 0x2, 0x2, 0x23, 0x2f, 
+    0x5, 0x4, 0x3, 0x7, 0x24, 0x27, 0xc, 0x5, 0x2, 0x2, 0x25, 0x26, 0x9, 
+    0x2, 0x2, 0x2, 0x26, 0x28, 0x5, 0x4, 0x3, 0x2, 0x27, 0x25, 0x3, 0x2, 
+    0x2, 0x2, 0x28, 0x29, 0x3, 0x2, 0x2, 0x2, 0x29, 0x27, 0x3, 0x2, 0x2, 
+    0x2, 0x29, 0x2a, 0x3, 0x2, 0x2, 0x2, 0x2a, 0x2c, 0x3, 0x2, 0x2, 0x2, 
+    0x2b, 0x2d, 0x5, 0x6, 0x4, 0x2, 0x2c, 0x2b, 0x3, 0x2, 0x2, 0x2, 0x2c, 
+    0x2d, 0x3, 0x2, 0x2, 0x2, 0x2d, 0x2f, 0x3, 0x2, 0x2, 0x2, 0x2e, 0x1e, 
+    0x3, 0x2, 0x2, 0x2, 0x2e, 0x21, 0x3, 0x2, 0x2, 0x2, 0x2e, 0x24, 0x3, 
+    0x2, 0x2, 0x2, 0x2f, 0x32, 0x3, 0x2, 0x2, 0x2, 0x30, 0x2e, 0x3, 0x2, 
+    0x2, 0x2, 0x30, 0x31, 0x3, 0x2, 0x2, 0x2, 0x31, 0x5, 0x3, 0x2, 0x2, 
+    0x2, 0x32, 0x30, 0x3, 0x2, 0x2, 0x2, 0x33, 0x34, 0x7, 0x6, 0x2, 0x2, 
+    0x34, 0x7, 0x3, 0x2, 0x2, 0x2, 0x8, 0x17, 0x1c, 0x29, 0x2c, 0x2e, 0x30, 
   };
 
   atn::ATNDeserializer deserializer;

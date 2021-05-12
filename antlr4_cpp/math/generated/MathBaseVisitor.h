@@ -19,6 +19,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitTestSubExpr(MathParser::TestSubExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitUnaryExpr(MathParser::UnaryExprContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -40,6 +44,10 @@ public:
   }
 
   virtual antlrcpp::Any visitNumExpr(MathParser::NumExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitOpt(MathParser::OptContext *ctx) override {
     return visitChildren(ctx);
   }
 

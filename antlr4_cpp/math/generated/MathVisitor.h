@@ -21,6 +21,8 @@ public:
    */
     virtual antlrcpp::Any visitCompileUnit(MathParser::CompileUnitContext *context) = 0;
 
+    virtual antlrcpp::Any visitTestSubExpr(MathParser::TestSubExprContext *context) = 0;
+
     virtual antlrcpp::Any visitUnaryExpr(MathParser::UnaryExprContext *context) = 0;
 
     virtual antlrcpp::Any visitFuncExpr(MathParser::FuncExprContext *context) = 0;
@@ -32,6 +34,8 @@ public:
     virtual antlrcpp::Any visitParenExpr(MathParser::ParenExprContext *context) = 0;
 
     virtual antlrcpp::Any visitNumExpr(MathParser::NumExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitOpt(MathParser::OptContext *context) = 0;
 
 
 };

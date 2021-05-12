@@ -19,6 +19,9 @@ public:
   virtual void enterCompileUnit(MathParser::CompileUnitContext * /*ctx*/) override { }
   virtual void exitCompileUnit(MathParser::CompileUnitContext * /*ctx*/) override { }
 
+  virtual void enterTestSubExpr(MathParser::TestSubExprContext * /*ctx*/) override { }
+  virtual void exitTestSubExpr(MathParser::TestSubExprContext * /*ctx*/) override { }
+
   virtual void enterUnaryExpr(MathParser::UnaryExprContext * /*ctx*/) override { }
   virtual void exitUnaryExpr(MathParser::UnaryExprContext * /*ctx*/) override { }
 
@@ -36,6 +39,9 @@ public:
 
   virtual void enterNumExpr(MathParser::NumExprContext * /*ctx*/) override { }
   virtual void exitNumExpr(MathParser::NumExprContext * /*ctx*/) override { }
+
+  virtual void enterOpt(MathParser::OptContext * /*ctx*/) override { }
+  virtual void exitOpt(MathParser::OptContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }
